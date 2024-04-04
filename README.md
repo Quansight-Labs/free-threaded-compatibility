@@ -22,11 +22,15 @@ that project's issue tracker.
 
 ### Building Free-Threaded CPython
 
-Currently we suggest building CPython from source using the latest
-version of the CPython `main` branch. See [the build
+Currently we suggest building CPython from source using the latest version of
+the CPython `main` branch. There is also a "bleeding-edge" branch integrating
+several work-in-progress pull requests. You may have a more stable experience
+using the [`nogil-integration`
+branch](https://github.com/python/cpython/issues/116749) on [Sam Gross` fork of
+CPython](https://github.com/colesbury/cpython/tree/nogil-integration). See [the
+build
 instructions](https://devguide.python.org/getting-started/setup-building/index.html)
-in the CPython developer guide. You will need to install [needed
-third-party
+in the CPython developer guide. You will need to install [needed third-party
 dependencies](https://devguide.python.org/getting-started/setup-building/index.html#install-dependencies)
 before building. To build the free-threaded version of CPython, pass
 `--disable-gil` to the `configure` script:
@@ -36,26 +40,6 @@ before building. To build the free-threaded version of CPython, pass
 ```
 
 If you will be switching Python versions often, it may make sense to
-build CPython using [pyenv](https://github.com/pyenv/pyenv). We suggest
-installing the
-[pyenv-suffix](https://github.com/AdrianDAlessandro/pyenv-suffix) plugin
-to distinguish between free-threaded and "standard" builds of CPython
-3.13:
-
-```bash
-CONFIGURE_OPTS="--disable-gil --with-pydebug"
-PYENV_VERSION_SUFFIX='-nogil' pyenv install -v 3.13-dev
-```
-
-You can then "activate" the installed free-threaded Python in your
-global shell environment with
-
-```bash
-pyenv global 3.13-dev-nogil
-```
-
-Or locally in a single directory with a `.python-version` file or with
-
-```bash
-pyenv local 3.13-dev-nogil
-```
+build CPython using [pyenv](https://github.com/pyenv/pyenv). See
+[the `pyenv` folder](pyenv/README.md) in this repository for more details
+managing free-threaded and non-free-threaded python installs with pyenv.
