@@ -25,7 +25,8 @@ that project's issue tracker.
 Currently we suggest building CPython from source using the latest version of
 the CPython `main` branch. There is also a "bleeding-edge" branch integrating
 several work-in-progress pull requests. You may have a more stable experience
-using the `nogil-integration` branch on [Sam Gross` fork of
+using the [`nogil-integration`
+branch](https://github.com/python/cpython/issues/116749) on [Sam Gross` fork of
 CPython](https://github.com/colesbury/cpython/tree/nogil-integration). See [the
 build
 instructions](https://devguide.python.org/getting-started/setup-building/index.html)
