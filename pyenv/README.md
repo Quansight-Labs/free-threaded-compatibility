@@ -20,10 +20,19 @@ Or locally in a single directory with a `.python-version` file or with
 pyenv local 3.13-dev-nogil-debug
 ```
 
-To install the `nogil-integration` branch, clone this repository and
-install using the provided definition file in this folder:
+Note that debug builds of python are substantially slower. You can drop
+`--debug` from the `pyenv install` invocation if you would like an optimized 
+build. The resulting pyenv environments will not have a `-debug` suffix in 
+their names.
+
+You can simultaneously install the build of python with the GIL enabled with
 
 ```bash
-CONFIGURE_OPTS="--disable-gil" PYENV_VERSION_SUFFIX='-nogil-integration' \
-pyenv install -v --debug /path/to/free-threaded-compatibility/pyenv/3.13-dev
+pyenv install -v --debug 3.13-dev
+```
+
+The resulting environment can be activated with
+
+```bash
+pyenv global 3.13-dev
 ```
