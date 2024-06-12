@@ -328,10 +328,27 @@ cibuildwheel action:
 
 As above, replace the ellipses with a `cibuildwheel` version.
 
-If your project depends on cython, you will need to install a Cython nightly
+If your project depends on Cython, you will need to install a Cython nightly
 wheel in the build, as the newest stable release of Cython cannot generate code
 that will compile under the free-threaded build. You likely do not need to
-disable pip build isolation if your project does not depend on cython.
+disable pip build isolation if your project does not depend on Cython.
+
+The newest pip release does not support installing free-threaded wheels, you
+will need to update to pip 24.1b1 or newer to install free-threaded wheels:
+
+```
+pip install -U --pre pip
+```
+
+You can install nightly wheels for Cython, NumPy, and SciPy using the following
+command:
+
+```
+pip install -i https://pypi.anaconda.org/scientific-python-nightly-wheels/simple cython
+```
+
+Note that nightly wheels may not be available on all platforms yet. Windows
+wheels, in particular, are not currently available for NumPy or SciPy.
 
 You will also likely need to manually pass `-Xgil=0` or set `PYTHON_GIL=0` in
 your shell environment while running tests to ensure the GIL is actually
