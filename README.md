@@ -66,8 +66,36 @@ python -c "import sys; print(sys._is_gil_enabled())"
 
 Extension modules need to explicitly indicate they support running with the GIL
 disabled, otherwise a warning is printed and the GIL is re-enabled at
-runtime after importing a module that does not support the GIL. To force
-Python to start with the GIL disabled anyway, use the `PYTHON_GIL` environment
+runtime after importing a module that does not support the GIL. In order to do so,
+extension modules that support multi-phase initialization can specify the
+[`Py_mod_gil`](https://docs.python.org/3.13/c-api/module.html#c.Py_mod_gil)
+module slot like this (the slot has no effect in the non-free-threaded build):
+
+```c
+static PyModuleDef_Slot module_slots[] = {
+    ...
+    {Py_mod_gil, Py_MOD_GIL_NOT_USED},
+    {0, NULL}
+};
+```
+
+Extensions that use single-phase initialization need to call
+[`PyUnstable_Module_SetGIL()`](https://docs.python.org/3.13/c-api/module.html#c.PyUnstable_Module_SetGIL)
+in the module's initialization function:
+
+```
+PyObject *mod = PyModule_Create(&module);
+if (mod == NULL) {
+    return NULL;
+}
+
+#ifdef Py_GIL_DISABLED
+PyModule_ExperimentalSetGIL(mod, Py_MOD_GIL_NOT_USED);
+#endif
+```
+
+To force Python to keep the GIL disabled even after importing a module
+that does not support running without it, use the `PYTHON_GIL` environment
 variable or the `-X gil` command line option:
 
 ```bash
