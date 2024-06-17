@@ -74,7 +74,9 @@ module slot like this (the slot has no effect in the non-free-threaded build):
 ```c
 static PyModuleDef_Slot module_slots[] = {
     ...
+#ifdef Py_GIL_DISABLED
     {Py_mod_gil, Py_MOD_GIL_NOT_USED},
+#endif
     {0, NULL}
 };
 ```
@@ -83,15 +85,19 @@ Extensions that use single-phase initialization need to call
 [`PyUnstable_Module_SetGIL()`](https://docs.python.org/3.13/c-api/module.html#c.PyUnstable_Module_SetGIL)
 in the module's initialization function:
 
-```
-PyObject *mod = PyModule_Create(&module);
-if (mod == NULL) {
-    return NULL;
-}
+```c
+PyMODINIT_FUNC
+PyInit__module(void)
+{
+    PyObject *mod = PyModule_Create(&module);
+    if (mod == NULL) {
+        return NULL;
+    }
 
 #ifdef Py_GIL_DISABLED
-PyModule_ExperimentalSetGIL(mod, Py_MOD_GIL_NOT_USED);
+    PyUnstable_Module_SetGIL(mod, Py_MOD_GIL_NOT_USED);
 #endif
+}
 ```
 
 To force Python to keep the GIL disabled even after importing a module
