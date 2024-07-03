@@ -36,9 +36,17 @@ before building. To build the free-threaded version of CPython, pass
 ```
 
 If you will be switching Python versions often, it may make sense to
-build CPython using [pyenv](https://github.com/pyenv/pyenv). See
-[the `pyenv` folder](pyenv/README.md) in this repository for more details
-managing free-threaded and non-free-threaded Python installs with pyenv.
+build CPython using [pyenv](https://github.com/pyenv/pyenv). The easiest way
+to select a free-threaded build is to install a python version with a `t` at
+the end of the name. For example:
+
+```bash
+pyenv install --debug 3.13.0b3t
+```
+
+Will install a free-threaded build of Python 3.13.0b3 that includes debug
+symbols. See the pyenv docs for more information about using pyenv and
+switching between python versions.
 
 ### Running Python With the GIL disabled
 
