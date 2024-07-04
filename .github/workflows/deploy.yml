@@ -4,6 +4,19 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '.github/worksflows/deploy.yml'
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - 'requirements.txt'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/worksflows/deploy.yml'
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - 'requirements.txt'
 
 jobs:
   deploy:
@@ -30,7 +43,7 @@ jobs:
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           external_repository: Quansight-Labs/pyfreethreading.github.io
