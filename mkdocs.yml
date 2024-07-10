@@ -24,7 +24,7 @@ theme:
 nav:
   - 'index.md'
   - 'tracking.md'
-  - 'building.md'
+  - 'installing_cpython.md'
   - 'running-gil-disabled.md'
   - 'porting.md'
   - 'ci.md'
