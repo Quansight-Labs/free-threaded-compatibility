@@ -9,4 +9,4 @@ that project's issue tracker.
 ### Documentation
 
 You can find documentation for various free-threading topics
-[on our site](https://pyfreethreading.github.io).
+[on py-free-threading.github.io](https://py-free-threading.github.io).
