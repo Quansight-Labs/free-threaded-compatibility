@@ -1,6 +1,6 @@
-site_name: pyfreethreading
+site_name: py-free-threading
 repo_url: https://github.com/Quansight-Labs/free-threaded-compatibility
-copyright: Copyright &copy; 2024 Quansight Labs & open source contributors
+copyright: Copyright &copy; 2024- Quansight Labs & open source contributors
 
 theme:
   name: material

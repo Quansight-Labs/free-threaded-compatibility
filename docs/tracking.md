@@ -1,5 +1,20 @@
 # Compatibility status tracking
 
+This page tracks the status of packages for which we're aware of active work on
+free-threaded support. It contains packages with extension modules, as well
+as build tools and packages that needed code specifically to support
+free-threading. Note that pure Python code works without changes by design,
+hence this page does not aim to track pure Python packages.
+
+!!! tip
+
+    It's early days for free-threaded support - bugs in CPython itself and in
+    widely used libraries with extension modules are being fixed every week.
+    It may be useful to use nightly wheels (when available) of packages
+    like `cython` or `numpy`, even if a first release is available on PyPI.
+
+
+<!-- keep alphabetically ordered -->
 
 
 | Project       | Tested in CI     | PyPI release    | First version with support    | Nightly wheels    | Nightly link    |
