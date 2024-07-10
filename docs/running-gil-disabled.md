@@ -1,10 +1,12 @@
-## Running Python With the GIL disabled
+# Running with the GIL disabled
 
-Much of the material in this subsection is also covered in the Python 3.13
-[release
-notes](https://docs.python.org/3.13/whatsnew/3.13.html#free-threaded-cpython).
+!!! info
 
-You can verify your build has the GIL disabled with the following incantation:
+    Most of the content on this page is also covered in the Python 3.13
+    [release notes](https://docs.python.org/3.13/whatsnew/3.13.html#free-threaded-cpython).
+
+You can verify your build of CPython itself has the GIL disabled with the
+following incantation:
 
 ```bash
 python -VV
