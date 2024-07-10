@@ -355,7 +355,7 @@ library.
 
 ### Dealing with thread-unsafe objects
 
-Similar to the section above, objects may need locking or atomics they can
+Similar to the section above, objects may need locking or atomics if they can
 be concurrently modified from multiple threads. CPython 3.13
 exposes a public C API that allows users to use the built-in
 per-object locks.
@@ -378,8 +378,8 @@ int do_modification(MyObject *obj) {
 }
 ```
 
-A variant for locking 2 objects at once is also available. For more information
-about `Py_BEGIN_CRITICAL_SECTION`, please the the
+A variant for locking two objects at once is also available. For more information
+about `Py_BEGIN_CRITICAL_SECTION`, please see the
 [Python C API documentation on critical sections](https://docs.python.org/3.13/c-api/init.html#python-critical-section-api).
 
 
