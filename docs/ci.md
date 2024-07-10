@@ -1,4 +1,4 @@
-## Guide to Continuous Integration
+# Setting up CI
 
 Currently the `setup-python` GitHub Action [does not
 support](https://github.com/actions/setup-python/issues/771) installing a
@@ -22,15 +22,15 @@ You should replace the ellipses with versions for the actions. If there is a
 newer CPython 3.13 release available since this document was written or
 updated, use that version instead.
 
-The [cibuildwheel](https://cibuildwheel.pypa.io/en/stable/) project has support
+[cibuildwheel](https://cibuildwheel.pypa.io/en/stable/) has support
 for building free-threaded wheels on all platforms. If your project releases
-nightly wheels, we suggest configuring cibuildwheel to build nightly
+nightly wheels, we suggest configuring `cibuildwheel` to build nightly
 free-threaded wheels.
 
 You will need to specify the following variables in the environment for the
 cibuildwheel action:
 
-```
+```yaml
       - name: Build wheels
         uses: pypa/cibuildwheel@...
         env:
@@ -47,17 +47,18 @@ As above, replace the ellipses with a `cibuildwheel` version.
 If your project depends on Cython, you will need to install a Cython nightly
 wheel in the build, as the newest stable release of Cython cannot generate code
 that will compile under the free-threaded build. You likely do not need to
-disable pip build isolation if your project does not depend on Cython.
+disable `pip`'s build isolation if your project does not depend on Cython.
 
-You can install nightly wheels for Cython, NumPy, and SciPy using the following
-command:
+You can install nightly wheels for Cython and NumPy using the following
+install command:
 
 ```
-pip install -i https://pypi.anaconda.org/scientific-python-nightly-wheels/simple cython
+pip install -i https://pypi.anaconda.org/scientific-python-nightly-wheels/simple cython numpy
 ```
 
 Note that nightly wheels may not be available on all platforms yet. Windows
-wheels, in particular, are not currently available for NumPy or SciPy.
+wheels, in particular, are not currently available for NumPy or projects that
+depend on NumPy (e.g., SciPy).
 
 You will also likely need to manually pass `-Xgil=0` or set `PYTHON_GIL=0` in
 your shell environment while running tests to ensure the GIL is actually
