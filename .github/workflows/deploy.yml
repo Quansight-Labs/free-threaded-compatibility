@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/worksflows/deploy.yml'
+      - '.github/workflows/deploy.yml'
       - 'docs/**'
       - 'mkdocs.yml'
       - 'requirements.txt'
@@ -13,7 +13,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/worksflows/deploy.yml'
+      - '.github/workflows/deploy.yml'
       - 'docs/**'
       - 'mkdocs.yml'
       - 'requirements.txt'
@@ -47,6 +47,7 @@ jobs:
         with:
           personal_token: ${{ secrets.PYFREETHREADING_DEPLOY_KEY }}
           external_repository: py-free-threading/py-free-threading.github.io
+          publish_branch: main
           publish_dir: ./site
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
