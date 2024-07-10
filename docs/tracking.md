@@ -22,6 +22,7 @@ hence this page does not aim to track pure Python packages.
 | cibuildwheel   | :material-check-bold: |   :material-check-bold:   | 2.19   |    |    |
 | CMake    |    | :material-check-bold:    | 3.30.0 [^cmake]   |    |    |
 | Cython       | :material-check-bold: |              | 3.1.0                      | :simple-linux: :simple-apple: :material-microsoft-windows: | [:simple-anaconda:](https://anaconda.org/scientific-python-nightly-wheels/cython/)       |
+| joblib       | :material-check-bold: | :material-check-bold:  | 1.4.2   |    |    |
 | Meson   |  | `--pre`    | 1.5.0 [^meson]   |    |    |
 | meson-python   | :material-check-bold: |   :material-check-bold:   | 0.16.0   |    |    |
 | NumPy        | :material-check-bold: |              | 2.1.0                      | :simple-linux: :simple-apple:                              | [:simple-anaconda:](https://anaconda.org/scientific-python-nightly-wheels/numpy/)        |
