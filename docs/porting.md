@@ -353,6 +353,36 @@ int call_library_function(int *argument) {
 Any other wrapped function needs similar locking around each call into the
 library.
 
+### Dealing with thread-unsafe objects
+
+Similar to the section above, objects may need locking or atomics if they can
+be concurrently modified from multiple threads. CPython 3.13
+exposes a public C API that allows users to use the built-in
+per-object locks.
+
+For example the following code:
+```C
+int do_modification(MyObject *obj) {
+    return modification_on_obj(obj);
+}
+```
+
+Should be transformed to:
+```C
+int do_modification(MyObject *obj) {
+    int res;
+    Py_BEGIN_CRTIICAL_SECTION(obj);
+    res = modification_on_obj(obj);
+    Py_END_CRTIICAL_SECTION(obj);
+    return res;
+}
+```
+
+A variant for locking two objects at once is also available. For more information
+about `Py_BEGIN_CRITICAL_SECTION`, please see the
+[Python C API documentation on critical sections](https://docs.python.org/3.13/c-api/init.html#python-critical-section-api).
+
+
 ## Cython thread-safety
 
 If your extension is written in Cython, you can generally assume that
