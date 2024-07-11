@@ -23,7 +23,7 @@ hence this page does not aim to track pure Python packages.
 | CMake    |    | :material-check-bold:    | 3.30.0 [^cmake]   |    |    |
 | Cython       | :material-check-bold: |              | 3.1.0                      | :simple-linux: :simple-apple: :material-microsoft-windows: | [:simple-anaconda:](https://anaconda.org/scientific-python-nightly-wheels/cython/)       |
 | joblib       | :material-check-bold: | :material-check-bold:  | 1.4.2   |    |    |
-| Meson   |  | `--pre`    | 1.5.0 [^meson]   |    |    |
+| Meson   |  | :material-check-bold:   | 1.5.0   |    |    |
 | meson-python   | :material-check-bold: |   :material-check-bold:   | 0.16.0   |    |    |
 | NumPy        | :material-check-bold: |              | 2.1.0                      | :simple-linux: :simple-apple:                              | [:simple-anaconda:](https://anaconda.org/scientific-python-nightly-wheels/numpy/)        |
 | packaging   | :material-check-bold: | :material-check-bold:   | 24.0   |   |   |
@@ -41,6 +41,3 @@ hence this page does not aim to track pure Python packages.
 
 [^cmake]:
     Windows isn't correctly handled yet in CMake 3.30.0, see [cmake#26016](https://gitlab.kitware.com/cmake/cmake/-/issues/26016)
-
-[^meson]:
-    Meson 1.5.0 is only needed for Windows support, older versions work fine for all other platforms
