@@ -40,6 +40,24 @@ section of the Python 3.13 docs.
     ```
     This will install the interpreter at `/usr/bin/python3.13t`.
 
+=== "Nixpkgs"
+
+    Nixpkgs provides cached builds under the [`python313FreeThreading`](https://search.nixos.org/packages?channel=unstable&show=python313FreeThreading&type=packages)
+    attribute from NixOS 24.05 and newer.
+
+    With `flakes` enabled the following command will drop you in an ephemeral shell:
+
+    ```
+    nix shell nixpkgs#python313FreeThreading
+    ```
+
+    Without `flakes`, make sure to update your nixpkgs channel first:
+
+    ```
+    sudo nix-channel --update
+    nix-shell -p python313FreeThreading
+    ```
+
 === "Ubuntu"
 
     For Ubuntu you can use the [deadsnakes PPA](https://launchpad.net/%7Edeadsnakes/+archive/ubuntu/ppa/+packages)
