@@ -12,7 +12,7 @@ hence this page does not aim to track pure Python packages.
     widely used libraries with extension modules are being fixed every week.
     It may be useful to use nightly wheels (when available) of packages
     like `cython` or `numpy`, even if a first release is available on PyPI.
-    You can do so by running:
+    For example, you can install a NumPy nightly wheel by running:
 
     ```
     pip install -i https://pypi.anaconda.org/scientific-python-nightly-wheels/simple numpy
