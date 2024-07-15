@@ -318,15 +318,15 @@ typedef struct lib_state_struct {
 } lib_state_struct;
 
 int call_library_function(lib_state_struct *lib_state) {
-    PyMutex_Lock(state->lock);
+    PyMutex_Lock(lib_state->lock);
     library_function(lib_state->state);
-    PyMutex_Unlock(state->lock)
+    PyMutex_Unlock(lib_state->lock)
 }
 
 int call_another_library_function(lib_state_struct *lib_state) {
-    PyMutex_Lock(state->lock);
+    PyMutex_Lock(lib_state->lock);
     another_library_function(lib_state->state);
-    PyMutex_Unlock(state->lock)
+    PyMutex_Unlock(lib_state->lock)
 }
 ```
 
