@@ -27,11 +27,12 @@ running with the GIL disabled via the
 [`gil_not_used`](https://pybind11.readthedocs.io/en/stable/reference.html#_CPPv4N7module_23create_extension_moduleEPKcPKcP10module_def16mod_gil_not_used)
 argument to `create_extension_module`.
 
-Starting with Cython 3.1.0 (only available via the nightly wheels), extension
-modules written in Cython can also do so using the
+Starting with Cython 3.1.0 (only available via the nightly wheels or the `master`
+branch as of right now), extension modules written in Cython can also do so using the
 [`freethreading_compatible`](https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#compiler-directives)
-compiler directive. It can be enabled either per module or globally by adding
-`-Xfreethreading_comparible=True` to the Cython arguments via the project's
+compiler directive. It can be enabled either per module as a directive
+(`# cython: freethreading_compatible=True`) in `.pyx` files, or globally by adding
+`-Xfreethreading_compatible=True` to the Cython arguments via the project's
 build system.
 
 C or C++ extension modules using multi-phase initialization can specify the
