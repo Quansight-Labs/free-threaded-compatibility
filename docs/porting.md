@@ -47,7 +47,7 @@ build systems:
     from Cython.Compiler.Version import version as cython_version
     from packaging.version import Version
 
-    compiler_directives = {...}
+    compiler_directives = {}
     if Version(cython_version) >= Version("3.1.0a1"):
         compiler_directives["freethreading_compatible"] = True
 
@@ -67,7 +67,7 @@ build systems:
     ```meson
     cy = meson.get_compiler('cython')
 
-    cython_args = [...]
+    cython_args = []
     if cy.version().version_compare('>=3.1.0')
         cython_args += ['-Xfreethreading_compatible=True']
     endif
@@ -84,7 +84,7 @@ build systems:
     ```meson
     cy = meson.get_compiler('cython')
     if cy.version().version_compare('>=3.1.0')
-        add_global_arguments('-Xfreethreading_compatible=true', language : 'cython')
+        add_project_arguments('-Xfreethreading_compatible=true', language : 'cython')
     endif
     ```
 
