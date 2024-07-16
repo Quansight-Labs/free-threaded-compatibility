@@ -22,16 +22,71 @@ Extension modules need to explicitly indicate they support running with the GIL
 disabled, otherwise a warning is printed and the GIL is re-enabled at runtime
 after importing a module that does not support the GIL. 
 
-!!! note
-
-    Currently it is not possible for extensions written in Cython to declare
-    they support running without the GIL. Work is under way to add support
-    (see [cython#6242](https://github.com/cython/cython/pull/6242)).
-
 C++ extension modules making use of `pybind11` can easily declare support for
 running with the GIL disabled via the
 [`gil_not_used`](https://pybind11.readthedocs.io/en/stable/reference.html#_CPPv4N7module_23create_extension_moduleEPKcPKcP10module_def16mod_gil_not_used)
 argument to `create_extension_module`.
+
+Starting with Cython 3.1.0 (only available via the nightly wheels or the `master`
+branch as of right now), extension modules written in Cython can also do so using the
+[`freethreading_compatible`](https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#compiler-directives)
+compiler directive. It can be enabled either per module as a directive
+(`# cython: freethreading_compatible=True`) in `.pyx` files, or globally by adding
+`-Xfreethreading_compatible=True` to the Cython arguments via the project's
+build system.
+
+Here are a few examples of how to globally enable the directive in a few popular
+build systems:
+
+=== "setuptools"
+
+    When using setuptools, you can pass the `compiler_directives` keyword argument
+    to `cythonize`:
+
+    ```python
+    from Cython.Compiler.Version import version as cython_version
+    from packaging.version import Version
+
+    compiler_directives = {}
+    if Version(cython_version) >= Version("3.1.0a1"):
+        compiler_directives["freethreading_compatible"] = True
+
+    setup(
+        ext_modules=cythonize(
+            extensions,
+            compiler_directives=compiler_directives,
+        )
+    )
+    ```
+
+=== "Meson"
+
+    When using Meson, you can add the directive to the `cython_args` you're
+    passing to `py.extension_module`:
+
+    ```meson
+    cy = meson.get_compiler('cython')
+
+    cython_args = []
+    if cy.version().version_compare('>=3.1.0')
+        cython_args += ['-Xfreethreading_compatible=True']
+    endif
+
+    py.extension_module('modulename'
+        'source.pyx',
+        cython_args: cython_args,
+        ...
+    )
+    ```
+
+    You can also globally add the directive for all Cython extension modules:
+
+    ```meson
+    cy = meson.get_compiler('cython')
+    if cy.version().version_compare('>=3.1.0')
+        add_project_arguments('-Xfreethreading_compatible=true', language : 'cython')
+    endif
+    ```
 
 C or C++ extension modules using multi-phase initialization can specify the
 [`Py_mod_gil`](https://docs.python.org/3.13/c-api/module.html#c.Py_mod_gil)
