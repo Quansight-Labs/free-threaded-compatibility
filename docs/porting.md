@@ -35,6 +35,59 @@ compiler directive. It can be enabled either per module as a directive
 `-Xfreethreading_compatible=True` to the Cython arguments via the project's
 build system.
 
+Here are a few examples of how to globally enable the directive in a few popular
+build systems:
+
+=== "setuptools"
+
+    When using setuptools, you can pass the `compiler_directives` keyword argument
+    to `cythonize`:
+
+    ```python
+    from Cython.Compiler.Version import version as cython_version
+    from packaging.version import Version
+
+    compiler_directives = {...}
+    if Version(cython_version) >= Version("3.1.0a1"):
+        compiler_directives["freethreading_compatible"] = True
+
+    setup(
+        ext_modules=cythonize(
+            extensions,
+            compiler_directives=compiler_directives,
+        )
+    )
+    ```
+
+=== "Meson"
+
+    When using Meson, you can add the directive to the `cython_args` you're
+    passing to `py.extension_module`:
+
+    ```meson
+    cy = meson.get_compiler('cython')
+
+    cython_args = [...]
+    if cy.version().version_compare('>=3.1.0')
+        cython_args += ['-Xfreethreading_compatible=True']
+    endif
+
+    py.extension_module('modulename'
+        'source.pyx',
+        cython_args: cython_args,
+        ...
+    )
+    ```
+
+    You can also globally add the directive for all Cython extension modules:
+
+    ```meson
+    cy = meson.get_compiler('cython')
+    if cy.version().version_compare('>=3.1.0')
+        add_global_arguments('-Xfreethreading_compatible=true', language : 'cython')
+    endif
+    ```
+
 C or C++ extension modules using multi-phase initialization can specify the
 [`Py_mod_gil`](https://docs.python.org/3.13/c-api/module.html#c.Py_mod_gil)
 module slot like this:
