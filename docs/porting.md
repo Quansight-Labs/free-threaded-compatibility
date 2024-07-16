@@ -92,7 +92,7 @@ C or C++ extension modules using multi-phase initialization can specify the
 [`Py_mod_gil`](https://docs.python.org/3.13/c-api/module.html#c.Py_mod_gil)
 module slot like this:
 
-```c
+```cpp
 static PyModuleDef_Slot module_slots[] = {
     ...
 #ifdef Py_GIL_DISABLED
@@ -108,7 +108,7 @@ Extensions that use single-phase initialization need to call
 [`PyUnstable_Module_SetGIL()`](https://docs.python.org/3.13/c-api/module.html#c.PyUnstable_Module_SetGIL)
 in the module's initialization function:
 
-```c
+```cpp
 PyMODINIT_FUNC
 PyInit__module(void)
 {
@@ -166,7 +166,7 @@ build. You can use it to enable low-level code that only runs under the
 free-threaded build, isolating possibly performance-impacting changes to the
 free-threaded build:
 
-```c
+```cpp
 #ifdef Py_GIL_DISABLED
 // free-threaded specific code goes here
 #endif
@@ -268,7 +268,7 @@ simultaneously tries to fill the cache.
 If the cache is not critical for performance, consider simply disabling the
 cache in the free-threaded build:
 
-```c
+```cpp
 static int *cache = NULL;
 
 int my_function_with_a_cache(void) {
@@ -290,7 +290,7 @@ can assume that module initialization is guaranteed to only happen on one
 thread, so you can initialize static globals safely during module
 initialization.
 
-```c
+```cpp
 static int *cache = NULL;
 
 PyMODINIT_FUNC
@@ -323,7 +323,7 @@ operations and a global mutex.
 If the cache is in the form of a data container, then you can lock access to
 the container, like in the following example:
 
-```c
+```cpp
 
 #ifdef Py_GIL_DISABLED
 static PyMutex cache_lock = {0};
@@ -366,7 +366,7 @@ threads, functions in the library can be safely executed simultaneously.
 Wrapping reentrant libraries requires adding locking whenever the state struct
 is accessed.
 
-```c
+```cpp
 typedef struct lib_state_struct {
     low_level_library_state *state;
     PyMutex lock;
@@ -394,7 +394,7 @@ call library functions simultaneously without causing undefined
 behavior. Generally this is due to use of global static state in the
 library. This means that non-reentrant libraries require a global lock:
 
-```c
+```cpp
 
 static PyMutex global_lock = {0};
 
@@ -416,14 +416,14 @@ exposes a public C API that allows users to use the built-in
 per-object locks.
 
 For example the following code:
-```C
+```cpp
 int do_modification(MyObject *obj) {
     return modification_on_obj(obj);
 }
 ```
 
 Should be transformed to:
-```C
+```cpp
 int do_modification(MyObject *obj) {
     int res;
     Py_BEGIN_CRTIICAL_SECTION(obj);
@@ -483,7 +483,7 @@ it's possible for another thread to delete the item from the container, leading
 to the item being de-allocated while the borrowed reference is still
 "alive". Even code like this:
 
-```C
+```cpp
 PyObject *item = Py_NewRef(PyList_GetItem(list_object, 0))
 ```
 

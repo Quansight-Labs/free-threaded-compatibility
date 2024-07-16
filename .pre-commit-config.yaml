@@ -16,3 +16,14 @@ repos:
           - mdformat-tables
           - mdformat-footnote
           - mdformat-frontmatter
+          - mdformat-black
+          - mdformat-beautysh
+          - mdformat-config
+
+  - repo: https://github.com/finsberg/clang-format-docs
+    rev: 8e0716290bd1ea7e786c76f79e79f54e52d404c6 # v0.3.0
+    hooks:
+      - id: clang-format-docs
+        args: [--style=LLVM]
+        additional_dependencies:
+          - clang-format
