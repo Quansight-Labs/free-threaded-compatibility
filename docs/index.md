@@ -42,4 +42,3 @@ ecosystem to jumpstart work on converting the libraries that make up the
 scientific Python and AI/ML stacks to work with the free-threaded build of
 CPython 3.13. Additionally, that effort will look at libraries like PyO3 that
 are needed to interface with CPython from other languages.
-
