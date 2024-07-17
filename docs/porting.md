@@ -106,13 +106,13 @@ in the module's initialization function:
 
 ```cpp
 PyMODINIT_FUNC PyInit__module(void) {
-  PyObject *mod = PyModule_Create(&module);
-  if (mod == NULL) {
-    return NULL;
-  }
+    PyObject *mod = PyModule_Create(&module);
+    if (mod == NULL) {
+        return NULL;
+    }
 
 #ifdef Py_GIL_DISABLED
-  PyUnstable_Module_SetGIL(mod, Py_MOD_GIL_NOT_USED);
+    PyUnstable_Module_SetGIL(mod, Py_MOD_GIL_NOT_USED);
 #endif
 }
 ```
@@ -264,16 +264,16 @@ cache in the free-threaded build:
 static int *cache = NULL;
 
 int my_function_with_a_cache(void) {
-  int *my_cache = NULL;
+    int *my_cache = NULL;
 #ifndef Py_GIL_DISABLED
-  if (cache == NULL) {
-    cache = get_expensive_result();
-  }
-  my_cache = cache;
+    if (cache == NULL) {
+        cache = get_expensive_result();
+    }
+    my_cache = cache;
 #else
-  my_cache = get_expensive_result();
+    my_cache = get_expensive_result();
 #endif;
-  // use the cache
+    // use the cache
 }
 ```
 
@@ -286,15 +286,15 @@ initialization.
 static int *cache = NULL;
 
 PyMODINIT_FUNC PyInit__module(void) {
-  PyObject *mod = PyModule_Create(&module);
-  if (mod == NULL) {
-    return NULL;
-  }
+    PyObject *mod = PyModule_Create(&module);
+    if (mod == NULL) {
+        return NULL;
+    }
 
-  // don't need to lock or do anything special
-  cache = setup_cache();
+    // don't need to lock or do anything special
+    cache = setup_cache();
 
-  // do rest of initialization
+    // do rest of initialization
 }
 ```
 
@@ -328,16 +328,16 @@ static int *cache = NULL;
 static PyObject *global_table = NULL;
 
 int initialize_table(void) {
-  // called during module initialization
-  global_table = PyDict_New();
-  return;
+    // called during module initialization
+    global_table = PyDict_New();
+    return;
 }
 
 int function_accessing_the_cache(void) {
-  LOCK();
-  // use the cache
+    LOCK();
+    // use the cache
 
-  UNLOCK();
+    UNLOCK();
 }
 ```
 
@@ -357,20 +357,20 @@ is accessed.
 
 ```cpp
 typedef struct lib_state_struct {
-  low_level_library_state *state;
-  PyMutex lock;
+    low_level_library_state *state;
+    PyMutex lock;
 } lib_state_struct;
 
 int call_library_function(lib_state_struct *lib_state) {
-  PyMutex_Lock(lib_state->lock);
-  library_function(lib_state->state);
-  PyMutex_Unlock(lib_state->lock)
+    PyMutex_Lock(lib_state->lock);
+    library_function(lib_state->state);
+    PyMutex_Unlock(lib_state->lock)
 }
 
 int call_another_library_function(lib_state_struct *lib_state) {
-  PyMutex_Lock(lib_state->lock);
-  another_library_function(lib_state->state);
-  PyMutex_Unlock(lib_state->lock)
+    PyMutex_Lock(lib_state->lock);
+    another_library_function(lib_state->state);
+    PyMutex_Unlock(lib_state->lock)
 }
 ```
 
@@ -388,9 +388,9 @@ library. This means that non-reentrant libraries require a global lock:
 static PyMutex global_lock = {0};
 
 int call_library_function(int *argument) {
-  PyMutex_Lock(global_lock);
-  library_function(argument);
-  PyMutex_Unlock(global_lock);
+    PyMutex_Lock(global_lock);
+    library_function(argument);
+    PyMutex_Unlock(global_lock);
 }
 ```
 
@@ -414,11 +414,11 @@ Should be transformed to:
 
 ```cpp
 int do_modification(MyObject *obj) {
-  int res;
-  Py_BEGIN_CRTIICAL_SECTION(obj);
-  res = modification_on_obj(obj);
-  Py_END_CRTIICAL_SECTION(obj);
-  return res;
+    int res;
+    Py_BEGIN_CRTIICAL_SECTION(obj);
+    res = modification_on_obj(obj);
+    Py_END_CRTIICAL_SECTION(obj);
+    return res;
 }
 ```
 
