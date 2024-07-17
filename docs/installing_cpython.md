@@ -6,19 +6,16 @@ with. Building from source is not too difficult either though, and in case you
 hit a bug that may involve CPython itself then you may want to build from
 source.
 
-
 ## Binary install options
 
 There are a growing number of options to install a free-threaded interpreter,
 from the python.org installers to Linux distro and Conda package managers.
 
 !!! note
-
     For any of these options, please check after the install succeeds that you
     have a `pip` version that is recent enough (`>=24.1`), and upgrade it if
     that isn't the case. Older `pip` versions will select wheels with the
     `cp313` tag (binary-incompatible) rather than the `cp313t` tag.
-
 
 ### python.org installers
 
@@ -29,19 +26,18 @@ _Download free-threaded binaries_ checkbox under "Advanced Options".
 See also the [Using Python on Windows](https://docs.python.org/3.13/using/windows.html#installing-free-threaded-binaries)
 section of the Python 3.13 docs.
 
-
 ### Linux distros
 
 === "Fedora"
-
     Fedora ships a packaged version, which you can install with:
+
     ```
     sudo dnf install python3.13-freethreading
     ```
+
     This will install the interpreter at `/usr/bin/python3.13t`.
 
 === "Nixpkgs"
-
     Nixpkgs provides cached builds under the [`python313FreeThreading`](https://search.nixos.org/packages?channel=unstable&show=python313FreeThreading&type=packages)
     attribute from NixOS 24.05 and newer.
 
@@ -59,15 +55,14 @@ section of the Python 3.13 docs.
     ```
 
 === "Ubuntu"
-
     For Ubuntu you can use the [deadsnakes PPA](https://launchpad.net/%7Edeadsnakes/+archive/ubuntu/ppa/+packages)
     by adding it to your repositories and then installing `python3.13-nogil`:
+
     ```
     sudo add-apt-repository ppa:deadsnakes
     sudo apt-get update
     sudo apt-get install python3.13-nogil
     ```
-
 
 ### Conda
 
@@ -77,7 +72,6 @@ label in the `ad-testing` (`ad` means "anaconda distribution") channel:
 ```
 conda create -n nogil -c defaults -c ad-testing/label/py313_nogil python=3.13
 ```
-
 
 ## Building from source
 

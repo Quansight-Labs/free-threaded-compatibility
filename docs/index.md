@@ -27,8 +27,6 @@ will be. The following resources should get you started:
 - [Porting extension modules to support free-threading](porting.md)
 - [Setting up CI](ci.md)
 
-
-
 ## About this site
 
 Any contributions are very much welcome - please open issues or pull requests

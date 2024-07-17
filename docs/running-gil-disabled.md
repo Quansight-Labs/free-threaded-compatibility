@@ -1,7 +1,6 @@
 # Running with the GIL disabled
 
 !!! info
-
     Most of the content on this page is also covered in the Python 3.13
     [release notes](https://docs.python.org/3.13/whatsnew/3.13.html#free-threaded-cpython).
 

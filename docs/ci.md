@@ -11,10 +11,10 @@ jobs:
   free-threaded:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@...
-    - uses: deadsnakes/action@...
-      with:
-          python-version: '3.13.0b2'
+      - uses: actions/checkout@...
+      - uses: deadsnakes/action@...
+        with:
+          python-version: 3.13.0b2
           nogil: true
 ```
 
@@ -31,15 +31,15 @@ You will need to specify the following variables in the environment for the
 cibuildwheel action:
 
 ```yaml
-      - name: Build wheels
-        uses: pypa/cibuildwheel@...
-        env:
-          CIBW_PRERELEASE_PYTHONS: True
-          CIBW_FREE_THREADED_SUPPORT: True
-          CIBW_BUILD: cp313t-${{ matrix.buildplat }}
-          # TODO: remove along with installing build deps in
-          # cibw_before_build.sh when a released cython can build numpy
-          CIBW_BUILD_FRONTEND: "pip; args: --no-build-isolation"
+  - name: Build wheels
+    uses: pypa/cibuildwheel@...
+    env:
+      CIBW_PRERELEASE_PYTHONS: true
+      CIBW_FREE_THREADED_SUPPORT: true
+      CIBW_BUILD: cp313t-${{ matrix.buildplat }}
+      # TODO: remove along with installing build deps in
+      # cibw_before_build.sh when a released cython can build numpy
+      CIBW_BUILD_FRONTEND: 'pip; args: --no-build-isolation'
 ```
 
 As above, replace the ellipses with a `cibuildwheel` version.
