@@ -4,7 +4,7 @@ Currently the `setup-python` GitHub Action [does not
 support](https://github.com/actions/setup-python/issues/771) installing a
 free-threaded build. For now, the easiest way to get a free-threaded Python
 build on a CI runner is with the `deadsnakes` Ubuntu PPA and the
-`deadsnakes-action` GitHub Action:
+[`deadsnakes-action` GitHub Action](https://github.com/deadsnakes/action):
 
 ```yaml
 jobs:
