@@ -3,6 +3,7 @@ repos:
     rev: 2c9f875913ee60ca25ce70243dc24d5b6415598c # v4.6.0
     hooks:
       - id: check-yaml
+        args: ["--unsafe"]
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: requirements-txt-fixer
