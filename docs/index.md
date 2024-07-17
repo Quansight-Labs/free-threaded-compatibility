@@ -26,6 +26,7 @@ will be. The following resources should get you started:
 - [Running Python with the GIL disabled](running-gil-disabled.md)
 - [Porting extension modules to support free-threading](porting.md)
 - [Setting up CI](ci.md)
+- [Finding, testing and debugging concurrency issues](debugging.md)
 
 
 

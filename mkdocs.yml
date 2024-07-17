@@ -28,6 +28,7 @@ nav:
   - 'running-gil-disabled.md'
   - 'porting.md'
   - 'ci.md'
+  - 'debugging.md'
 
 plugins:
   - search
