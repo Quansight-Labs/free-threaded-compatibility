@@ -78,6 +78,20 @@ label in the `ad-testing` (`ad` means "anaconda distribution") channel:
 conda create -n nogil -c defaults -c ad-testing/label/py313_nogil python=3.13
 ```
 
+## Containers
+
+The [manylinux containers](https://github.com/pypa/manylinux) have free-threaded
+builds. You can use any of the actively supported images:
+
+* `quay.io/pypa/manylinux2014_...`
+* `quay.io/pypa/manylinux_2_28_...`
+* `quay.io/pypa/musllinux_1_1_...`
+* `quay.io/pypa/musllinux_1_2_...`
+
+Replace `...` with your desired archetecture, such as `x86_64` or `aarch64`.
+
+These images have `python3.13t` available, along with other commonly used tools
+that can target it like the latest `pip`, `pipx`, and `uv`.
 
 ## Building from source
 
