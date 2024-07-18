@@ -144,13 +144,21 @@ You will also need to declare support in your code.
 === "Cython"
 
     For Cython code, you need to set the `freethreading_compatible` directive.
-    You can do this in a source file:
+    You can do this in one of
+    [several ways](https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#how-to-set-directives),
+    e.g., in a source file:
 
-    ```c++
+    ```cython
     # cython: freethreading_compatible=True
     ```
 
-    Or any other way you can set directives in Cython.
+    Or by passing the directive when invoking the `cython` executable:
+
+    ```bash
+    $ cython -X freethreading_compatible=True
+    ```
+
+    Or via a build system specific way of passing directives to Cython.
 
 
 If you publish binaries and have downstream libraries that depend on your
