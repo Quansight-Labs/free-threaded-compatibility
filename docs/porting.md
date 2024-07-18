@@ -128,7 +128,7 @@ You will also need to declare support in your code.
     }
     ```
 
-=== Pybind11
+=== "Pybind11"
 
     For pybind11, you need to add the `py::mod_gil_not_used()` tag to a module:
 
@@ -141,7 +141,7 @@ You will also need to declare support in your code.
     }
     ```
 
-=== Cython
+=== "Cython"
 
     For Cython code, you need to set the `freethreading_compatible` directive.
     You can do this in a source file:
