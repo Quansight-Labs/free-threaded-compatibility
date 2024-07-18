@@ -88,43 +88,81 @@ build systems:
     endif
     ```
 
-C or C++ extension modules using multi-phase initialization can specify the
-[`Py_mod_gil`](https://docs.python.org/3.13/c-api/module.html#c.Py_mod_gil)
-module slot like this:
+You will also need to declare support in your code.
 
-```c
-static PyModuleDef_Slot module_slots[] = {
-    ...
-#ifdef Py_GIL_DISABLED
-    {Py_mod_gil, Py_MOD_GIL_NOT_USED},
-#endif
-    {0, NULL}
-};
-```
 
-The `Py_mod_gil` slot has no effect in the non-free-threaded build.
+=== "C API"
 
-Extensions that use single-phase initialization need to call
-[`PyUnstable_Module_SetGIL()`](https://docs.python.org/3.13/c-api/module.html#c.PyUnstable_Module_SetGIL)
-in the module's initialization function:
-
-```c
-PyMODINIT_FUNC
-PyInit__module(void)
-{
-    PyObject *mod = PyModule_Create(&module);
-    if (mod == NULL) {
-        return NULL;
+    C or C++ extension modules using multi-phase initialization can specify the
+    [`Py_mod_gil`](https://docs.python.org/3.13/c-api/module.html#c.Py_mod_gil)
+    module slot like this:
+    
+    ```c
+    static PyModuleDef_Slot module_slots[] = {
+        ...
+    #ifdef Py_GIL_DISABLED
+        {Py_mod_gil, Py_MOD_GIL_NOT_USED},
+    #endif
+        {0, NULL}
+    };
+    ```
+    
+    The `Py_mod_gil` slot has no effect in the non-free-threaded build.
+    
+    Extensions that use single-phase initialization need to call
+    [`PyUnstable_Module_SetGIL()`](https://docs.python.org/3.13/c-api/module.html#c.PyUnstable_Module_SetGIL)
+    in the module's initialization function:
+    
+    ```c
+    PyMODINIT_FUNC
+    PyInit__module(void)
+    {
+        PyObject *mod = PyModule_Create(&module);
+        if (mod == NULL) {
+            return NULL;
+        }
+    
+    #ifdef Py_GIL_DISABLED
+        PyUnstable_Module_SetGIL(mod, Py_MOD_GIL_NOT_USED);
+    #endif
     }
+    ```
 
-#ifdef Py_GIL_DISABLED
-    PyUnstable_Module_SetGIL(mod, Py_MOD_GIL_NOT_USED);
-#endif
-}
-```
+=== "Pybind11"
+
+    For pybind11, you need to add the `py::mod_gil_not_used()` tag to a module:
+
+    ```c++
+    #include <pybind11/pybind11.h>
+    namespace py = pybind11;
+
+    PYBIND11_MODULE(example, m, py::mod_gil_not_used()) {
+        ...
+    }
+    ```
+
+=== "Cython"
+
+    For Cython code, you need to set the `freethreading_compatible` directive.
+    You can do this in one of
+    [several ways](https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#how-to-set-directives),
+    e.g., in a source file:
+
+    ```cython
+    # cython: freethreading_compatible=True
+    ```
+
+    Or by passing the directive when invoking the `cython` executable:
+
+    ```bash
+    $ cython -X freethreading_compatible=True
+    ```
+
+    Or via a build system specific way of passing directives to Cython.
+
 
 If you publish binaries and have downstream libraries that depend on your
-library, we suggest adding the `Py_mod_gil` slot and uploading nightly wheels
+library, we suggest adding support as described above and uploading nightly wheels
 as soon as basic support for the free-threaded build is established in the
 development branch. This will ease the work of libraries that depend on yours
 to also add support for the free-threaded build.
