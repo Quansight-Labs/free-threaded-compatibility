@@ -14,7 +14,7 @@ jobs:
     - uses: actions/checkout@...
     - uses: deadsnakes/action@...
       with:
-          python-version: '3.13.0b2'
+          python-version: '3.13-dev'
           nogil: true
 ```
 
