@@ -19,6 +19,10 @@ from the python.org installers to Linux distro and Conda package managers.
     that isn't the case. Older `pip` versions will select wheels with the
     `cp313` tag (binary-incompatible) rather than the `cp313t` tag.
 
+??? question "As a packager, what should I name the package and interpreter?"
+
+    Please see [this guidance from the Python Steering Council](https://github.com/python/steering-council/issues/221#issuecomment-1841593283)
+
 
 ### python.org installers
 
