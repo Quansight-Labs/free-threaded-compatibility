@@ -145,11 +145,13 @@ When Python is run under `gdb`, several Python integration commands will be
 available, such commands start with the `py-` prefix. For instance, the `py-bt`
 allows to obtain a Python interpreter backtrace whenever the debugger hits a native
 frame, this allows to improve the tracking of execution between Python and native
-frames.
+frames[^1].
 
 For more information about `gdb` and `lldb` commands, we encourage reading
 the [GDB to LLDB command map](https://lldb.llvm.org/use/map.html) page in the
 official LLVM docs.
+
+[^1]: This feature is not correctly working on `lldb` after CPython 3.12.
 
 ### Cython debugging
 Since Cython produces intermediate C/C++ sources that then are compiled into native
