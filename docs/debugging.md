@@ -1,15 +1,14 @@
 # Uncovering concurrency issues, testing and debugging
-Until now, the GIL has allowed developers to elide and get away from
-concurrency issues when writing parallel programs, since the GIL ensured that
-all thread execution got serialized when any of them tried to simultaneously
-write or read a variable defined in the interpreter. Under the new free-threaded
-paradigm, developers now must think about concurrency, distribution and
-parallelism constructs that will allow them to exploit the maximum performance
-of their parallel programs.
+Until now, the GIL has allowed developers to ignore C
+safety issues when writing parallel programs, since the GIL ensured that
+all thread execution was serialized simultaneous access
+to Python objects and state defined in the interpreter. 
+Under the new free-threaded
+safe access to data from multiple C threads. This is particularly important in C extensions that assumed the GIL serialized access to static state in C programs.
 
 Usually, concurrency issues arise when two or more threads try to modify the
 same value in memory. In Python, this commonly occurs when a class or function
-defines shared state, either via an attribute or a variable that can modified
+defines shared state, either via an attribute or a variable that can be modified
 from each thread execution scope.
 
 The most common issues related to concurrency in the context of free-threaded
@@ -140,7 +139,7 @@ If your code has native dependencies, either via C/C++ or Cython, `gdb`
 PYTHON_GIL=0 gdb --args python my_program.py --args ...
 
 # To test under pytest
-PYTHON_GIL=0 gdb --args python -m pytest -x -v test_here.py::TestClass::test_method[arg]
+PYTHON_GIL=0 gdb --args python -m pytest -x -v "test_here.py::TestClass::test_method"
 ```
 
 When Python is run under `gdb`, several Python integration commands will be
