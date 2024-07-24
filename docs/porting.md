@@ -153,6 +153,28 @@ after importing a module that does not support the GIL.
         endif
         ```
 
+=== "f2py"
+
+    Starting with NumPy 2.1.0 (only available via the nightly wheels or the
+    `main` branch as of right now), Fortran extension modules wrapped using
+    f2py can declare they are thread safe and support free-threading using the
+    [`--freethreading-compatible`](https://numpy.org/devdocs/f2py/usage.html#extension-module-construction)
+    command-line argument:
+
+    ```bash
+    $ python -m numpy.f2py -c code.f -m my_module --freethreading-compatible
+    ```
+
+    If you know the extension is *not* thread safe, then you can force the
+    extension to require the GIL with `--no-freethreading-compatible.
+
+    If you know the fortran code is thread-safe, consider also creating a
+    [signature file](https://numpy.org/devdocs/f2py/signature-file.html) if you
+    have not already done so, and mark the wrapped signatures as
+    `threadsafe`. Note that this currently does not work with wrapped fortran
+    code that uses callbacks because the callback implementation in f2py makes
+    use of the CPython C API.
+
 
 If you publish binaries and have downstream libraries that depend on your
 library, we suggest adding support as described above and uploading nightly wheels
