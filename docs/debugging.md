@@ -185,8 +185,7 @@ to several lines in the produced C code.
 ### Detecting issues in CPython
 If a debugging session suggests that an error/bug is incoming from CPython,
 we recommend installing a debug instance. The easiest way to accomplish this
-
-accomplish this is via `pyenv`:
+is via `pyenv`:
 
 ```bash
 pyenv install --debug --keep 3.13t-dev
