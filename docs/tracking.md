@@ -32,7 +32,7 @@ hence this page does not aim to track pure Python packages.
 | meson-python   | :material-check-bold: |   :material-check-bold:   | 0.16.0   |    |    |
 | NumPy        | :material-check-bold: |              | 2.1.0                      | :simple-linux: :simple-apple:                              | [:simple-anaconda:](https://anaconda.org/scientific-python-nightly-wheels/numpy/)        |
 | packaging   | :material-check-bold: | :material-check-bold:   | 24.0   |   |   |
-| pandas       | :material-check-bold: |   | 3.0.0    |    |    |
+| pandas       | :material-check-bold: |   | 3.0.0    | :simple-linux: :simple-apple: |    |
 | Pillow       | :material-check-bold: |   | 11.0.0   | :simple-linux: :simple-apple: :material-microsoft-windows: | [:simple-anaconda:](https://anaconda.org/scientific-python-nightly-wheels/pillow/)       |
 | pip   | :material-check-bold: | :material-check-bold:   | 24.1   |    |    |
 | pybind11   | :material-check-bold: | :material-check-bold:   | 2.13   |    |    |
