@@ -168,13 +168,6 @@ after importing a module that does not support the GIL.
     If you know the extension is *not* thread safe, then you can force the
     extension to require the GIL with `--no-freethreading-compatible.
 
-    If you know the fortran code is thread-safe, consider also creating a
-    [signature file](https://numpy.org/devdocs/f2py/signature-file.html) if you
-    have not already done so, and mark the wrapped signatures as
-    `threadsafe`. Note that this currently does not work with wrapped fortran
-    code that uses callbacks because the callback implementation in f2py makes
-    use of the CPython C API.
-
 
 If you publish binaries and have downstream libraries that depend on your
 library, we suggest adding support as described above and uploading nightly wheels
