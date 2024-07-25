@@ -26,6 +26,7 @@ hence this page does not aim to track pure Python packages.
 |:--------------|:----------------:|:---------------:|:-----------------------------:|:-----------------:|:---------------:|
 | cibuildwheel   | :material-check-bold: |   :material-check-bold:   | 2.19   |    |    |
 | CMake    |    | :material-check-bold:    | 3.30.0 [^cmake]   |    |    |
+| ContourPy | :material-check-bold: |  | 1.3.0 | :simple-linux: :simple-apple: | [:simple-anaconda:](https://anaconda.org/scientific-python-nightly-wheels/contourpy/) |
 | Cython       | :material-check-bold: |              | 3.1.0                      | :simple-linux: :simple-apple: :material-microsoft-windows: | [:simple-anaconda:](https://anaconda.org/scientific-python-nightly-wheels/cython/)       |
 | joblib       | :material-check-bold: | :material-check-bold:  | 1.4.2   |    |    |
 | Meson   |  | :material-check-bold:   | 1.5.0   |    |    |
