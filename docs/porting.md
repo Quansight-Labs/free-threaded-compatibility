@@ -147,6 +147,14 @@ after importing a module that does not support the GIL.
             endif
             ```
 
+    In CI, you will need to ensure a nightly cython is installed for
+    free-threaded builds and disable build isolation by passing
+    `--no-build-isolation` to `pip` at build time. If you
+    use `cibuildwheel` to produce wheels, you can conditionally set
+    `CIBW_BUILD_FRONTEND` to `pip; args: --no-build-isolation` for free-threaded
+    builds.
+
+
 === "f2py"
     Starting with NumPy 2.1.0 (only available via the nightly wheels or the
     `main` branch as of right now), extension modules containing f2py-wrapped
