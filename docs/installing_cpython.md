@@ -34,7 +34,7 @@ section of the Python 3.13 docs.
 === "Fedora"
     Fedora ships a packaged version, which you can install with:
 
-    ```
+    ```bash
     sudo dnf install python3.13-freethreading
     ```
 
@@ -46,13 +46,13 @@ section of the Python 3.13 docs.
 
     With `flakes` enabled the following command will drop you in an ephemeral shell:
 
-    ```
+    ```bash
     nix shell nixpkgs#python313FreeThreading
     ```
 
     Without `flakes`, make sure to update your nixpkgs channel first:
 
-    ```
+    ```bash
     sudo nix-channel --update
     nix-shell -p python313FreeThreading
     ```
@@ -61,7 +61,7 @@ section of the Python 3.13 docs.
     For Ubuntu you can use the [deadsnakes PPA](https://launchpad.net/%7Edeadsnakes/+archive/ubuntu/ppa/+packages)
     by adding it to your repositories and then installing `python3.13-nogil`:
 
-    ```
+    ```bash
     sudo add-apt-repository ppa:deadsnakes
     sudo apt-get update
     sudo apt-get install python3.13-nogil
@@ -72,7 +72,7 @@ section of the Python 3.13 docs.
 Conda packages are currently available for macOS arm64 and Linux x86-64 under a
 label in the `ad-testing` (`ad` means "anaconda distribution") channel:
 
-```
+```bash
 conda create -n nogil -c defaults -c ad-testing/label/py313_nogil python=3.13
 ```
 

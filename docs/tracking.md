@@ -13,7 +13,7 @@ hence this page does not aim to track pure Python packages.
     like `cython` or `numpy`, even if a first release is available on PyPI.
     For example, you can install a NumPy nightly wheel by running:
 
-    ```
+    ```bash
     pip install -i https://pypi.anaconda.org/scientific-python-nightly-wheels/simple numpy
     ```
 

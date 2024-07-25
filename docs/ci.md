@@ -52,7 +52,7 @@ disable `pip`'s build isolation if your project does not depend on Cython.
 You can install nightly wheels for Cython and NumPy using the following
 install command:
 
-```
+```bash
 pip install -i https://pypi.anaconda.org/scientific-python-nightly-wheels/simple cython numpy
 ```
 
