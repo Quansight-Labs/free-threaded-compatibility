@@ -176,7 +176,7 @@ to also add support for the free-threaded build.
 ## Suggested Plan of Attack
 
 Put priority on thread-safety issues surfaced by real-world testing. Run the
-test suite for your project and fix any failures that occure only with the GIL
+test suite for your project and fix any failures that occur only with the GIL
 disabled. Some issues may be due to changes in Python 3.13 that are not
 specific to the free-threaded build.
 
