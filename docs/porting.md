@@ -477,7 +477,8 @@ about `Py_BEGIN_CRITICAL_SECTION`, please see the
 
 If your extension is written in Cython, you can generally assume that
 "Python-level" code that compiles to CPython C API operations on Python objects
-is thread safe, but "C-level" code (e.g. code that will compile inside a `with nogil` block) may have thread-safety issues. Note that not all code outside
+is thread safe, but "C-level" code (e.g. code that will compile inside a
+`with nogil` block) may have thread-safety issues. Note that not all code outside
 `with nogil` blocks is thread safe. For example, a Python wrapper for a
 thread-unsafe C library is thread-unsafe if the GIL is disabled unless there is
 locking around uses of the thread-unsafe library. Another example: using
@@ -557,6 +558,7 @@ build.
 
 The free-threaded build does not support the limited CPython C API. If you
 currently use the limited API you will not be able to use it while shipping
-binaries for the free-threaded build. This also means that code inside `#ifdef Py_GIL_DISABLED` checks can use C API constructs outside the limited API if you
+binaries for the free-threaded build. This also means that code inside
+`#ifdef Py_GIL_DISABLED` checks can use C API constructs outside the limited API if you
 would like to do that, although these uses will need to be removed once the
 free-threaded build gains support for compiling with the limited API.
