@@ -4,7 +4,7 @@ Currently the `setup-python` GitHub Action [does not
 support](https://github.com/actions/setup-python/issues/771) installing a
 free-threaded build. For now, the easiest way to get a free-threaded Python
 build on a CI runner is with the `deadsnakes` Ubuntu PPA and the
-[`deadsnakes-action` GitHub Action](https://github.com/deadsnakes/action):
+`deadsnakes-action` GitHub Action:
 
 ```yaml
 jobs:
@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@...
       - uses: deadsnakes/action@...
         with:
-          python-version: 3.13.0b2
+          python-version: 3.13-dev
           nogil: true
 ```
 
@@ -37,8 +37,8 @@ cibuildwheel action:
       CIBW_PRERELEASE_PYTHONS: true
       CIBW_FREE_THREADED_SUPPORT: true
       CIBW_BUILD: cp313t-${{ matrix.buildplat }}
-      # TODO: remove along with installing build deps in
-      # cibw_before_build.sh when a released cython can build numpy
+          # TODO: remove along with installing build deps in
+          # cibw_before_build.sh when a released cython can build numpy
       CIBW_BUILD_FRONTEND: 'pip; args: --no-build-isolation'
 ```
 

@@ -17,6 +17,9 @@ from the python.org installers to Linux distro and Conda package managers.
     that isn't the case. Older `pip` versions will select wheels with the
     `cp313` tag (binary-incompatible) rather than the `cp313t` tag.
 
+??? question "As a packager, what should I name the package and interpreter?"
+    Please see [this guidance from the Python Steering Council](https://github.com/python/steering-council/issues/221#issuecomment-1841593283)
+
 ### python.org installers
 
 The [python.org downloads page](https://www.python.org/download/pre-releases/)
@@ -72,6 +75,21 @@ label in the `ad-testing` (`ad` means "anaconda distribution") channel:
 ```
 conda create -n nogil -c defaults -c ad-testing/label/py313_nogil python=3.13
 ```
+
+## Containers
+
+The [manylinux containers](https://github.com/pypa/manylinux) have free-threaded
+builds. You can use any of the actively supported images:
+
+- `quay.io/pypa/manylinux2014_...`
+- `quay.io/pypa/manylinux_2_28_...`
+- `quay.io/pypa/musllinux_1_1_...`
+- `quay.io/pypa/musllinux_1_2_...`
+
+Replace `...` with your desired architecture, such as `x86_64` or `aarch64`.
+
+These images have `python3.13t` available, along with other commonly used tools
+that can target it like the latest `pip`, `pipx`, and `uv`.
 
 ## Building from source
 

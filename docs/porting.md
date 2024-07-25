@@ -22,103 +22,145 @@ Extension modules need to explicitly indicate they support running with the GIL
 disabled, otherwise a warning is printed and the GIL is re-enabled at runtime
 after importing a module that does not support the GIL.
 
-C++ extension modules making use of `pybind11` can easily declare support for
-running with the GIL disabled via the
-[`gil_not_used`](https://pybind11.readthedocs.io/en/stable/reference.html#_CPPv4N7module_23create_extension_moduleEPKcPKcP10module_def16mod_gil_not_used)
-argument to `create_extension_module`.
+=== "C API"
+    C or C++ extension modules using multi-phase initialization can specify the
+    [`Py_mod_gil`](https://docs.python.org/3.13/c-api/module.html#c.Py_mod_gil)
+    module slot like this:
 
-Starting with Cython 3.1.0 (only available via the nightly wheels or the `master`
-branch as of right now), extension modules written in Cython can also do so using the
-[`freethreading_compatible`](https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#compiler-directives)
-compiler directive. It can be enabled either per module as a directive
-(`# cython: freethreading_compatible=True`) in `.pyx` files, or globally by adding
-`-Xfreethreading_compatible=True` to the Cython arguments via the project's
-build system.
-
-Here are a few examples of how to globally enable the directive in a few popular
-build systems:
-
-=== "setuptools"
-    When using setuptools, you can pass the `compiler_directives` keyword argument
-    to `cythonize`:
-
-    ```python
-    from Cython.Compiler.Version import version as cython_version
-    from packaging.version import Version
-
-    compiler_directives = {}
-    if Version(cython_version) >= Version("3.1.0a1"):
-        compiler_directives["freethreading_compatible"] = True
-
-    setup(
-        ext_modules=cythonize(
-            extensions,
-            compiler_directives=compiler_directives,
-        )
-    )
-    ```
-
-=== "Meson"
-    When using Meson, you can add the directive to the `cython_args` you're
-    passing to `py.extension_module`:
-
-    ```meson
-    cy = meson.get_compiler('cython')
-
-    cython_args = []
-    if cy.version().version_compare('>=3.1.0')
-        cython_args += ['-Xfreethreading_compatible=True']
-    endif
-
-    py.extension_module('modulename'
-        'source.pyx',
-        cython_args: cython_args,
+    ```c
+    static PyModuleDef_Slot module_slots[] = {
         ...
-    )
+    #ifdef Py_GIL_DISABLED
+        {Py_mod_gil, Py_MOD_GIL_NOT_USED},
+    #endif
+        {0, NULL}
+    };
     ```
 
-    You can also globally add the directive for all Cython extension modules:
+    The `Py_mod_gil` slot has no effect in the non-free-threaded build.
 
-    ```meson
-    cy = meson.get_compiler('cython')
-    if cy.version().version_compare('>=3.1.0')
-        add_project_arguments('-Xfreethreading_compatible=true', language : 'cython')
-    endif
-    ```
+    Extensions that use single-phase initialization need to call
+    [`PyUnstable_Module_SetGIL()`](https://docs.python.org/3.13/c-api/module.html#c.PyUnstable_Module_SetGIL)
+    in the module's initialization function:
 
-C or C++ extension modules using multi-phase initialization can specify the
-[`Py_mod_gil`](https://docs.python.org/3.13/c-api/module.html#c.Py_mod_gil)
-module slot like this:
+    ```c
+    PyMODINIT_FUNC
+    PyInit__module(void)
+    {
+        PyObject *mod = PyModule_Create(&module);
+        if (mod == NULL) {
+            return NULL;
+        }
 
-```cpp
-static PyModuleDef_Slot module_slots[] = {...
-#ifdef Py_GIL_DISABLED
-                                          {Py_mod_gil, Py_MOD_GIL_NOT_USED},
-#endif
-                                          {0, NULL}};
-```
-
-The `Py_mod_gil` slot has no effect in the non-free-threaded build.
-
-Extensions that use single-phase initialization need to call
-[`PyUnstable_Module_SetGIL()`](https://docs.python.org/3.13/c-api/module.html#c.PyUnstable_Module_SetGIL)
-in the module's initialization function:
-
-```cpp
-PyMODINIT_FUNC PyInit__module(void) {
-    PyObject *mod = PyModule_Create(&module);
-    if (mod == NULL) {
-        return NULL;
+    #ifdef Py_GIL_DISABLED
+        PyUnstable_Module_SetGIL(mod, Py_MOD_GIL_NOT_USED);
+    #endif
     }
+    ```
 
-#ifdef Py_GIL_DISABLED
-    PyUnstable_Module_SetGIL(mod, Py_MOD_GIL_NOT_USED);
-#endif
-}
-```
+=== "Pybind11"
+    C++ extension modules making use of `pybind11` can easily declare support for
+    running with the GIL disabled via the
+    [`gil_not_used`](https://pybind11.readthedocs.io/en/stable/reference.html#_CPPv4N7module_23create_extension_moduleEPKcPKcP10module_def16mod_gil_not_used)
+    argument to `create_extension_module`. Example:
+
+    ```cpp
+    #include <pybind11/pybind11.h>
+    namespace py = pybind11;
+
+    PYBIND11_MODULE(example, m, py::mod_gil_not_used()) {
+        ...
+    }
+    ```
+
+=== "Cython"
+    Starting with Cython 3.1.0 (only available via the nightly wheels or the `master`
+    branch as of right now), extension modules written in Cython can do so using the
+    [`freethreading_compatible`](https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#compiler-directives)
+    compiler directive.
+
+    You can do this in one of
+    [several ways](https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#how-to-set-directives),
+    e.g., in a source file:
+
+    ```cython
+    # cython: freethreading_compatible=True
+    ```
+
+    Or by passing the directive when invoking the `cython` executable:
+
+    ```bash
+    $ cython -X freethreading_compatible=True
+    ```
+
+    Or via a build system specific way of passing directives to Cython.
+
+    !!! tip
+        Here are a few examples of how to globally enable the directive in a few popular
+        build systems:
+
+        === "setuptools"
+            When using setuptools, you can pass the `compiler_directives` keyword argument
+            to `cythonize`:
+
+            ```python
+            from Cython.Compiler.Version import version as cython_version
+            from packaging.version import Version
+
+            compiler_directives = {}
+            if Version(cython_version) >= Version("3.1.0a1"):
+                compiler_directives["freethreading_compatible"] = True
+
+            setup(
+                ext_modules=cythonize(
+                    extensions,
+                    compiler_directives=compiler_directives,
+                )
+            )
+            ```
+
+        === "Meson"
+            When using Meson, you can add the directive to the `cython_args` you're
+            passing to `py.extension_module`:
+
+            ```meson
+            cy = meson.get_compiler('cython')
+
+            cython_args = []
+            if cy.version().version_compare('>=3.1.0')
+                cython_args += ['-Xfreethreading_compatible=True']
+            endif
+
+            py.extension_module('modulename'
+                'source.pyx',
+                cython_args: cython_args,
+                ...
+            )
+            ```
+
+            You can also globally add the directive for all Cython extension modules:
+
+            ```meson
+            cy = meson.get_compiler('cython')
+            if cy.version().version_compare('>=3.1.0')
+                add_project_arguments('-Xfreethreading_compatible=true', language : 'cython')
+            endif
+            ```
+
+=== "f2py"
+    Starting with NumPy 2.1.0 (only available via the nightly wheels or the
+    `main` branch as of right now), extension modules containing f2py-wrapped
+    Fortran code can declare they are thread safe and support free-threading
+    using the
+    [`--freethreading-compatible`](https://numpy.org/devdocs/f2py/usage.html#extension-module-construction)
+    command-line argument:
+
+    ```bash
+    $ python -m numpy.f2py -c code.f -m my_module --freethreading-compatible
+    ```
 
 If you publish binaries and have downstream libraries that depend on your
-library, we suggest adding the `Py_mod_gil` slot and uploading nightly wheels
+library, we suggest adding support as described above and uploading nightly wheels
 as soon as basic support for the free-threaded build is established in the
 development branch. This will ease the work of libraries that depend on yours
 to also add support for the free-threaded build.
@@ -159,7 +201,7 @@ build. You can use it to enable low-level code that only runs under the
 free-threaded build, isolating possibly performance-impacting changes to the
 free-threaded build:
 
-```cpp
+```c
 #ifdef Py_GIL_DISABLED
 // free-threaded specific code goes here
 #endif
@@ -260,7 +302,7 @@ simultaneously tries to fill the cache.
 If the cache is not critical for performance, consider simply disabling the
 cache in the free-threaded build:
 
-```cpp
+```c
 static int *cache = NULL;
 
 int my_function_with_a_cache(void) {
@@ -282,10 +324,12 @@ can assume that module initialization is guaranteed to only happen on one
 thread, so you can initialize static globals safely during module
 initialization.
 
-```cpp
+```c
 static int *cache = NULL;
 
-PyMODINIT_FUNC PyInit__module(void) {
+PyMODINIT_FUNC
+PyInit__module(void)
+{
     PyObject *mod = PyModule_Create(&module);
     if (mod == NULL) {
         return NULL;
@@ -313,7 +357,7 @@ operations and a global mutex.
 If the cache is in the form of a data container, then you can lock access to
 the container, like in the following example:
 
-```cpp
+```c
 
 #ifdef Py_GIL_DISABLED
 static PyMutex cache_lock = {0};
@@ -339,6 +383,7 @@ int function_accessing_the_cache(void) {
 
     UNLOCK();
 }
+
 ```
 
 ### Dealing with thread-unsafe libraries
@@ -355,7 +400,7 @@ threads, functions in the library can be safely executed simultaneously.
 Wrapping reentrant libraries requires adding locking whenever the state struct
 is accessed.
 
-```cpp
+```c
 typedef struct lib_state_struct {
     low_level_library_state *state;
     PyMutex lock;
@@ -383,7 +428,7 @@ call library functions simultaneously without causing undefined
 behavior. Generally this is due to use of global static state in the
 library. This means that non-reentrant libraries require a global lock:
 
-```cpp
+```c
 
 static PyMutex global_lock = {0};
 
@@ -406,13 +451,15 @@ per-object locks.
 
 For example the following code:
 
-```cpp
-int do_modification(MyObject *obj) { return modification_on_obj(obj); }
+```C
+int do_modification(MyObject *obj) {
+    return modification_on_obj(obj);
+}
 ```
 
 Should be transformed to:
 
-```cpp
+```C
 int do_modification(MyObject *obj) {
     int res;
     Py_BEGIN_CRTIICAL_SECTION(obj);
@@ -470,7 +517,7 @@ it's possible for another thread to delete the item from the container, leading
 to the item being de-allocated while the borrowed reference is still
 "alive". Even code like this:
 
-```cpp
+```C
 PyObject *item = Py_NewRef(PyList_GetItem(list_object, 0))
 ```
 
@@ -510,7 +557,6 @@ build.
 
 The free-threaded build does not support the limited CPython C API. If you
 currently use the limited API you will not be able to use it while shipping
-binaries for the free-threaded build. This also means that code inside
-`#ifdef Py_GIL_DISABLED` checks can use C API constructs outside the limited API if you
+binaries for the free-threaded build. This also means that code inside `#ifdef Py_GIL_DISABLED` checks can use C API constructs outside the limited API if you
 would like to do that, although these uses will need to be removed once the
 free-threaded build gains support for compiling with the limited API.
