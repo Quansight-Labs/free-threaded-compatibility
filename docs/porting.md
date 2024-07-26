@@ -155,7 +155,6 @@ after importing a module that does not support the GIL.
     builds. If your project normally uses `pip` to build wheels, the variable
     should be set to `pip; args --no-build-isolation`.
 
-
 === "f2py"
     Starting with NumPy 2.1.0 (only available via the nightly wheels or the
     `main` branch as of right now), extension modules containing f2py-wrapped

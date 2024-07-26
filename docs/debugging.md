@@ -202,8 +202,6 @@ by `gdb`/`lldb` at the moment of debugging. For more information regarding
 CPython installation sources, please visit the
 [Installing a free-threaded Python](installing_cpython.md) page.
 
-[^1]: This feature is not correctly working on `lldb` after CPython 3.12.
-
 ## Frequently seen errors and how to fix them
 
 These are error messages that we see come up often when working with code or
@@ -300,3 +298,5 @@ updating the assumed C standard is not a big problem as of mid-2024. There are
 some C11 features that MSVC and other compilers are missing, so please open an
 issue if this ends up being a big problem for your project or a subset of your
 userbase.
+
+[^1]: This feature is not correctly working on `lldb` after CPython 3.12.
