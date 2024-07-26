@@ -151,8 +151,9 @@ after importing a module that does not support the GIL.
     free-threaded builds and disable build isolation by passing
     `--no-build-isolation` to `pip` at build time. If you
     use `cibuildwheel` to produce wheels, you can conditionally set
-    `CIBW_BUILD_FRONTEND` to `pip; args: --no-build-isolation` for free-threaded
-    builds.
+    `CIBW_BUILD_FRONTEND` to `build; args: --no-build-isolation` for free-threaded
+    builds. If your project normally uses `pip` to build wheels, the variable
+    should be set to `pip; args --no-build-isolation`.
 
 
 === "f2py"
