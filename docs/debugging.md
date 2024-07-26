@@ -270,7 +270,7 @@ static_assert(COLD_EXIT_INITIAL_VALUE > ADAPTIVE_COOLDOWN_VALUE,
   int
 ```
 
-Free-threading support on Cython relies CPython internals. In particular, Cython
+Free-threading support in Cython relies CPython internals. In particular, Cython
 will generate code that in some situations includes an internal CPython header,
 `pycore_frame.h`. This header, in turn, includes another header `pycore_code.h`
 that makes use of `static_assert`, a construct defined in the C11 standard. This
