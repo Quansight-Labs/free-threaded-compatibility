@@ -1,0 +1,22 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: 2c9f875913ee60ca25ce70243dc24d5b6415598c # v4.6.0
+    hooks:
+      - id: check-yaml
+        args: ["--unsafe"]
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: requirements-txt-fixer
+
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 6c1288142f351100fb24babd44aedd20e1599e99 # 0.7.17
+    hooks:
+      - id: mdformat
+        additional_dependencies:
+          - mdformat-mkdocs
+          - mdformat-tables
+          - mdformat-footnote
+          - mdformat-frontmatter
+          - mdformat-black
+          - mdformat-beautysh
+          - mdformat-config

@@ -1,4 +1,5 @@
 # Uncovering concurrency issues, testing and debugging
+
 Until now, the GIL has allowed developers to ignore C
 safety issues when writing parallel programs, since the GIL ensured that
 all thread execution was serialized, allowing for simultaneous access
@@ -27,10 +28,12 @@ In order to discover, handle and debug concurrency issues at large, there are
 several strategies, which we will summarize next.
 
 ## Ensure that an extension module is free-threaded compliant
+
 We highly suggest reading the detailed guide presented on
 [Porting Extension Modules to Support Free-Threading](porting.md)
 
 ## Testing scenarios
+
 In order to check that a function or class has no concurrency issues, it is
 necessary to define test functions that cover such cases. For such scenarios, the
 standard `threading` library defines several low-level parallel primitives that
@@ -47,8 +50,10 @@ it using first low-level primitives:
 
 # Low level parallel primitives
 import threading
+
 # High level parallel constructs
 from concurrent.futures import ThreadPoolExecutor
+
 # Library to test
 from mylib import MyClass
 
@@ -63,6 +68,7 @@ def test_call_unsafe_concurrent_threading():
     cls_instance = MyClass(...)
 
     results = []
+
     def closure():
         # Ensure that all threads reach this point before concurrent execution.
         barrier.wait()
@@ -72,8 +78,7 @@ def test_call_unsafe_concurrent_threading():
     # Spawn n threads that call call_unsafe concurrently.
     workers = []
     for _ in range(0, n_threads):
-        workers.append(threading.Thread(
-            target=closure))
+        workers.append(threading.Thread(target=closure))
 
     for worker in workers:
         worker.start()
@@ -122,8 +127,8 @@ PYTHON_GIL=0 pytest -x -v --count=100 test_concurrent.py
 We advise to set `count` in the order of hundreds and even larger, in order to
 ensure at least one concurrent clash event.
 
-
 ## Debugging tests that depend on native calls
+
 If your code has native dependencies, either via C/C++ or Cython, `gdb`
 (or `lldb`) can be used as follows:
 
@@ -151,9 +156,8 @@ For more information about `gdb` and `lldb` commands, we encourage reading
 the [GDB to LLDB command map](https://lldb.llvm.org/use/map.html) page in the
 official LLVM docs.
 
-[^1]: This feature is not correctly working on `lldb` after CPython 3.12.
-
 ### Cython debugging
+
 Since Cython produces intermediate C/C++ sources that then are compiled into native
 code, stepping through may get difficult if done solely from the C source file.
 In order to get through such difficulty, Cython includes the `cygdb` extension,
@@ -183,6 +187,7 @@ Cython definition name, `cy next` will step over a Cython line, which is equival
 to several lines in the produced C code.
 
 ### Detecting issues in CPython
+
 If a debugging session suggests that an error/bug is incoming from CPython,
 we recommend installing a debug instance. The easiest way to accomplish this
 is via `pyenv`:
@@ -196,3 +201,5 @@ will ensure that the source files are kept as well, such files will be loaded
 by `gdb`/`lldb` at the moment of debugging. For more information regarding
 CPython installation sources, please visit the
 [Installing a free-threaded Python](installing_cpython.md) page.
+
+[^1]: This feature is not correctly working on `lldb` after CPython 3.12.

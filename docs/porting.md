@@ -23,7 +23,6 @@ disabled, otherwise a warning is printed and the GIL is re-enabled at runtime
 after importing a module that does not support the GIL.
 
 === "C API"
-
     C or C++ extension modules using multi-phase initialization can specify the
     [`Py_mod_gil`](https://docs.python.org/3.13/c-api/module.html#c.Py_mod_gil)
     module slot like this:
@@ -60,14 +59,12 @@ after importing a module that does not support the GIL.
     ```
 
 === "Pybind11"
-
     C++ extension modules making use of `pybind11` can easily declare support for
     running with the GIL disabled via the
     [`gil_not_used`](https://pybind11.readthedocs.io/en/stable/reference.html#_CPPv4N7module_23create_extension_moduleEPKcPKcP10module_def16mod_gil_not_used)
     argument to `create_extension_module`. Example:
 
-
-    ```c++
+    ```cpp
     #include <pybind11/pybind11.h>
     namespace py = pybind11;
 
@@ -77,7 +74,6 @@ after importing a module that does not support the GIL.
     ```
 
 === "Cython"
-
     Starting with Cython 3.1.0 (only available via the nightly wheels or the `master`
     branch as of right now), extension modules written in Cython can do so using the
     [`freethreading_compatible`](https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#compiler-directives)
@@ -99,62 +95,59 @@ after importing a module that does not support the GIL.
 
     Or via a build system specific way of passing directives to Cython.
 
+    !!! tip
+        Here are a few examples of how to globally enable the directive in a few popular
+        build systems:
 
-    Here are a few examples of how to globally enable the directive in a few popular
-    build systems:
+        === "setuptools"
+            When using setuptools, you can pass the `compiler_directives` keyword argument
+            to `cythonize`:
 
-    === "setuptools"
+            ```python
+            from Cython.Compiler.Version import version as cython_version
+            from packaging.version import Version
 
-        When using setuptools, you can pass the `compiler_directives` keyword argument
-        to `cythonize`:
+            compiler_directives = {}
+            if Version(cython_version) >= Version("3.1.0a1"):
+                compiler_directives["freethreading_compatible"] = True
 
-        ```python
-        from Cython.Compiler.Version import version as cython_version
-        from packaging.version import Version
-
-        compiler_directives = {}
-        if Version(cython_version) >= Version("3.1.0a1"):
-            compiler_directives["freethreading_compatible"] = True
-
-        setup(
-            ext_modules=cythonize(
-                extensions,
-                compiler_directives=compiler_directives,
+            setup(
+                ext_modules=cythonize(
+                    extensions,
+                    compiler_directives=compiler_directives,
+                )
             )
-        )
-        ```
+            ```
 
-    === "Meson"
+        === "Meson"
+            When using Meson, you can add the directive to the `cython_args` you're
+            passing to `py.extension_module`:
 
-        When using Meson, you can add the directive to the `cython_args` you're
-        passing to `py.extension_module`:
+            ```meson
+            cy = meson.get_compiler('cython')
 
-        ```meson
-        cy = meson.get_compiler('cython')
+            cython_args = []
+            if cy.version().version_compare('>=3.1.0')
+                cython_args += ['-Xfreethreading_compatible=True']
+            endif
 
-        cython_args = []
-        if cy.version().version_compare('>=3.1.0')
-            cython_args += ['-Xfreethreading_compatible=True']
-        endif
+            py.extension_module('modulename'
+                'source.pyx',
+                cython_args: cython_args,
+                ...
+            )
+            ```
 
-        py.extension_module('modulename'
-            'source.pyx',
-            cython_args: cython_args,
-            ...
-        )
-        ```
+            You can also globally add the directive for all Cython extension modules:
 
-        You can also globally add the directive for all Cython extension modules:
-
-        ```meson
-        cy = meson.get_compiler('cython')
-        if cy.version().version_compare('>=3.1.0')
-            add_project_arguments('-Xfreethreading_compatible=true', language : 'cython')
-        endif
-        ```
+            ```meson
+            cy = meson.get_compiler('cython')
+            if cy.version().version_compare('>=3.1.0')
+                add_project_arguments('-Xfreethreading_compatible=true', language : 'cython')
+            endif
+            ```
 
 === "f2py"
-
     Starting with NumPy 2.1.0 (only available via the nightly wheels or the
     `main` branch as of right now), extension modules containing f2py-wrapped
     Fortran code can declare they are thread safe and support free-threading
@@ -171,7 +164,6 @@ library, we suggest adding support as described above and uploading nightly whee
 as soon as basic support for the free-threaded build is established in the
 development branch. This will ease the work of libraries that depend on yours
 to also add support for the free-threaded build.
-
 
 ## Suggested Plan of Attack
 
@@ -278,8 +270,7 @@ global state to thread local state.
 Python and Cython code can make use of
 [`threading.local`](https://docs.python.org/3/library/threading.html#thread-local-data)
 to declare a thread-local Python object. C and C++ code can also use the
-[`Py_tss
-API`](https://docs.python.org/3/c-api/init.html#thread-specific-storage-tss-api)
+[`Py_tss API`](https://docs.python.org/3/c-api/init.html#thread-specific-storage-tss-api)
 to store thread-local Python object references. [PEP
 539](https://peps.python.org/pep-0539) has more details about the `Py_tss` API.
 
@@ -459,6 +450,7 @@ exposes a public C API that allows users to use the built-in
 per-object locks.
 
 For example the following code:
+
 ```C
 int do_modification(MyObject *obj) {
     return modification_on_obj(obj);
@@ -466,6 +458,7 @@ int do_modification(MyObject *obj) {
 ```
 
 Should be transformed to:
+
 ```C
 int do_modification(MyObject *obj) {
     int res;
@@ -480,13 +473,12 @@ A variant for locking two objects at once is also available. For more informatio
 about `Py_BEGIN_CRITICAL_SECTION`, please see the
 [Python C API documentation on critical sections](https://docs.python.org/3.13/c-api/init.html#python-critical-section-api).
 
-
 ## Cython thread-safety
 
 If your extension is written in Cython, you can generally assume that
 "Python-level" code that compiles to CPython C API operations on Python objects
-is thread safe, but "C-level" code (e.g. code that will compile inside a `with
-nogil` block) may have thread-safety issues. Note that not all code outside
+is thread safe, but "C-level" code (e.g. code that will compile inside a
+`with nogil` block) may have thread-safety issues. Note that not all code outside
 `with nogil` blocks is thread safe. For example, a Python wrapper for a
 thread-unsafe C library is thread-unsafe if the GIL is disabled unless there is
 locking around uses of the thread-unsafe library. Another example: using
@@ -566,7 +558,7 @@ build.
 
 The free-threaded build does not support the limited CPython C API. If you
 currently use the limited API you will not be able to use it while shipping
-binaries for the free-threaded build. This also means that code inside `#ifdef
-Py_GIL_DISABLED` checks can use C API constructs outside the limited API if you
+binaries for the free-threaded build. This also means that code inside
+`#ifdef Py_GIL_DISABLED` checks can use C API constructs outside the limited API if you
 would like to do that, although these uses will need to be removed once the
 free-threaded build gains support for compiling with the limited API.
