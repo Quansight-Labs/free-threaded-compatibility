@@ -148,12 +148,8 @@ after importing a module that does not support the GIL.
             ```
 
     In CI, you will need to ensure a nightly cython is installed for
-    free-threaded builds and disable build isolation by passing
-    `--no-build-isolation` to `pip` at build time. If you
-    use `cibuildwheel` to produce wheels, you can conditionally set
-    `CIBW_BUILD_FRONTEND` to `build; args: --no-build-isolation` for free-threaded
-    builds. If your project normally uses `pip` to build wheels, the variable
-    should be set to `pip; args --no-build-isolation`.
+    free-threaded builds. See [the docs on setting up CI](ci.md) for advice on 
+    how to build projects that depend on Cython.
 
 === "f2py"
     Starting with NumPy 2.1.0 (only available via the nightly wheels or the
