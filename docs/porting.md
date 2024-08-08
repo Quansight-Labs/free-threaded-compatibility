@@ -148,7 +148,7 @@ after importing a module that does not support the GIL.
             ```
 
     In CI, you will need to ensure a nightly cython is installed for
-    free-threaded builds. See [the docs on setting up CI](ci.md) for advice on 
+    free-threaded builds. See [the docs on setting up CI](ci.md) for advice on
     how to build projects that depend on Cython.
 
 === "f2py"

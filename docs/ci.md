@@ -51,7 +51,7 @@ specify the following variables in the environment for the cibuildwheel action:
       CIBW_PRERELEASE_PYTHONS: true
       CIBW_FREE_THREADED_SUPPORT: true
       CIBW_BUILD: cp313t-${{ matrix.buildplat }}
-      # TODO: 
+      # TODO:
       # remove when a released cython can build free-threaded extensions
       CIBW_BUILD_FRONTEND: 'pip; args: --no-build-isolation'
 ```
@@ -63,7 +63,6 @@ pip about the nightly wheel index and it will use it in an isolated build. To do
 this set:
 
 ```yaml
-
 CIBW_BUILD_FRONTEND: 'pip; args: --pre --extra-index-url https://pypi.anaconda.org/scientific-python-nightly-wheels/simple"'
 ```
 
