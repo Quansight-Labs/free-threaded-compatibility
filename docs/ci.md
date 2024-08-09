@@ -59,12 +59,20 @@ specify the following variables in the environment for the cibuildwheel action:
 As above, replace the ellipses with a `cibuildwheel` version.
 
 If for some reason disabling build isolation is unworkable, you can also tell
-pip about the nightly wheel index and it will use it in an isolated build. To do
-this set:
+pip about the nightly wheel index and it will use it in an isolated build. To
+do this, set:
 
 ```yaml
 CIBW_BUILD_FRONTEND: 'pip; args: --pre --extra-index-url https://pypi.anaconda.org/scientific-python-nightly-wheels/simple"'
 ```
+
+Many projects use `build` instead of `pip` for the build frontend. See [the
+cibuildwheel](https://cibuildwheel.pypa.io/en/stable/options/#build-frontend)
+docs for more information about how to pass arguments to `build` and `pip`. See
+[this
+comment](https://github.com/pypa/build/issues/651#issuecomment-2243025713) on
+the `build` issue tracker if you need to use `build` and cannot disable build
+isolation.
 
 Note that nightly wheels may not be available on all platforms yet. Windows
 wheels, in particular, are not currently available for NumPy or projects that
