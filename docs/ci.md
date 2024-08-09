@@ -63,7 +63,7 @@ pip about the nightly wheel index and it will use it in an isolated build. To
 do this, set:
 
 ```yaml
-CIBW_BUILD_FRONTEND: 'pip; args: --pre --extra-index-url https://pypi.anaconda.org/scientific-python-nightly-wheels/simple"'
+CIBW_BUILD_FRONTEND: 'pip; args: --pre --extra-index-url "https://pypi.anaconda.org/scientific-python-nightly-wheels/simple"'
 ```
 
 Many projects use `build` instead of `pip` for the build frontend. See [the
