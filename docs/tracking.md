@@ -28,7 +28,7 @@ hence this page does not aim to track pure Python packages.
 | joblib            | :material-check-bold: | :material-check-bold: |           1.4.2            |                                                            |                                                                                          |
 | Meson             |                       | :material-check-bold: |           1.5.0            |                                                            |                                                                                          |
 | meson-python      | :material-check-bold: | :material-check-bold: |           0.16.0           |                                                            |                                                                                          |
-| NumPy             | :material-check-bold: |                       |           2.1.0            |               :simple-linux: :simple-apple:                |    [:simple-anaconda:](https://anaconda.org/scientific-python-nightly-wheels/numpy/)     |
+| NumPy             | :material-check-bold: | :material-check-bold: [^numpy] |           2.1.0            |               :simple-linux: :simple-apple:                |    [:simple-anaconda:](https://anaconda.org/scientific-python-nightly-wheels/numpy/)     |
 | packaging         | :material-check-bold: | :material-check-bold: |            24.0            |                                                            |                                                                                          |
 | pandas            | :material-check-bold: |                       |           3.0.0            |               :simple-linux: :simple-apple:                |                                                                                          |
 | Pillow            | :material-check-bold: |                       |           11.0.0           | :simple-linux: :simple-apple: :material-microsoft-windows: |    [:simple-anaconda:](https://anaconda.org/scientific-python-nightly-wheels/pillow/)    |
@@ -41,3 +41,5 @@ hence this page does not aim to track pure Python packages.
 | setuptools        | :material-check-bold: | :material-check-bold: |           69.5.0           |                                                            |                                                                                          |
 
 [^cmake]: Windows isn't correctly handled yet in CMake 3.30.0, see [cmake#26016](https://gitlab.kitware.com/cmake/cmake/-/issues/26016)
+[^numpy]: Currently available as the NumPy 2.1.0rc1 prerelease. Install by
+    passing `--pre` to pip.
