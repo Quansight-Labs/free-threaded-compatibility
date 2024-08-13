@@ -2,7 +2,10 @@
 
 Currently the `setup-python` GitHub Action [does not
 support](https://github.com/actions/setup-python/issues/771) installing a
-free-threaded build. For now, the easiest way to get a free-threaded Python
+free-threaded build. For now, here are some relatively easy ways:
+
+## Ubuntu Linux CI Setup via `deadsnakes-action`
+the easiest way to get a free-threaded Python
 build on a CI runner is with the `deadsnakes` Ubuntu PPA and the
 `deadsnakes-action` GitHub Action:
 
@@ -21,6 +24,25 @@ jobs:
 You should replace the ellipses with versions for the actions. If there is a
 newer CPython 3.13 release available since this document was written or
 updated, use that version instead.
+
+## Windows CI Setup via Custom PowerShell Script
+
+For installing a free-threaded build of python on a Windows CI runner 
+(`runs-on: windows-latest`), you can download and install directly from 
+[https://www.python.org/ftp/python/](https://www.python.org/ftp/python/) as 
+shown in the following PowerShell snippet (noting that the free-threaded
+binary is named `python{verison}t.exe`, where the "t" is for free-"t"hreaded).
+For more tips see the [docs on silent installation and options on 
+Windows](https://docs.python.org/3.13/using/windows.html#installing-without-ui).
+
+```pwsh
+$pythonInstallerUrl = "https://www.python.org/ftp/python/3.13.0/python-3.13.0rc1-amd64.exe"
+Invoke-WebRequest $pythonInstallerUrl -OutFile setup-python.exe
+Start-Process "setup-python.exe" -argumentlist "/quiet PrependPath=1 TargetDir=C:\Python313 Include_freethreaded=1" -wait
+C:\Python313\python3.13t.exe -m pip install -r requirements.txt
+C:\Python313\python3.13t.exe -c "import sys; print(sys._is_gil_enabled())"
+```
+## Building Free-Threaded Wheels with cibuildwheel
 
 [cibuildwheel](https://cibuildwheel.pypa.io/en/stable/) has support
 for building free-threaded wheels on all platforms. If your project releases
