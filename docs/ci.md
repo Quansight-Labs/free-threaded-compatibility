@@ -30,7 +30,7 @@ updated, use that version instead.
 For installing a free-threaded build of Python on a Windows CI runner
 (`runs-on: windows-latest`), you can download and install directly from
 [https://www.python.org/ftp/python/](https://www.python.org/ftp/python/) as
-shown in the  following PowerShell snippet (noting that the free-threaded
+shown in the following PowerShell snippet (noting that the free-threaded
 binary is named `python{version}t.exe`, where the "t" is for free-"t"hreaded).
 For more tips see the [docs on silent installation and options on
 Windows](https://docs.python.org/3.13/using/windows.html#installing-without-ui).
