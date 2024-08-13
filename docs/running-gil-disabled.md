@@ -4,6 +4,9 @@
     Most of the content on this page is also covered in the Python 3.13
     [release notes](https://docs.python.org/3.13/whatsnew/3.13.html#free-threaded-cpython).
 
+!!! info
+    On Windows installations of Python 3.13, the free-threaded binary is named `python3.13t.exe` (with a "t" suffix to indicate it is "t"hreaded), whereas the standard gil-enabled python binary is simply named `python.exe` (as usual). If you cannot find the free-threaded binary, that means the Free-threaded option was not selected during [installation](installing_cpython.md).
+
 You can verify your build of CPython itself has the GIL disabled with the
 following incantation:
 
