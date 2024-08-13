@@ -5,6 +5,7 @@ support](https://github.com/actions/setup-python/issues/771) installing a
 free-threaded build. For now, here are some relatively easy ways:
 
 ## Ubuntu Linux CI Setup via `deadsnakes-action`
+
 the easiest way to get a free-threaded Python
 build on a CI runner is with the `deadsnakes` Ubuntu PPA and the
 `deadsnakes-action` GitHub Action:
@@ -27,12 +28,12 @@ updated, use that version instead.
 
 ## Windows CI Setup via Custom PowerShell
 
-For installing a free-threaded build of python on a Windows CI runner 
-(`runs-on: windows-latest`), you can download and install directly from 
-[https://www.python.org/ftp/python/](https://www.python.org/ftp/python/) as 
+For installing a free-threaded build of python on a Windows CI runner
+(`runs-on: windows-latest`), you can download and install directly from
+[https://www.python.org/ftp/python/](https://www.python.org/ftp/python/) as
 shown in the  following PowerShell snippet (noting that the free-threaded
 binary is named `python{verison}t.exe`, where the "t" is for free-"t"hreaded).
-For more tips see the [docs on silent installation and options on 
+For more tips see the [docs on silent installation and options on
 Windows](https://docs.python.org/3.13/using/windows.html#installing-without-ui).
 
 ```yaml
