@@ -25,7 +25,6 @@ You should replace the ellipses with versions for the actions. If there is a
 newer CPython 3.13 release available since this document was written or
 updated, use that version instead.
 
-
 ## Windows CI setup via custom PowerShell
 
 For installing a free-threaded build of Python on a Windows CI runner
@@ -51,7 +50,6 @@ jobs:
           C:\Python313\python3.13t.exe -m pip install -r requirements.txt
           C:\Python313\python3.13t.exe -c "import sys; print(sys._is_gil_enabled())"
 ```
-
 
 ## Building free-threaded wheels with cibuildwheel
 
