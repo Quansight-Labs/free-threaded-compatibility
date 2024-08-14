@@ -17,7 +17,6 @@
     free-threaded binary, that means the free-threaded option was not selected
     during installation.
 
-
 You can verify your build of CPython itself has the GIL disabled with the
 following incantation:
 
