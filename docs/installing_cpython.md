@@ -29,6 +29,61 @@ _Download free-threaded binaries_ checkbox under "Advanced Options".
 See also the [Using Python on Windows](https://docs.python.org/3.13/using/windows.html#installing-free-threaded-binaries)
 section of the Python 3.13 docs.
 
+Automating the process of downloading the official installers
+and installing the free-threaded binaries is also possible:
+
+=== "Windows"
+    On Windows, you can invoke the installer from the command-line prompt:
+
+    ```powershell
+    $url = 'https://www.python.org/ftp/python/3.13.0/python-3.13.0rc1-amd64.exe'
+    Invoke-WebRequest -Uri $url -OutFile 'python.exe'
+    python.exe /quiet Include_freethreaded=1
+    ```
+
+    If you are running this script without administrator privileges,
+    a UAC prompt will trigger when you try to run the installer.
+    The resulting Python installation will be available afterwards
+    in `AppData\Local\Programs\Python\Python313\python3.13t.exe`.
+    See [Installing Without UI](https://docs.python.org/3.13/using/windows.html#installing-without-ui)
+    for more information.
+
+=== "macOS"
+    On macOS, you can use `installer` to install a macOS package you've
+    downloaded:
+
+    ```bash
+    curl -O https://www.python.org/ftp/python/3.13.0/python-3.13.0rc1-macos11.pkg
+
+    # create installer choice changes to customize the install:
+    #    enable the PythonTFramework-3.13 package
+    #    while accepting the other defaults (install all other packages)
+    cat > ./choicechanges.plist <<EOF
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+    <array>
+            <dict>
+                    <key>attributeSetting</key>
+                    <integer>1</integer>
+                    <key>choiceAttribute</key>
+                    <string>selected</string>
+                    <key>choiceIdentifier</key>
+                    <string>org.python.Python.PythonTFramework-3.13</string>
+            </dict>
+    </array>
+    </plist>
+    EOF
+
+    sudo installer -pkg ./python-3.13.0rc1-macos11.pkg \
+        -applyChoiceChangesXML ./choicechanges.plist \
+        -target /
+    rm -f python-3.13.0rc1-macos11.pkg
+    ```
+
+    See also [this Github issue](https://github.com/python/cpython/issues/120098)
+    for more information.
+
 ### Linux distros
 
 === "Fedora"
