@@ -41,6 +41,10 @@ and installing the free-threaded binaries is also possible:
     python.exe /quiet Include_freethreaded=1
     ```
 
+If you are running this script without administrator privileges,
+a UAC prompt will trigger when you try to run the installer.
+The resulting Python installation will be available afterwards
+in `AppData\Local\Programs\Python\Python313\python3.13t.exe`.
     See [Installing Without UI](https://docs.python.org/3.13/using/windows.html#installing-without-ui)
     for more information.
 
