@@ -323,10 +323,13 @@ int my_function_with_a_cache(void) {
 }
 ```
 
-If the cache is set up at import time during module initialization, then you
-can assume that module initialization is guaranteed to only happen on one
-thread, so you can initialize static globals safely during module
-initialization.
+CPython holds a per-module lock during import. This lock can be released to
+avoid deadlocks in unusual cases, but in most situations module initialization
+happens exactly once per interpreter in one C thread. Modules using static
+single-phase initialization can therefore set up per-module state in the
+`PyInit` function without worrying about concurrent initialization of modules in
+different threads. For example, you might set up a global static cache that is
+read-only after module initialization like this:
 
 ```c
 static int *cache = NULL;
@@ -346,8 +349,12 @@ PyInit__module(void)
 }
 ```
 
+You can then read from `cache` at runtime in a context where you know the module
+is initialized without worrying about whether or not the per-module static cache
+is initialized.
+
 If the cache is critical for performance, cannot be generated at import time,
-but generally gets filled quickly after a program begins then you will need to
+but generally gets filled quickly after a program begins, then you will need to
 use a single-initialization API to ensure the cache is only ever initialized
 once. In C++, use
 [`std::once_flag`](https://en.cppreference.com/w/cpp/thread/once_flag) or
