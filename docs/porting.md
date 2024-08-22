@@ -466,9 +466,9 @@ Should be transformed to:
 ```C
 int do_modification(MyObject *obj) {
     int res;
-    Py_BEGIN_CRTIICAL_SECTION(obj);
+    Py_BEGIN_CRITICAL_SECTION(obj);
     res = modification_on_obj(obj);
-    Py_END_CRTIICAL_SECTION(obj);
+    Py_END_CRITICAL_SECTION(obj);
     return res;
 }
 ```
