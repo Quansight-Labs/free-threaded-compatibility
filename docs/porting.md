@@ -397,6 +397,13 @@ int function_accessing_the_cache(void) {
 
 ```
 
+!!! note
+    Note that, while the NumPy PR linked above uses `PyThread_type_lock`, that is
+    only because `PyMutex` was not part of the public Python C API at the time. We
+    recommended always using `PyMutex`. For pointers on how to do that, check
+    [this NumPy PR](https://github.com/numpy/numpy/pull/27011) that ports all
+    `PyThread_type_lock` usages to `PyMutex`.
+
 ### Dealing with thread-unsafe libraries
 
 Many C, C++, and Fortran libraries are not written in a thread-safe manner. It
