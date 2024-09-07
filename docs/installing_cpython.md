@@ -122,13 +122,10 @@ and installing the free-threaded binaries is also possible:
     sudo apt-get install python3.13-nogil
     ```
 
-### Conda
-
-Conda packages are currently available for macOS arm64 and Linux x86-64 under a
-label in the `ad-testing` (`ad` means "anaconda distribution") channel:
+### Conda-forge
 
 ```bash
-conda create -n nogil -c defaults -c ad-testing/label/py313_nogil python=3.13
+mamba create -n nogil -c conda-forge/label/python_rc python-freethreading
 ```
 
 ## Containers
