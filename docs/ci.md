@@ -44,7 +44,7 @@ jobs:
       - name: custom python install script
         shell: pwsh
         run: |
-          $pythonInstallerUrl = "https://www.python.org/ftp/python/3.13.0/python-3.13.0rc1-amd64.exe"
+          $pythonInstallerUrl = "https://www.python.org/ftp/python/3.13.0/python-3.13.0rc2-amd64.exe"
           Invoke-WebRequest $pythonInstallerUrl -OutFile setup-python.exe
           Start-Process "setup-python.exe" -argumentlist "/quiet PrependPath=1 TargetDir=C:\Python313 Include_freethreaded=1" -wait
           C:\Python313\python3.13t.exe -m pip install -r requirements.txt
