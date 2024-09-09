@@ -59,11 +59,11 @@ nightly wheels, we suggest configuring `cibuildwheel` to build nightly
 free-threaded wheels.
 
 If your project depends on Cython or the NumPy C API, you will need to install a
-Cython and/or NumPy nightly wheel in the build, as the newest stable release of
-Cython cannot generate code that will compile under the free-threaded build and
-the newest stable release of NumPy does not support free-threaded python. Cython
-3.1.0 and NumPy 2.1.0 will be the first stable releases to support free-threaded
-python.
+Cython nightly wheel in the build, as the newest stable release of Cython cannot
+generate code that will compile under the free-threaded build. Cython 3.1.0 and
+NumPy 2.1.0 will be or are the first stable releases to support free-threaded
+python. See [the project tracker](tracking.md) for more detailed information
+about projects you may depend on.
 
 You can install nightly wheels for both Cython and NumPy using the following
 install command:
