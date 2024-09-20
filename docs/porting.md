@@ -555,6 +555,9 @@ bugs in C or C++ code using the C API directly. However, many usages *are*
 unsafe, and maintaining a borrowed reference to an objects that could be exposed
 to another thread is unsafe.
 
+A good starting place to find instances of this would be to look for usages of the
+[unsafe borrowed reference APIs mentioned in the free-threading compatibility docs](https://docs.python.org/3.14/howto/free-threading-extensions.html#borrowed-references).
+
 ### Adopt `pythoncapi-compat` to use new C API functions
 
 Rather than maintaining compatibility shims to use functions added to the C API
