@@ -425,15 +425,15 @@ typedef struct lib_state_struct {
 } lib_state_struct;
 
 int call_library_function(lib_state_struct *lib_state) {
-    PyMutex_Lock(lib_state->lock);
+    PyMutex_Lock(&lib_state->lock);
     library_function(lib_state->state);
-    PyMutex_Unlock(lib_state->lock)
+    PyMutex_Unlock(&lib_state->lock)
 }
 
 int call_another_library_function(lib_state_struct *lib_state) {
-    PyMutex_Lock(lib_state->lock);
+    PyMutex_Lock(&lib_state->lock);
     another_library_function(lib_state->state);
-    PyMutex_Unlock(lib_state->lock)
+    PyMutex_Unlock(&lib_state->lock)
 }
 ```
 
@@ -451,9 +451,9 @@ library. This means that non-reentrant libraries require a global lock:
 static PyMutex global_lock = {0};
 
 int call_library_function(int *argument) {
-    PyMutex_Lock(global_lock);
+    PyMutex_Lock(&global_lock);
     library_function(argument);
-    PyMutex_Unlock(global_lock);
+    PyMutex_Unlock(&global_lock);
 }
 ```
 
