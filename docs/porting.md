@@ -110,7 +110,7 @@ after importing a module that does not support the GIL.
             from packaging.version import Version
 
             compiler_directives = {}
-            if Version(cython_version) >= Version("3.1.0a1"):
+            if Version(cython_version) >= Version("3.1.0a0"):
                 compiler_directives["freethreading_compatible"] = True
 
             setup(
