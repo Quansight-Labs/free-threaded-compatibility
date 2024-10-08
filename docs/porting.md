@@ -55,6 +55,8 @@ after importing a module that does not support the GIL.
     #ifdef Py_GIL_DISABLED
         PyUnstable_Module_SetGIL(mod, Py_MOD_GIL_NOT_USED);
     #endif
+
+        return mod;
     }
     ```
 
@@ -323,10 +325,13 @@ int my_function_with_a_cache(void) {
 }
 ```
 
-If the cache is set up at import time during module initialization, then you
-can assume that module initialization is guaranteed to only happen on one
-thread, so you can initialize static globals safely during module
-initialization.
+CPython holds a per-module lock during import. This lock can be released to
+avoid deadlocks in unusual cases, but in most situations module initialization
+happens exactly once per interpreter in one C thread. Modules using static
+single-phase initialization can therefore set up per-module state in the
+`PyInit` function without worrying about concurrent initialization of modules in
+different threads. For example, you might set up a global static cache that is
+read-only after module initialization like this:
 
 ```c
 static int *cache = NULL;
@@ -346,8 +351,12 @@ PyInit__module(void)
 }
 ```
 
+You can then read from `cache` at runtime in a context where you know the module
+is initialized without worrying about whether or not the per-module static cache
+is initialized.
+
 If the cache is critical for performance, cannot be generated at import time,
-but generally gets filled quickly after a program begins then you will need to
+but generally gets filled quickly after a program begins, then you will need to
 use a single-initialization API to ensure the cache is only ever initialized
 once. In C++, use
 [`std::once_flag`](https://en.cppreference.com/w/cpp/thread/once_flag) or
@@ -390,6 +399,13 @@ int function_accessing_the_cache(void) {
 
 ```
 
+!!! note
+    Note that, while the NumPy PR linked above uses `PyThread_type_lock`, that is
+    only because `PyMutex` was not part of the public Python C API at the time. We
+    recommended always using `PyMutex`. For pointers on how to do that, check
+    [this NumPy PR](https://github.com/numpy/numpy/pull/27011) that ports all
+    `PyThread_type_lock` usages to `PyMutex`.
+
 ### Dealing with thread-unsafe libraries
 
 Many C, C++, and Fortran libraries are not written in a thread-safe manner. It
@@ -411,15 +427,15 @@ typedef struct lib_state_struct {
 } lib_state_struct;
 
 int call_library_function(lib_state_struct *lib_state) {
-    PyMutex_Lock(lib_state->lock);
+    PyMutex_Lock(&lib_state->lock);
     library_function(lib_state->state);
-    PyMutex_Unlock(lib_state->lock)
+    PyMutex_Unlock(&lib_state->lock)
 }
 
 int call_another_library_function(lib_state_struct *lib_state) {
-    PyMutex_Lock(lib_state->lock);
+    PyMutex_Lock(&lib_state->lock);
     another_library_function(lib_state->state);
-    PyMutex_Unlock(lib_state->lock)
+    PyMutex_Unlock(&lib_state->lock)
 }
 ```
 
@@ -437,9 +453,9 @@ library. This means that non-reentrant libraries require a global lock:
 static PyMutex global_lock = {0};
 
 int call_library_function(int *argument) {
-    PyMutex_Lock(global_lock);
+    PyMutex_Lock(&global_lock);
     library_function(argument);
-    PyMutex_Unlock(global_lock);
+    PyMutex_Unlock(&global_lock);
 }
 ```
 
@@ -540,6 +556,9 @@ thread-safe by construction and also likely introduce new reference counting
 bugs in C or C++ code using the C API directly. However, many usages *are*
 unsafe, and maintaining a borrowed reference to an objects that could be exposed
 to another thread is unsafe.
+
+A good starting place to find instances of this would be to look for usages of the
+[unsafe borrowed reference APIs mentioned in the free-threading compatibility docs](https://docs.python.org/3.14/howto/free-threading-extensions.html#borrowed-references).
 
 ### Adopt `pythoncapi-compat` to use new C API functions
 
