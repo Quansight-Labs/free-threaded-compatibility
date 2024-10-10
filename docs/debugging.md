@@ -193,7 +193,7 @@ we recommend installing a debug instance. The easiest way to accomplish this
 is via `pyenv`:
 
 ```bash
-pyenv install --debug --keep 3.13t-dev
+pyenv install --debug --keep 3.13.0
 ```
 
 This command will not only install a debug distribution of CPython, but also
