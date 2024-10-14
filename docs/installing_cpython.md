@@ -125,7 +125,7 @@ and installing the free-threaded binaries is also possible:
 ### Conda-forge
 
 ```bash
-mamba create -n nogil -c conda-forge/label/python_rc python-freethreading
+mamba create -n nogil -c conda-forge python-freethreading
 ```
 
 ## Containers
