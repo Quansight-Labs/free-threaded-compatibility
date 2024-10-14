@@ -36,7 +36,7 @@ and installing the free-threaded binaries is also possible:
     On Windows, you can invoke the installer from the command-line prompt:
 
     ```powershell
-    $url = 'https://www.python.org/ftp/python/3.13.0/python-3.13.0rc2-amd64.exe'
+    $url = 'https://www.python.org/ftp/python/3.13.0/python-3.13.0-amd64.exe'
     Invoke-WebRequest -Uri $url -OutFile 'python.exe'
     python.exe /quiet Include_freethreaded=1
     ```
@@ -53,7 +53,7 @@ and installing the free-threaded binaries is also possible:
     downloaded:
 
     ```bash
-    curl -O https://www.python.org/ftp/python/3.13.0/python-3.13.0rc2-macos11.pkg
+    curl -O https://www.python.org/ftp/python/3.13.0/python-3.13.0-macos11.pkg
 
     # create installer choice changes to customize the install:
     #    enable the PythonTFramework-3.13 package
@@ -75,10 +75,10 @@ and installing the free-threaded binaries is also possible:
     </plist>
     EOF
 
-    sudo installer -pkg ./python-3.13.0rc2-macos11.pkg \
+    sudo installer -pkg ./python-3.13.0-macos11.pkg \
         -applyChoiceChangesXML ./choicechanges.plist \
         -target /
-    rm -f python-3.13.0rc2-macos11.pkg
+    rm -f python-3.13.0-macos11.pkg
     ```
 
     See also [this Github issue](https://github.com/python/cpython/issues/120098)
@@ -127,7 +127,7 @@ and installing the free-threaded binaries is also possible:
 === "Conda-forge"
 
 ```bash
-mamba create -n nogil -c conda-forge/label/python_rc python-freethreading
+mamba create -n nogil -c conda-forge python-freethreading
 ```
 
 === "Anaconda Testing"
@@ -174,5 +174,5 @@ build CPython using [pyenv](https://github.com/pyenv/pyenv). In order to
 do that, you can use the following:
 
 ```bash
-pyenv install --debug 3.13t-dev
+pyenv install --debug --keep 3.13.0
 ```

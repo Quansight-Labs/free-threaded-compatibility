@@ -55,6 +55,8 @@ after importing a module that does not support the GIL.
     #ifdef Py_GIL_DISABLED
         PyUnstable_Module_SetGIL(mod, Py_MOD_GIL_NOT_USED);
     #endif
+
+        return mod;
     }
     ```
 
@@ -108,7 +110,7 @@ after importing a module that does not support the GIL.
             from packaging.version import Version
 
             compiler_directives = {}
-            if Version(cython_version) >= Version("3.1.0a1"):
+            if Version(cython_version) >= Version("3.1.0a0"):
                 compiler_directives["freethreading_compatible"] = True
 
             setup(
@@ -400,7 +402,7 @@ int function_accessing_the_cache(void) {
 !!! note
     Note that, while the NumPy PR linked above uses `PyThread_type_lock`, that is
     only because `PyMutex` was not part of the public Python C API at the time. We
-    recommended always using `PyMutex`. For pointers on how to do that, check
+    recommend always using `PyMutex`. For pointers on how to do that, check
     [this NumPy PR](https://github.com/numpy/numpy/pull/27011) that ports all
     `PyThread_type_lock` usages to `PyMutex`.
 
