@@ -135,7 +135,7 @@ mamba create -n nogil -c conda-forge/label/python_rc python-freethreading
 Anaconda's test channel includes the Python interpreter and ABI-compatible builds of many common packages, like NumPy, Cython, Pandas, etc.  These packages use the `python_abi` metapackage and should be compatible with conda-forge:
 
 ```bash
-conda create -n nogil -c ad-testing/label/py313 python-freethreading
+conda create -n nogil --override-channels -c ad-testing/label/py313 -c https://repo.anaconda.com/pkgs/main python-freethreading
 ```
 
 [Full list of Anaconda test packages built with free-threading ABI.](https://anaconda.org/ad-testing/repo?label=py313_nogil&type=any)
