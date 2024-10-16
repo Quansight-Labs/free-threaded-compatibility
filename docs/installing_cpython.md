@@ -129,6 +129,13 @@ and installing the free-threaded binaries is also possible:
     mamba create -n nogil -c conda-forge python-freethreading
     ```
 
+    or with conda:
+
+    ```bash
+    conda create -n nogil --override-channels -c conda-forge python-freethreading
+    ```
+
+
 === "Anaconda Testing"
     Anaconda's test channel includes the Python interpreter and ABI-compatible
     builds of many common packages, like NumPy, Cython, Pandas, etc.  These
