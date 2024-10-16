@@ -490,14 +490,14 @@ should not assume that functionality provided by PyTest is thread-safe.
 
 Functionality that is known not to be thread-safe includes:
 
-* [`pytest.warns`](https://docs.pytest.org/en/stable/reference/reference.html#pytest.warns),
-  it relies on `warnings.catch_warnings`, which is not thread safe.
-* The [`tmp_path`](https://docs.pytest.org/en/stable/reference/reference.html#std-fixture-tmp_path) and [`tmpdir`](https://docs.pytest.org/en/stable/reference/reference.html#std-fixture-tmpdir) fixtures, since they rely on the filesystem
-* The [`capsys`
-  fixture](https://docs.pytest.org/en/stable/reference/reference.html#std-fixture-capsys),
-  because of shared use of `sys.stdout` and `sys.stderr`.
-* The [`monkeypatch`
-  fixture](https://docs.pytest.org/en/stable/reference/reference.html#std-fixture-monkeypatch).
+- [`pytest.warns`](https://docs.pytest.org/en/stable/reference/reference.html#pytest.warns),
+    it relies on `warnings.catch_warnings`, which is not thread safe.
+- The [`tmp_path`](https://docs.pytest.org/en/stable/reference/reference.html#std-fixture-tmp_path) and [`tmpdir`](https://docs.pytest.org/en/stable/reference/reference.html#std-fixture-tmpdir) fixtures, since they rely on the filesystem
+- The [`capsys`
+    fixture](https://docs.pytest.org/en/stable/reference/reference.html#std-fixture-capsys),
+    because of shared use of `sys.stdout` and `sys.stderr`.
+- The [`monkeypatch`
+    fixture](https://docs.pytest.org/en/stable/reference/reference.html#std-fixture-monkeypatch).
 
 Note that the PyTest maintainers have explicitly ruled out making PyTest
 thread-safe, please do not open issues asking to fix thread safety issues in
