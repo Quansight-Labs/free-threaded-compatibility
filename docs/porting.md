@@ -3,18 +3,18 @@
 Many Python packages, particularly packages relying on C extension modules, are
 not thread-safe in the free-threaded build as of mid-2024. Up until now, the GIL
 has added implicit locking around any operation in Python or C that holds the
-GIL, and the GIL must be explicitly dropped before many thread-safety issues
+GIL, and the GIL must be explicitly dropped before many thread safety issues
 become problematic. Also, because of the GIL, attempting to parallelize many
 workflows using the Python
 [threading](https://docs.python.org/3/library/threading.html) module will not
-produce any speedups, so thread-safety issues that are possible even with the
+produce any speedups, so thread safety issues that are possible even with the
 GIL are not hit often since users do not make use of threading as much as other
 parallelization strategies. This means many codebases have threading bugs that
 up-until-now have only been theoretical or present in niche use cases. With
 free-threading, many more users will want to use Python threads.
 
 This means we must analyze Python codebases, particularly in low-level extension
-modules, to identify thread-safety issues and make changes to thread-unsafe
+modules, to identify thread safety issues and make changes to thread-unsafe
 low-level code, including C, C++, and Cython code exposed to Python.
 
 ## Updating Extension Modules
@@ -159,7 +159,7 @@ after importing a module that does not support the GIL.
 === "f2py"
     Starting with NumPy 2.1.0 (only available via the nightly wheels or the
     `main` branch as of right now), extension modules containing f2py-wrapped
-    Fortran code can declare they are thread safe and support free-threading
+    Fortran code can declare they are thread-safe and support free-threading
     using the
     [`--freethreading-compatible`](https://numpy.org/devdocs/f2py/usage.html#extension-module-construction)
     command-line argument:
@@ -176,7 +176,7 @@ to also add support for the free-threaded build.
 
 ## Suggested Plan of Attack
 
-Put priority on thread-safety issues surfaced by real-world testing. Run the
+Put priority on thread safety issues surfaced by real-world testing. Run the
 test suite for your project and fix any failures that occur only with the GIL
 disabled. Some issues may be due to changes in Python 3.13 that are not
 specific to the free-threaded build.
@@ -196,7 +196,7 @@ You can also look at
 [pytest-run-parallel](https://github.com/Quansight-Labs/pytest-run-parallel) as
 well as
 [pytest-freethreaded](https://github.com/tonybaloney/pytest-freethreaded), which
-both offer pytest plugins to enable running tests in an existing PyTest test
+both offer pytest plugins to enable running tests in an existing `pytest` test
 suite simultaneously in many threads. See the section below on [global state in
 tests](porting.md#dealing-with-global-state-in-tests) for more information
 about updating test suites to work with the free-threaded build.
@@ -280,9 +280,9 @@ tries to acquire the mutex and ends up blocked, garbage collection can still
 proceed and, in the GIL-enabled build, the blocked thread releases the GIL,
 allowing other threads to continue running. This implies that it is impossible
 to create a deadlock between a `PyMutex` and the GIL. For this reason, it is not
-necessary to add code for the GIL-enabled to ensure the GIL is released before
-acquiring a `PyMutex`. If you do not call into the CPython C API while holding
-the lock `PyMutex` has no special advantages over other mutexes, besides
+necessary to add code for the GIL-enabled build to ensure the GIL is released
+before acquiring a `PyMutex`. If you do not call into the CPython C API while
+holding the lock, `PyMutex` has no special advantages over other mutexes, besides
 low-level details like performance or the size of the mutex object in memory.
 
 See the section on [dealing with thread-unsafe low-level
@@ -291,11 +291,11 @@ using PyMutex to lock around a thread-unsafe C library.
 
 ### Critical Sections
 
-Python 3.13 or newer also a [critical section
+Python 3.13 or newer also offers a [critical section
 API](https://docs.python.org/3/c-api/init.html#python-critical-section-api) that
 is useful for locking either a single object or a pair of objects during a
 low-level operation. The critical section API is intended to provide weaker, but
-still useful locking guarantees compared to directly locking access to object
+still useful locking guarantees compared to directly locking access to an object
 using a mutex. This provides similar guarantees to the GIL and avoids
 the risk of deadlocks introduced by locking individual objects.
 
@@ -479,31 +479,33 @@ will likely need to update the tests to eliminate use of global state.
 Since tests using global state are inherently racey, this means that test
 failures associated with these tests are also inherently flakey. If you see
 tests failing intermittently, you should not discount that you are using global
-state in a test, or even inadvertantly using global state in PyTest itself.
+state in a test, or even inadvertently using global state in `pytest` itself.
 
-#### PyTest is not thread-safe
+#### `pytest` is not thread-safe
 
-See [the PyTest
+See [the `pytest`
 docs](https://docs.pytest.org/en/stable/explanation/flaky.html#thread-safety)
 for more information about this. While tests can manage their own threads, you
-should not assume that functionality provided by PyTest is thread-safe.
+should not assume that functionality provided by `pytest` is thread-safe.
 
 Functionality that is known not to be thread-safe includes:
 
 * [`pytest.warns`](https://docs.pytest.org/en/stable/reference/reference.html#pytest.warns),
-  it relies on `warnings.catch_warnings`, which is not thread safe.
-* The [`tmp_path`](https://docs.pytest.org/en/stable/reference/reference.html#std-fixture-tmp_path) and [`tmpdir`](https://docs.pytest.org/en/stable/reference/reference.html#std-fixture-tmpdir) fixtures, since they rely on the filesystem
+  it relies on `warnings.catch_warnings`, which is not thread-safe.
+* The [`tmp_path`](https://docs.pytest.org/en/stable/reference/reference.html#std-fixture-tmp_path)
+  and [`tmpdir`](https://docs.pytest.org/en/stable/reference/reference.html#std-fixture-tmpdir)
+  fixtures, since they rely on the filesystem
 * The [`capsys`
   fixture](https://docs.pytest.org/en/stable/reference/reference.html#std-fixture-capsys),
   because of shared use of `sys.stdout` and `sys.stderr`.
 * The [`monkeypatch`
   fixture](https://docs.pytest.org/en/stable/reference/reference.html#std-fixture-monkeypatch).
 
-Note that the PyTest maintainers have explicitly ruled out making PyTest
+Note that the `pytest` maintainers have explicitly ruled out making `pytest`
 thread-safe, please do not open issues asking to fix thread safety issues in
-PyTest itself.
+`pytest` itself.
 
-#### The `warnings` module is not thread safe
+#### The `warnings` module is not thread-safe
 
 Many tests carefully ensure that warnings will be seen by the user in cases
 where the library author intends users to see them. These tests inevintably make
@@ -623,13 +625,13 @@ A variant for locking two objects at once is also available. For more informatio
 about `Py_BEGIN_CRITICAL_SECTION`, please see the
 [Python C API documentation on critical sections](https://docs.python.org/3.13/c-api/init.html#python-critical-section-api).
 
-## Cython thread-safety
+## Cython thread safety
 
 If your extension is written in Cython, you can generally assume that
 "Python-level" code that compiles to CPython C API operations on Python objects
-is thread safe, but "C-level" code (e.g. code that will compile inside a
-`with nogil` block) may have thread-safety issues. Note that not all code outside
-`with nogil` blocks is thread safe. For example, a Python wrapper for a
+is thread-safe, but "C-level" code (e.g. code that will compile inside a
+`with nogil` block) may have thread safety issues. Note that not all code outside
+`with nogil` blocks is thread-safe. For example, a Python wrapper for a
 thread-unsafe C library is thread-unsafe if the GIL is disabled unless there is
 locking around uses of the thread-unsafe library. Another example: using
 thread-unsafe C-level constructs like a global variable is also thread-unsafe
@@ -640,19 +642,19 @@ if the GIL is disabled.
 In the free-threaded build it is possible for the reference count of an object
 to change "underneath" a running thread when it is mutated by another
 thread. This means that many APIs that assume reference counts cannot be
-updated by another thread while it is running are no longer thread safe. In
+updated by another thread while it is running are no longer thread-safe. In
 particular, C code returning "borrowed" references to Python objects in mutable
-containers like lists may introduce thread-safety issues. A borrowed reference
+containers like lists may introduce thread safety issues. A borrowed reference
 happens when a C API function does not increment the reference count of a
 Python object before returning the object to the caller. "New" references are
 safe to use until the owning thread releases the reference, as in non
 free-threaded code.
 
-Most direct uses of the CPython C API are thread safe. There is no need to add
+Most direct uses of the CPython C API are thread-safe. There is no need to add
 locking for scenarios that should be bugs in CPython. You can assume, for
 example, that the initializer for a Python object can only be called by one
 thread and the C-level implementation of a Python function can only be called on
-one thread. Accessing the arguments of a Python function is thread safe no
+one thread. Accessing the arguments of a Python function is thread-safe no
 matter what C API constructs are used and no matter whether the reference is
 borrowed or owned because two threads can't simultaneously call the same
 function with the same arguments from the same Python-level context. Of course
@@ -672,7 +674,7 @@ to the item being de-allocated while the borrowed reference is still
 PyObject *item = Py_NewRef(PyList_GetItem(list_object, 0))
 ```
 
-Is not thread safe, because in principle it's possible for the list item to be
+Is not thread-safe, because in principle it's possible for the list item to be
 de-allocated before `Py_NewRef` gets a chance to increment the reference count.
 
 For that reason, you should inspect Python C API code to look for patterns
