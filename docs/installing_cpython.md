@@ -122,7 +122,7 @@ and installing the free-threaded binaries is also possible:
     sudo apt-get install python3.13-nogil
     ```
 
-### Conda Packages
+### Multi-platform Package Managers
 
 === "Conda-forge"
     ```bash
@@ -146,6 +146,17 @@ and installing the free-threaded binaries is also possible:
     ```
 
     [Full list of Anaconda test packages built with free-threading ABI.](https://anaconda.org/ad-testing/repo?label=py313_nogil&type=any)
+
+=== "Homebrew"
+    On macOS and Linux, you can use Homebrew:
+
+    ```bash
+    brew install python-freethreading
+    ```
+
+    This will install the interpreter at `$(brew --prefix)/bin/python3.13t`.
+
+    On macOS, the Python framework built with the free-threading ABI can be found at `$(brew --prefix)/Frameworks/PythonT.framework`.
 
 ## Containers
 
