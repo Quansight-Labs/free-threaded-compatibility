@@ -29,6 +29,7 @@ nav:
   - 'porting.md'
   - 'ci.md'
   - 'debugging.md'
+  - 'resources.md'
 
 plugins:
   - search
