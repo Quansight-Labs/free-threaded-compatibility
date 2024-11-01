@@ -203,7 +203,7 @@ about updating test suites to work with the free-threaded build.
 
 Many C and C++ extensions assume the GIL serializes access to state shared
 between threads, introducing the possibility of data races and race conditions
-that were impossible before when the GIL is disabled.
+that are impossible when the GIL is enabled.
 
 Cython code can also be thread-unsafe and exhibit undefined behavior due to
 data races just like any other C or C++ code. However, code operating on Python
