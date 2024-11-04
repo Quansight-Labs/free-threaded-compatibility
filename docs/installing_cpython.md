@@ -158,6 +158,20 @@ and installing the free-threaded binaries is also possible:
 
     On macOS, the Python framework built with the free-threading ABI can be found at `$(brew --prefix)/Frameworks/PythonT.framework`.
 
+## Installing a Jupyter Kernel
+
+While jupyter [does not currently support free-threaded
+Python](https://github.com/jupyter/notebook/issues/7512), you can use Jupyter
+with a regular build of Python and a free-threaded Jupyter kernel. To do so,
+install the kernel to a location that is visible to both Python installations:
+
+```bash
+python3.13t -m ipykernel install --name python3.13t --user
+```
+
+And then you should be able to launch new jupyterlab or jupyter notebook
+sessions using the `python3.13t` kernel to experiment with free-threaded Python.
+
 ## Containers
 
 The [manylinux containers](https://github.com/pypa/manylinux) have free-threaded
