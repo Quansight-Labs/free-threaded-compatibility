@@ -160,7 +160,7 @@ and installing the free-threaded binaries is also possible:
 
 ## Installing a Jupyter Kernel
 
-While jupyter [does not currently support free-threaded
+While Jupyter [does not currently support free-threaded
 Python](https://github.com/jupyter/notebook/issues/7512), you can use Jupyter
 with a regular build of Python and a free-threaded Jupyter kernel. To do so,
 install the kernel to a location that is visible to both Python installations:
