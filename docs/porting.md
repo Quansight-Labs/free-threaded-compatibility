@@ -712,8 +712,11 @@ build.
 ### Limited API support
 
 The free-threaded build does not support the limited CPython C API. If you
-currently use the limited API you will not be able to use it while shipping
-binaries for the free-threaded build. This also means that code inside
-`#ifdef Py_GIL_DISABLED` checks can use C API constructs outside the limited API if you
-would like to do that, although these uses will need to be removed once the
-free-threaded build gains support for compiling with the limited API.
+currently use the limited API to build wheels that do not depend on a specific
+Python version, you will not be able to use it while shipping binaries for the
+free-threaded build. In practice, the limited API is a subset of the full C API,
+so your extension will build, you just cannot set `Py_LIMITED_API` at build
+time. This also means that code inside `#ifdef Py_GIL_DISABLED` checks can use C
+API constructs outside the limited API if you would like to do that, although
+these uses will need to be removed once the free-threaded build gains support
+for compiling with the limited API.
