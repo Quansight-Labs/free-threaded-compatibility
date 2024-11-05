@@ -32,18 +32,54 @@ several strategies, which we will summarize next.
 We highly suggest reading the detailed guide presented on
 [Porting Extension Modules to Support Free-Threading](porting.md)
 
-## Testing scenarios
+## pytest plugins to discover concurrency issues
+As parallel testing has become a critical component to ensure compatibility
+against free-threaded CPython distributions, several community-led pytest
+plugins have been implemented including,
 
-In order to check that a function or class has no concurrency issues, it is
-necessary to define test functions that cover such cases. For such scenarios, the
-standard `threading` library defines several low-level parallel primitives that
-can be used to test for concurrency, while the `concurrent.futures` module
-provides high-level constructs.
+- [pytest-run-parallel](https://github.com/Quansight-Labs/pytest-run-parallel)
+- [pytest-freethreaded](https://github.com/tonybaloney/pytest-freethreaded).
+
+The advantage of using a pytest plugin as opposed to manually using the
+`threading` and/or `concurrent.futures` modules mainly resides in their
+ability to integrate with the ecosystem constructs like markers, fixtures,
+skip and failure flags. For more information regarding the usage of these
+libraries please refer to the documentation of each project.
+Also, if you are an author of a pytest plugin library please
+feel free to open an issue in order to include the information of your project
+in this wiki.
+
+### Repeated test execution
+
+Given the non-deterministic nature of parallel execution, such tests may pass
+from time to time. In order to reliably ensuring their failure under concurrency,
+we recommend using `pytest-repeat`, which enables the `--count` flag in the
+`pytest` command:
+
+```bash
+# Setting PYTHON_GIL=0 ensures that the GIL is effectively disabled.
+PYTHON_GIL=0 pytest -x -v --count=100 test_concurrent.py
+```
+
+We advise to set `count` in the order of hundreds and even larger, in order to
+ensure at least one concurrent clash event.
+
+## Manually testing scenarios
+
+If manual testing is desired in order to prevent adding additional test
+dependencies or to test a particular subset of tests for concurrency issues,
+it is necessary to define test functions that cover such cases.
+For such scenarios, the standard `threading` library defines several low-level
+parallel primitives that can be used to test for concurrency,
+while the `concurrent.futures` module provides high-level constructs.
 
 For example, consider a method `MyClass.call_unsafe`
 that has been flagged as having concurrency issues since it mutates attributes
 of a shared object that is accessed by multiple threads. We can write a test for
-it using first low-level primitives:
+it using both low and high-level primitives:
+
+<details>
+<summary>Example:</summary>
 
 ```python
 """test_concurrent.py"""
@@ -113,35 +149,8 @@ def test_call_unsafe_concurrent_pool():
     # Do something about the results
     assert check_results(results)
 ```
+</details>
 
-Given the non-deterministic nature of parallel execution, such tests may pass
-from time to time. In order to reliably ensuring their failure under concurrency,
-we recommend using `pytest-repeat`, which enables the `--count` flag in the
-`pytest` command:
-
-```bash
-# Setting PYTHON_GIL=0 ensures that the GIL is effectively disabled.
-PYTHON_GIL=0 pytest -x -v --count=100 test_concurrent.py
-```
-
-We advise to set `count` in the order of hundreds and even larger, in order to
-ensure at least one concurrent clash event.
-
-## PyTest plugins to discover concurrency issues
-Given that the aforementioned testing scenarios are repetitive and highly
-verbose, several community-lead pytest libraries have been implemented
-including,
-
-- [pytest-run-parallel](https://github.com/Quansight-Labs/pytest-run-parallel)
-- [pytest-freethreaded](https://github.com/tonybaloney/pytest-freethreaded).
-
-The advantage of using a pytest plugin as opposed to manually using the testing
-scenarios mainly reside in their ability to integrate with the ecosystem
-constructs like markers, fixtures, skip and failure flags. For more information
-regarding the usage of these libraries please refer to the documentation of
-each project. Also, if you are an author of a pytest plugin library please
-feel free to open an issue in order to include the information of your project
-in this wiki.
 
 ## Debugging tests that depend on native calls
 
