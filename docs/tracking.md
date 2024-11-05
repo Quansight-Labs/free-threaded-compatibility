@@ -6,6 +6,12 @@ as build tools and packages that needed code specifically to support
 free-threading. Note that pure Python code works without changes by design,
 hence this page does not aim to track pure Python packages.
 
+We are updating this tracking table manually and including links to nightlies
+and project-specific issue links. There is also an [automatically
+updated tracker](https://hugovk.github.io/free-threaded-wheels/) that pulls in
+information for a wider range of packages, but only tracks whether or not they
+have wheels on PyPI.
+
 If there's a bug related to free-threading in a library you use, please open
 an issue on the corresponding issue tracker or post a comment on the
 corresponding free-threading support tracking issue (see table below). If
