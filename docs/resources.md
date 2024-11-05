@@ -1,4 +1,4 @@
-# More resources
+# More Resources
 
 Apart from this website, there's a wide list of resources on the
 free-threaded build and free-threading topics in general, including
