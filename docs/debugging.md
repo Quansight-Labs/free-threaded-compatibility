@@ -128,6 +128,7 @@ We advise to set `count` in the order of hundreds and even larger, in order to
 ensure at least one concurrent clash event.
 
 ## PyTest plugins to discover concurrency issues
+
 Given that the aforementioned testing scenarios are repetitive and highly
 verbose, several community-lead pytest libraries have been implemented
 including,
