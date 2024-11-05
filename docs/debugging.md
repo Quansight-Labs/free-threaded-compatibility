@@ -33,6 +33,7 @@ We highly suggest reading the detailed guide presented on
 [Porting Extension Modules to Support Free-Threading](porting.md)
 
 ## pytest plugins to discover concurrency issues
+
 As parallel testing has become a critical component to ensure compatibility
 against free-threaded CPython distributions, several community-led pytest
 plugins have been implemented including,
@@ -149,6 +150,7 @@ def test_call_unsafe_concurrent_pool():
     # Do something about the results
     assert check_results(results)
 ```
+
 </details>
 
 ## Debugging tests that depend on native calls
