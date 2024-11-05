@@ -1,4 +1,4 @@
-# Running with the GIL disabled
+# Running Python with the GIL Disabled
 
 !!! info
     Most of the content on this page is also covered in the Python 3.13

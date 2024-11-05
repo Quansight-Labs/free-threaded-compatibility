@@ -1,4 +1,4 @@
-# Compatibility status tracking
+# Compatibility Status Tracking
 
 This page tracks the status of packages for which we're aware of active work on
 free-threaded support. It contains packages with extension modules, as well

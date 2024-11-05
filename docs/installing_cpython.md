@@ -1,4 +1,4 @@
-# Installing a free-threaded Python
+# Installing Free-Threaded Python
 
 To install a free-threaded CPython interpreter, you can either use a pre-built
 binary or build CPython from source. The former is quickest to get started

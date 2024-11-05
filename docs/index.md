@@ -16,17 +16,18 @@ maintainers and end users interested in supporting or experimenting with
 free-threaded Python. An overview of the compatibility status of various Python
 libraries is maintained in:
 
-- [Compatibility status tracking](tracking.md)
+- [Compatibility Status Tracking](tracking.md)
 
 This website also provide documentation and porting guidance - with a focus on
 extension modules using the Python C API, because that's where most of the work
 will be. The following resources should get you started:
 
-- [Installing free-threaded CPython](installing_cpython.md)
-- [Running Python with the GIL disabled](running-gil-disabled.md)
-- [Porting extension modules to support free-threading](porting.md)
+- [Installing Free-Threaded Python](installing_cpython.md)
+- [Running Python with the GIL Disabled](running-gil-disabled.md)
+- [Porting Python Packages to Support Free-Threading](porting.md)
 - [Setting up CI](ci.md)
-- [Finding, testing and debugging concurrency issues](debugging.md)
+- [Uncovering Concurrency Issues, Testing and Debugging](debugging.md)
+- [More Resources](resources.md)
 
 ## About this site
 

@@ -1,4 +1,4 @@
-# Uncovering concurrency issues, testing and debugging
+# Uncovering Concurrency Issues, Testing and Debugging
 
 Until now, the GIL has allowed developers to ignore C
 safety issues when writing parallel programs, since the GIL ensured that
