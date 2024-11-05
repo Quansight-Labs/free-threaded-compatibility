@@ -127,6 +127,22 @@ PYTHON_GIL=0 pytest -x -v --count=100 test_concurrent.py
 We advise to set `count` in the order of hundreds and even larger, in order to
 ensure at least one concurrent clash event.
 
+## PyTest plugins to discover concurrency issues
+Given that the aforementioned testing scenarios are repetitive and highly
+verbose, several community-lead pytest libraries have been implemented
+including,
+
+- [pytest-run-parallel](https://github.com/Quansight-Labs/pytest-run-parallel)
+- [pytest-freethreaded](https://github.com/tonybaloney/pytest-freethreaded).
+
+The advantage of using a pytest plugin as opposed to manually using the testing
+scenarios mainly reside in their ability to integrate with the ecosystem
+constructs like markers, fixtures, skip and failure flags. For more information
+regarding the usage of these libraries please refer to the documentation of
+each project. Also, if you are an author of a pytest plugin library please
+feel free to open an issue in order to include the information of your project
+in this wiki.
+
 ## Debugging tests that depend on native calls
 
 If your code has native dependencies, either via C/C++ or Cython, `gdb`
