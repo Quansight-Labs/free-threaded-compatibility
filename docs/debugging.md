@@ -159,7 +159,6 @@ def test_call_unsafe_concurrent_pool():
 
 </details>
 
-
 ## Debugging tests that depend on native calls
 
 If your code has native dependencies, either via C/C++ or Cython, `gdb`
