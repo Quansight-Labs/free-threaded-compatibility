@@ -32,27 +32,57 @@ several strategies, which we will summarize next.
 We highly suggest reading the detailed guide presented on
 [Porting Extension Modules to Support Free-Threading](porting.md)
 
-## Testing scenarios
+## pytest plugins to discover concurrency issues
 
-In order to check that a function or class has no concurrency issues, it is
-necessary to define test functions that cover such cases. For such scenarios, the
-standard `threading` library defines several low-level parallel primitives that
-can be used to test for concurrency, while the `concurrent.futures` module
-provides high-level constructs.
+As parallel testing has become a critical component to ensure compatibility
+with free-threaded CPython, several community-led pytest plugins have been
+implemented that attempt to smoke out issues by running all tests in a test
+suite in a concurrent manner:
 
-For example, consider a method `MyClass.call_unsafe`
-that has been flagged as having concurrency issues since it mutates attributes
-of a shared object that is accessed by multiple threads. We can write a test for
-it using first low-level primitives:
+- [pytest-run-parallel](https://github.com/Quansight-Labs/pytest-run-parallel)
+- [pytest-freethreaded](https://github.com/tonybaloney/pytest-freethreaded)
+
+The advantage of using a pytest plugin as opposed to manually using the
+`threading` and/or `concurrent.futures` modules mainly resides in their
+ability to integrate with the ecosystem constructs like markers, fixtures,
+skip and failure flags. For more information regarding the usage of these
+libraries please refer to the documentation of each project.
+
+### Repeated test execution
+
+Given the non-deterministic nature of parallel execution, tests for code that
+has a concurrency issue may still pass most of the time.
+In order to more reliably reproduce a test failure under concurrency, we
+recommend using [pytest-repeat](https://github.com/pytest-dev/pytest-repeat),
+which enables the `--count` flag in the `pytest` command:
+
+```bash
+# Setting PYTHON_GIL=0 ensures that the GIL is effectively disabled.
+PYTHON_GIL=0 pytest -x -v --count=100 test_concurrent.py
+```
+
+We advise to set `count` to `100` (or even larger if needed), in order to
+ensure at least one concurrent clash event.
+
+## Writing explicitly concurrent test cases
+
+It may be desirable to have tests using, e.g., `threading` or
+`concurrent.futures` in your test suite in order to prevent adding
+additional test dependencies or to test a particular subset of tests for
+concurrency issues by default. The stdlib `threading` module defines several
+low-level parallel primitives that can be used to test for concurrency,
+while the `concurrent.futures` module provides higher-level constructs.
+
+For example, consider a method `MyClass.call_unsafe` that has been flagged as
+having concurrency issues since it mutates attributes of a shared object that
+is accessed by multiple threads. We can write a test for it using either
+`threading` or `concurrent.futures` primitives:
+
+<details>
+<summary>Example using threading:</summary>
 
 ```python
-"""test_concurrent.py"""
-
-# Low level parallel primitives
 import threading
-
-# High level parallel constructs
-from concurrent.futures import ThreadPoolExecutor
 
 # Library to test
 from mylib import MyClass
@@ -88,6 +118,19 @@ def test_call_unsafe_concurrent_threading():
 
     # Do something about the results
     assert check_results(results)
+```
+
+</details>
+
+<details>
+<summary>Example using concurrent.futures:</summary>
+
+```python
+import threading
+from concurrent.futures import ThreadPoolExecutor
+
+# Library to test
+from mylib import MyClass
 
 
 def test_call_unsafe_concurrent_pool():
@@ -114,18 +157,7 @@ def test_call_unsafe_concurrent_pool():
     assert check_results(results)
 ```
 
-Given the non-deterministic nature of parallel execution, such tests may pass
-from time to time. In order to reliably ensuring their failure under concurrency,
-we recommend using `pytest-repeat`, which enables the `--count` flag in the
-`pytest` command:
-
-```bash
-# Setting PYTHON_GIL=0 ensures that the GIL is effectively disabled.
-PYTHON_GIL=0 pytest -x -v --count=100 test_concurrent.py
-```
-
-We advise to set `count` in the order of hundreds and even larger, in order to
-ensure at least one concurrent clash event.
+</details>
 
 ## Debugging tests that depend on native calls
 
@@ -215,7 +247,7 @@ other libraries and aren't covered here.
 ### Cython compilation errors: `unknown type name '__pyx_vectorcallfunc'`
 
 This happens if you try to build a Cython extension for the free-threaded build
-using the current stable release of Cython (3.0.10 at the time of writing). The
+using the current stable release of Cython (3.0.11 at the time of writing). The
 current stable release of Cython does not support the free-threaded build. You
 must either build Cython from the `master` branch [on
 Github](https://github.com/cython/cython) or use the nightly wheel:
