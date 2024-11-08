@@ -37,8 +37,8 @@ and installing the free-threaded binaries is also possible:
 
     ```powershell
     $url = 'https://www.python.org/ftp/python/3.13.0/python-3.13.0-amd64.exe'
-    Invoke-WebRequest -Uri $url -OutFile 'python.exe'
-    python.exe /quiet Include_freethreaded=1
+    Invoke-WebRequest -Uri $url -OutFile 'python-3.13.0-amd64.exe'
+    .\python-3.13.0-amd64.exe /quiet Include_freethreaded=1
     ```
 
     If you are running this script without administrator privileges,
