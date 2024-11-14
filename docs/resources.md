@@ -14,6 +14,7 @@ try to keep an up-to-date list here:
 - [PEP 703 acceptance announcement](https://discuss.python.org/t/37075)
 - [Quansight Labs blog post about work on free-threading](https://labs.quansight.org/blog/free-threaded-python-rollout)
 - [Simon Willison's post about trying out free-threaded Python on macOS](https://til.simonwillison.net/python/trying-free-threaded-python)
+- [Codspeed's blog post about free-threading performance](https://codspeed.io/blog/state-of-python-3-13-performance-free-threading)
 
 There's also a lot of useful resources on CPython internals, that are not
 specific to the free-threaded build:
