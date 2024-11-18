@@ -15,7 +15,7 @@ free-threading, many more users will want to use Python threads.
 
 This means we must analyze Python codebases, particularly in low-level extension
 modules, to identify thread safety issues and make changes to thread-unsafe
-low-level code, including C, C++, and Cython code exposed to Python.
+low-level code, including C, C++, Cython, and Rust code exposed to Python.
 
 ## Updating Extension Modules
 
@@ -155,6 +155,47 @@ after importing a module that does not support the GIL.
     In CI, you will need to ensure a nightly cython is installed for
     free-threaded builds. See [the docs on setting up CI](ci.md) for advice on
     how to build projects that depend on Cython.
+
+=== "Rust"
+    If you use the CPython C API via [PyO3](https://pyo3.rs), then you
+    can follow the [PyO3 Guide
+    section](https://pyo3.rs/v0.23.1/free-threading.html) on supporting
+    free-threaded Python. You must also update your extension to at least
+    version 0.23.
+
+    You should write multithreaded tests of any code you expose to Python. You
+    can leverage your existing test suite and
+    [`pytest-run-parallel`](https://github.com/Quansight-Labs/pytest-run-parallel)
+    to discover thread safety issues due to use of global state, but you should
+    also write explicitly multithreaded tests using any data structures provided
+    by modules defined in Rust extensions.
+
+    As of PyO3 0.23, PyO3 enforces rust's borrow checking rules at
+    runtime and may produce runtime panics if you simultaneously mutably borrow
+    data in more than one thread. You may want to consider storing state in using
+    atomic data structures, with mutexes or locks, or behind `Arc`
+    pointers.
+
+    Once you are satisfied the Python modules defined by your rust crate are
+    thread safe, you can pass `gil_used = false` to the [`pymodule`
+    macro](https://docs.rs/pyo3/latest/pyo3/attr.pymodule.html):
+
+    ```rust
+
+    #[pymodule(gil_used = false)]
+    fn my_module(py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
+        ...
+    }
+    ```
+
+    If you define any modules procedurally by manually creating a `PyModule`
+    struct without using the `pymodule` macro, you can call
+    [`PyModuleMethods::gil_used`](https://docs.rs/pyo3/latest/pyo3/prelude/trait.PyModuleMethods.html#tymethod.gil_used)
+    after instantiating the module.
+
+    If you use the `pyo3-ffi` and `unsafe` FFI calls to call directly into the C
+    API, then see the section on porting C extensions in this guide as well as
+    the PyO3 source code.
 
 === "f2py"
     Starting with NumPy 2.1.0 (only available via the nightly wheels or the
