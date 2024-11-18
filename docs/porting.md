@@ -198,8 +198,7 @@ after importing a module that does not support the GIL.
     the PyO3 source code.
 
 === "f2py"
-    Starting with NumPy 2.1.0 (only available via the nightly wheels or the
-    `main` branch as of right now), extension modules containing f2py-wrapped
+    Starting with NumPy 2.1.0, extension modules containing f2py-wrapped
     Fortran code can declare they are thread-safe and support free-threading
     using the
     [`--freethreading-compatible`](https://numpy.org/devdocs/f2py/usage.html#extension-module-construction)
