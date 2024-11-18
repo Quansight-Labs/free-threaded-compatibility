@@ -197,9 +197,12 @@ You can also look at
 well as
 [pytest-freethreaded](https://github.com/tonybaloney/pytest-freethreaded), which
 both offer pytest plugins to enable running tests in an existing `pytest` test
-suite simultaneously in many threads. See the section below on [global state in
-tests](porting.md#dealing-with-global-state-in-tests) for more information
-about updating test suites to work with the free-threaded build.
+suite simultaneously in many threads, with the goal of validating thread
+safety. [unittest-ft](https://github.com/amyreese/unittest-ft) offers similar
+functionality for running `unittest`-based tests in parallel. See the section
+below on [global state in tests](porting.md#dealing-with-global-state-in-tests)
+for more information about updating test suites to work with the free-threaded
+build.
 
 Many C and C++ extensions assume the GIL serializes access to state shared
 between threads, introducing the possibility of data races and race conditions
