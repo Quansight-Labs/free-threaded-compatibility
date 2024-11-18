@@ -193,7 +193,7 @@ after importing a module that does not support the GIL.
     [`PyModuleMethods::gil_used`](https://docs.rs/pyo3/latest/pyo3/prelude/trait.PyModuleMethods.html#tymethod.gil_used)
     after instantiating the module.
 
-    If you use the `pyo3-ffi` and `unsafe` FFI calls to call directly into the C
+    If you use the `pyo3-ffi` crate and/or `unsafe` FFI calls to call directly into the C
     API, then see the section on porting C extensions in this guide as well as
     the PyO3 source code.
 
