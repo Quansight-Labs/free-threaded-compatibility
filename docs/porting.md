@@ -159,7 +159,7 @@ after importing a module that does not support the GIL.
 === "Rust"
     If you use the CPython C API via [PyO3](https://pyo3.rs), then you
     can follow the [PyO3 Guide
-    section](https://pyo3.rs/v0.23.1/free-threading.html) on supporting
+    section](https://pyo3.rs/latest/free-threading.html) on supporting
     free-threaded Python. You must also update your extension to at least
     version 0.23.
 
@@ -170,7 +170,7 @@ after importing a module that does not support the GIL.
     also write explicitly multithreaded tests using any data structures provided
     by modules defined in Rust extensions.
 
-    As of PyO3 0.23, PyO3 enforces rust's borrow checking rules at
+    As of PyO3 0.23, PyO3 enforces Rust's borrow checking rules at
     runtime and may produce runtime panics if you simultaneously mutably borrow
     data in more than one thread. You may want to consider storing state in using
     atomic data structures, with mutexes or locks, or behind `Arc`
