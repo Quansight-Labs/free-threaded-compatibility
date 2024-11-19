@@ -86,11 +86,14 @@ after importing a module that does not support the GIL.
     or C undefined behavior due to Python-level semantics. If you find such a
     case, it may be a Cython or CPython bug and should be reported as such.
 
-    That said, as opposed to data races, a race conditions that produces random
-    results from a multithreaded algorithm is not undefined behavior and is
+    That said, as opposed to data races, race conditions that produces random
+    results from a multithreaded algorithm are not undefined behavior and are
     allowed in Python and therefore Cython as well. You will still need to add
     locking or synchronization where appropriate to ensure reproducible results
-    when running a multithreaded algorithm on shared mutable data.
+    when running a multithreaded algorithm on shared mutable data. See the
+    [suggested plan of attack](porting.md#suggested-plan-of-attack) below for
+    more details about discovering and fixing thread safety issues for Python
+    native extensions.
 
     Starting with Cython 3.1.0 (available via the nightly wheels, a PyPI
     pre-release or the `master` branch as of right now), extension modules
