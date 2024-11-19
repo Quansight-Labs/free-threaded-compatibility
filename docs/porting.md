@@ -79,8 +79,22 @@ after importing a module that does not support the GIL.
     ```
 
 === "Cython"
-    Starting with Cython 3.1.0 (only available via the nightly wheels or the `master`
-    branch as of right now), extension modules written in Cython can do so using the
+    Cython code can be thread-unsafe and just like C and C++ code can exhibit
+    undefined behavior due to data races.
+
+    Code operating on Python objects should not exhibit any low-level data corruption
+    or C undefined behavior due to Python-level semantics. If you find such a
+    case, it may be a Cython or CPython bug and should be reported as such.
+
+    That said, as opposed to data races, a race conditions that produces random
+    results from a multithreaded algorithm is not undefined behavior and is
+    allowed in Python and therefore Cython as well. You will still need to add
+    locking or synchronization where appropriate to ensure reproducible results
+    when running a multithreaded algorithm on shared mutable data.
+
+    Starting with Cython 3.1.0 (available via the nightly wheels, a PyPI
+    pre-release or the `master` branch as of right now), extension modules
+    written in Cython can do so using the
     [`freethreading_compatible`](https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#compiler-directives)
     compiler directive.
 
@@ -216,6 +230,8 @@ to also add support for the free-threaded build.
 
 ## Suggested Plan of Attack
 
+### Validating thread safety with testing
+
 Put priority on thread safety issues surfaced by real-world testing. Run the
 test suite for your project and fix any failures that occur only with the GIL
 disabled. Some issues may be due to changes in Python 3.13 that are not
@@ -225,34 +241,45 @@ Definitely run your existing test suite with the GIL disabled, but unless your
 tests make heavy use of the `threading` module, you will likely not hit many
 issues, so also consider constructing multithreaded tests to expose bugs based
 on workflows you want to support. Issues found in these tests are the issues
-your users will most likely hit first. The
-[`concurrent.futures.ThreadPoolExecutor`](https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ThreadPoolExecutor)
-class is a lightweight way to create multithreaded tests where many threads
-repeatedly call a function simultaneously. You can also use the `threading`
-module directly. Adding a `threading.Barrier` before your test code is a good
-way to synchronize workers and encourage a race condition.
+your users will most likely hit first.
 
-You can also look at
+Multithreaded Python programs can exhibit [race
+conditions](https://en.wikipedia.org/wiki/Race_condition) which produce random
+results depending on the order of execution in a multithreaded context. This can
+happen even with the GIL providing locking, so long as the algorithm releases
+the GIL at some point, and many Python operations can lead to the GIL being
+released at some point. If your library was not designed with multithreading in
+mind, it is likely that some form of locking or synchronization is necessary to
+make mutable data structures defined by your library thread-safe. You should
+document the thread-safety guarantees of your library, both with and without the
+GIL.
+
+You can look at
 [pytest-run-parallel](https://github.com/Quansight-Labs/pytest-run-parallel) as
 well as
 [pytest-freethreaded](https://github.com/tonybaloney/pytest-freethreaded), which
 both offer pytest plugins to enable running tests in an existing `pytest` test
 suite simultaneously in many threads. See the section below on [global state in
 tests](porting.md#dealing-with-global-state-in-tests) for more information
-about updating test suites to work with the free-threaded build.
+about updating test suites to work with the free-threaded build. These plugins
+are useful for discovering issues related to use of global state, but cannot
+discover issues from multithreaded use of data structures defined by your
+library.
 
-Many C and C++ extensions assume the GIL serializes access to state shared
+If you would like to create your own testing utilities, the
+[`concurrent.futures.ThreadPoolExecutor`](https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ThreadPoolExecutor)
+class is a lightweight way to create multithreaded tests where many threads
+repeatedly call a function simultaneously. You can also use the `threading`
+module directly for more complicated multithreaded test workflows. Adding a
+`threading.Barrier` before a line of code that you suspect will trigger a race
+condition is a good way to synchronize workers and increase the chances that an
+infrequent test failure will trigger.
+
+### General considerations for porting
+
+Many extensions assume the GIL serializes access to state shared
 between threads, introducing the possibility of data races and race conditions
 that are impossible when the GIL is enabled.
-
-Cython code can also be thread-unsafe and exhibit undefined behavior due to
-data races just like any other C or C++ code. However, code operating on Python
-objects should not exhibit any low-level data races or undefined behavior due
-to Python-level semantics. If you find such a case, it may be a Cython or
-CPython bug and should be reported as such. That said, race conditions are
-allowed in Python and therefore Cython as well, so you will still need to add
-locking or synchronization where appropriate to ensure reproducible results
-when running a multithreaded algorithm on shared mutable data.
 
 The CPython C API exposes the `Py_GIL_DISABLED` macro in the free-threaded
 build. You can use it to enable low-level code that only runs under the
@@ -287,7 +314,7 @@ multithreaded scaling.
 
 For your libraries, we suggest a similar approach for now. Focus on thread
 safety issues that only occur with the GIL disabled. Any non-critical
-pre-existing thread safety issues can be dealt with later once the
+preexisting thread safety issues can be dealt with later once the
 free-threaded build is used more. The goal for now should be to enable further
 refinement and experimentation by fixing issues that prevent using the library
 at all.
