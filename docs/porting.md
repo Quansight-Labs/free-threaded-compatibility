@@ -163,12 +163,12 @@ after importing a module that does not support the GIL.
     free-threaded Python. You must also update your extension to at least
     version 0.23.
 
-    You should write multithreaded tests of any code you expose to Python. You
-    can leverage your existing test suite and
-    [`pytest-run-parallel`](https://github.com/Quansight-Labs/pytest-run-parallel)
-    to discover thread safety issues due to use of global state, but you should
-    also write explicitly multithreaded tests using any data structures provided
-    by modules defined in Rust extensions.
+    You should write multithreaded tests of any code you expose to Python. See
+    the details about testing in our [suggested plan of
+    attack](porting.md#suggested-plan-of-attack) below as well as the guidance
+    for [updating test suites](porting.md#fixing-thread-unsafe-tests). You
+    should fix any thread safety issues you discover while running multithreaded
+    tests.
 
     As of PyO3 0.23, PyO3 enforces Rust's borrow checking rules at
     runtime and may produce runtime panics if you simultaneously mutably borrow
