@@ -15,7 +15,7 @@ free-threading, many more users will want to use Python threads.
 
 This means we must analyze Python codebases, particularly in low-level extension
 modules, to identify thread safety issues and make changes to thread-unsafe
-low-level code, including C, C++, and Cython code exposed to Python.
+low-level code, including C, C++, Cython, and Rust code exposed to Python.
 
 ## Updating Extension Modules
 
@@ -79,8 +79,25 @@ after importing a module that does not support the GIL.
     ```
 
 === "Cython"
-    Starting with Cython 3.1.0 (only available via the nightly wheels or the `master`
-    branch as of right now), extension modules written in Cython can do so using the
+    Cython code can be thread-unsafe and just like C and C++ code can exhibit
+    undefined behavior due to data races.
+
+    Code operating on Python objects should not exhibit any low-level data corruption
+    or C undefined behavior due to Python-level semantics. If you find such a
+    case, it may be a Cython or CPython bug and should be reported as such.
+
+    That said, as opposed to data races, race conditions that produces random
+    results from a multithreaded algorithm are not undefined behavior and are
+    allowed in Python and therefore Cython as well. You will still need to add
+    locking or synchronization where appropriate to ensure reproducible results
+    when running a multithreaded algorithm on shared mutable data. See the
+    [suggested plan of attack](porting.md#suggested-plan-of-attack) below for
+    more details about discovering and fixing thread safety issues for Python
+    native extensions.
+
+    Starting with Cython 3.1.0 (available via the nightly wheels, a PyPI
+    pre-release or the `master` branch as of right now), extension modules
+    written in Cython can do so using the
     [`freethreading_compatible`](https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#compiler-directives)
     compiler directive.
 
@@ -156,9 +173,49 @@ after importing a module that does not support the GIL.
     free-threaded builds. See [the docs on setting up CI](ci.md) for advice on
     how to build projects that depend on Cython.
 
+=== "Rust"
+    If you use the CPython C API via [PyO3](https://pyo3.rs), then you
+    can follow the [PyO3 Guide
+    section](https://pyo3.rs/latest/free-threading.html) on supporting
+    free-threaded Python. You must also update your extension to at least
+    version 0.23.
+
+    You should write multithreaded tests of any code you expose to Python. See
+    the details about testing in our [suggested plan of
+    attack](porting.md#suggested-plan-of-attack) below as well as the guidance
+    for [updating test suites](porting.md#fixing-thread-unsafe-tests). You
+    should fix any thread safety issues you discover while running multithreaded
+    tests.
+
+    As of PyO3 0.23, PyO3 enforces Rust's borrow checking rules at
+    runtime and may produce runtime panics if you simultaneously mutably borrow
+    data in more than one thread. You may want to consider storing state in using
+    atomic data structures, with mutexes or locks, or behind `Arc`
+    pointers.
+
+    Once you are satisfied the Python modules defined by your rust crate are
+    thread safe, you can pass `gil_used = false` to the [`pymodule`
+    macro](https://docs.rs/pyo3/latest/pyo3/attr.pymodule.html):
+
+    ```rust
+
+    #[pymodule(gil_used = false)]
+    fn my_module(py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
+        ...
+    }
+    ```
+
+    If you define any modules procedurally by manually creating a `PyModule`
+    struct without using the `pymodule` macro, you can call
+    [`PyModuleMethods::gil_used`](https://docs.rs/pyo3/latest/pyo3/prelude/trait.PyModuleMethods.html#tymethod.gil_used)
+    after instantiating the module.
+
+    If you use the `pyo3-ffi` crate and/or `unsafe` FFI calls to call directly into the C
+    API, then see the section on porting C extensions in this guide as well as
+    the PyO3 source code.
+
 === "f2py"
-    Starting with NumPy 2.1.0 (only available via the nightly wheels or the
-    `main` branch as of right now), extension modules containing f2py-wrapped
+    Starting with NumPy 2.1.0, extension modules containing f2py-wrapped
     Fortran code can declare they are thread-safe and support free-threading
     using the
     [`--freethreading-compatible`](https://numpy.org/devdocs/f2py/usage.html#extension-module-construction)
@@ -176,6 +233,8 @@ to also add support for the free-threaded build.
 
 ## Suggested Plan of Attack
 
+### Validating thread safety with testing
+
 Put priority on thread safety issues surfaced by real-world testing. Run the
 test suite for your project and fix any failures that occur only with the GIL
 disabled. Some issues may be due to changes in Python 3.13 that are not
@@ -185,14 +244,20 @@ Definitely run your existing test suite with the GIL disabled, but unless your
 tests make heavy use of the `threading` module, you will likely not hit many
 issues, so also consider constructing multithreaded tests to expose bugs based
 on workflows you want to support. Issues found in these tests are the issues
-your users will most likely hit first. The
-[`concurrent.futures.ThreadPoolExecutor`](https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ThreadPoolExecutor)
-class is a lightweight way to create multithreaded tests where many threads
-repeatedly call a function simultaneously. You can also use the `threading`
-module directly. Adding a `threading.Barrier` before your test code is a good
-way to synchronize workers and encourage a race condition.
+your users will most likely hit first.
 
-You can also look at
+Multithreaded Python programs can exhibit [race
+conditions](https://en.wikipedia.org/wiki/Race_condition) which produce random
+results depending on the order of execution in a multithreaded context. This can
+happen even with the GIL providing locking, so long as the algorithm releases
+the GIL at some point, and many Python operations can lead to the GIL being
+released at some point. If your library was not designed with multithreading in
+mind, it is likely that some form of locking or synchronization is necessary to
+make mutable data structures defined by your library thread-safe. You should
+document the thread-safety guarantees of your library, both with and without the
+GIL.
+
+You can look at
 [pytest-run-parallel](https://github.com/Quansight-Labs/pytest-run-parallel) as
 well as
 [pytest-freethreaded](https://github.com/tonybaloney/pytest-freethreaded), which
@@ -204,18 +269,24 @@ below on [global state in tests](porting.md#dealing-with-global-state-in-tests)
 for more information about updating test suites to work with the free-threaded
 build.
 
-Many C and C++ extensions assume the GIL serializes access to state shared
+These plugins are useful for discovering issues related to use of global state,
+but cannot discover issues from multithreaded use of data structures defined by
+your library.
+
+If you would like to create your own testing utilities, the
+[`concurrent.futures.ThreadPoolExecutor`](https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ThreadPoolExecutor)
+class is a lightweight way to create multithreaded tests where many threads
+repeatedly call a function simultaneously. You can also use the `threading`
+module directly for more complicated multithreaded test workflows. Adding a
+`threading.Barrier` before a line of code that you suspect will trigger a race
+condition is a good way to synchronize workers and increase the chances that an
+infrequent test failure will trigger.
+
+### General considerations for porting
+
+Many extensions assume the GIL serializes access to state shared
 between threads, introducing the possibility of data races and race conditions
 that are impossible when the GIL is enabled.
-
-Cython code can also be thread-unsafe and exhibit undefined behavior due to
-data races just like any other C or C++ code. However, code operating on Python
-objects should not exhibit any low-level data races or undefined behavior due
-to Python-level semantics. If you find such a case, it may be a Cython or
-CPython bug and should be reported as such. That said, race conditions are
-allowed in Python and therefore Cython as well, so you will still need to add
-locking or synchronization where appropriate to ensure reproducible results
-when running a multithreaded algorithm on shared mutable data.
 
 The CPython C API exposes the `Py_GIL_DISABLED` macro in the free-threaded
 build. You can use it to enable low-level code that only runs under the
@@ -250,7 +321,7 @@ multithreaded scaling.
 
 For your libraries, we suggest a similar approach for now. Focus on thread
 safety issues that only occur with the GIL disabled. Any non-critical
-pre-existing thread safety issues can be dealt with later once the
+preexisting thread safety issues can be dealt with later once the
 free-threaded build is used more. The goal for now should be to enable further
 refinement and experimentation by fixing issues that prevent using the library
 at all.
