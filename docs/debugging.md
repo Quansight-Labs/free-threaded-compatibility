@@ -281,11 +281,13 @@ In this section we provide the commands to build free-threading compatible CPyth
 #### Compile free-threading CPython with TSAN
 
 - Clone free-threading stable branch, e.g. 3.13.1
+
 ```bash
 git clone https://github.com/python/cpython.git -b v3.13.1
 ```
 
 - Configure and build (we use clang-18 as compiler):
+
 ```bash
 cd cpython
 CC=clang-18 CXX=clang++-18 ./configure --disable-gil --with-thread-sanitizer --prefix $PWD/cpython-tsan
@@ -294,6 +296,7 @@ make install
 ```
 
 - Use built python interpreter:
+
 ```bash
 export PATH=$PWD/cpython-tsan/bin:$PATH
 python3.13t -VV
@@ -303,11 +306,13 @@ YTHON_GIL=0 python3.13t -c "import sys; print(sys._is_gil_enabled())"
 #### Compile NumPy with TSAN
 
 - Get the source code (for example, `main` branch)
+
 ```bash
 git clone --recursive https://github.com/numpy/numpy.git
 ```
 
 - Install build requirements:
+
 ```bash
 cd numpy
 python3.13t -mpip install -r requirements/build_requirements.txt
@@ -316,6 +321,7 @@ python3.13t -mpip install -U "cython==3.1.0a1"
 ```
 
 - Build the package
+
 ```bash
 export CC=clang-18
 export CXX=clang++-18
@@ -329,11 +335,13 @@ python3.13t -mpip install -v . --no-build-isolation
 ### Useful TSAN options
 
 - By default TSAN reports warnings. How to stop execution on TSAN error:
+
 ```bash
 TSAN_OPTIONS=halt_on_error=1 python3.13t -mpytest test.py
 ```
 
 - How to add tsan suppressions (written in a file: `tsan-suppressions`):
+
 ```bash
 # Let's show an example content of suppressions,
 # more info: https://github.com/google/sanitizers/wiki/ThreadSanitizerSuppressions
