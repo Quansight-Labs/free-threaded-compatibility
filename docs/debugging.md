@@ -271,4 +271,80 @@ slower than a compiled version, so you should default to installing the wheel in
 CI instead of compiling Cython, which can take up to a few minutes on some CI
 runners.
 
+### Compiling CPython and foundational packages with thread sanitizer (TSAN)
+
+[Thread sanitizer](https://github.com/google/sanitizers/wiki/ThreadSanitizerCppManual) (or TSAN) helps
+to detect C/C++ data races in concurrent systems. This tool can help to reveal free-threading
+related bugs in CPython and foundational packages (e.g. `numpy`).
+In this section we provide the commands to build free-threading compatible CPython and packages with TSAN and other hints to discover potential data races.
+
+#### Compile free-threading CPython with TSAN
+
+- Clone free-threading stable branch, e.g. 3.13.1
+```bash
+git clone https://github.com/python/cpython.git -b v3.13.1
+```
+
+- Configure and build (we use clang-18 as compiler):
+```bash
+cd cpython
+CC=clang-18 CXX=clang++-18 ./configure --disable-gil --with-thread-sanitizer --prefix $PWD/cpython-tsan
+make -j 8
+make install
+```
+
+- Use built python interpreter:
+```bash
+export PATH=$PWD/cpython-tsan/bin:$PATH
+python3.13t -VV
+YTHON_GIL=0 python3.13t -c "import sys; print(sys._is_gil_enabled())"
+```
+
+#### Compile NumPy with TSAN
+
+- Get the source code (for example, `main` branch)
+```bash
+git clone --recursive https://github.com/numpy/numpy.git
+```
+
+- Install build requirements:
+```bash
+cd numpy
+python3.13t -mpip install -r requirements/build_requirements.txt
+# Make sur to install compatible Cython version
+python3.13t -mpip install -U "cython==3.1.0a1"
+```
+
+- Build the package
+```bash
+export CC=clang-18
+export CXX=clang++-18
+export CFLAGS=-fsanitize=thread
+export CXXFLAGS=-fsanitize=thread
+export LDFLAGS=-fsanitize=thread
+
+python3.13t -mpip install -v . --no-build-isolation
+```
+
+### Useful TSAN options
+
+- By default TSAN reports warnings. How to stop execution on TSAN error:
+```bash
+TSAN_OPTIONS=halt_on_error=1 python3.13t -mpytest test.py
+```
+
+- How to add tsan suppressions (written in a file: `tsan-suppressions`):
+```bash
+# Let's show an example content of suppressions,
+# more info: https://github.com/google/sanitizers/wiki/ThreadSanitizerSuppressions
+cat $PWD/tsan-suppressions
+
+race:llvm::RuntimeDyldELF::registerEHFrames
+race:partial_vectorcall_fallback
+race:dnnl_sgemm
+
+
+export TSAN_OPTIONS="suppressions=$PWD/tsan-suppressions" python3.13t -mpytest test.py
+```
+
 [^1]: This feature is not correctly working on `lldb` after CPython 3.12.
