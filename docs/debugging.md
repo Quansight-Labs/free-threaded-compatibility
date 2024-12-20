@@ -300,7 +300,7 @@ make install
 ```bash
 export PATH=$PWD/cpython-tsan/bin:$PATH
 python3.13t -VV
-YTHON_GIL=0 python3.13t -c "import sys; print(sys._is_gil_enabled())"
+PYTHON_GIL=0 python3.13t -c "import sys; print(sys._is_gil_enabled())"
 ```
 
 #### Compile NumPy with TSAN
