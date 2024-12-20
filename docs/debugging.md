@@ -300,7 +300,9 @@ make install
 ```bash
 export PATH=$PWD/cpython-tsan/bin:$PATH
 python3.13t -VV
+# Python 3.13.1 experimental free-threading build (tags/v3.13.1:06714517797, Dec 19 2024, 10:06:54) [Clang 18.1.3 (1ubuntu1)]
 PYTHON_GIL=0 python3.13t -c "import sys; print(sys._is_gil_enabled())"
+# False
 ```
 
 #### Compile NumPy with TSAN
