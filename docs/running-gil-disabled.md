@@ -33,6 +33,12 @@ Python 3.13.0b1+ experimental free-threading build (heads/3.13:d93c4f9, May 21 2
 Verify that the GIL is disabled at runtime with the following incantation:
 
 ```bash
+python -c "import sysconfig; print(bool(sysconfig.get_config_var('Py_GIL_DISABLED')))"
+```
+
+or alternatively with:
+
+```bash
 python -c "import sys; print(sys._is_gil_enabled())"
 ```
 
