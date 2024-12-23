@@ -280,13 +280,13 @@ In this section we provide the commands to build free-threading compatible CPyth
 
 #### Compile free-threading CPython with TSAN
 
-- Clone free-threading stable branch, e.g. 3.13.1
+- Clone free-threading stable branch, e.g. 3.13
 
 ```bash
-git clone https://github.com/python/cpython.git -b v3.13.1
+git clone https://github.com/python/cpython.git -b 3.13
 ```
 
-- Configure and build (we use clang-18 as compiler):
+- Configure and build the interpreter. Below instructions are for Linux (Windows and macOS may require some changes). We skip the instructions on how to install Clang compiler.
 
 ```bash
 cd cpython
@@ -295,14 +295,21 @@ make -j 8
 make install
 ```
 
-- Use built python interpreter:
+- Use built Python interpreter:
 
 ```bash
-export PATH=$PWD/cpython-tsan/bin:$PATH
-python3.13t -VV
+# Create virtual environment:
+$PWD/cpython-tsan/bin/python3.13t -m venv ~/tsanvenv
+# Activate it:
+source ~/tsanvenv/bin/activate
+
+python -VV
 # Python 3.13.1 experimental free-threading build (tags/v3.13.1:06714517797, Dec 19 2024, 10:06:54) [Clang 18.1.3 (1ubuntu1)]
-PYTHON_GIL=0 python3.13t -c "import sys; print(sys._is_gil_enabled())"
+PYTHON_GIL=0 python -c "import sys; print(sys._is_gil_enabled())"
 # False
+
+# Optionally, exit cpython folder
+cd ..
 ```
 
 #### Compile NumPy with TSAN
@@ -317,9 +324,9 @@ git clone --recursive https://github.com/numpy/numpy.git
 
 ```bash
 cd numpy
-python3.13t -mpip install -r requirements/build_requirements.txt
-# Make sur to install compatible Cython version
-python3.13t -mpip install -U "cython==3.1.0a1"
+python -m pip install -r requirements/build_requirements.txt
+# Make sure to install compatible Cython version
+python -m pip install -U git+https://github.com/cython/cython
 ```
 
 - Build the package
@@ -331,7 +338,7 @@ export CFLAGS=-fsanitize=thread
 export CXXFLAGS=-fsanitize=thread
 export LDFLAGS=-fsanitize=thread
 
-python3.13t -mpip install -v . --no-build-isolation
+python -m pip install -v . --no-build-isolation
 ```
 
 ### Useful TSAN options
@@ -339,10 +346,10 @@ python3.13t -mpip install -v . --no-build-isolation
 - By default TSAN reports warnings. How to stop execution on TSAN error:
 
 ```bash
-TSAN_OPTIONS=halt_on_error=1 python3.13t -mpytest test.py
+TSAN_OPTIONS=halt_on_error=1 python -m pytest test.py
 ```
 
-- How to add tsan suppressions (written in a file: `tsan-suppressions`):
+- How to add TSAN suppressions (written in a file: `tsan-suppressions`):
 
 ```bash
 # Let's show an example content of suppressions,
@@ -354,7 +361,7 @@ race:partial_vectorcall_fallback
 race:dnnl_sgemm
 
 
-export TSAN_OPTIONS="suppressions=$PWD/tsan-suppressions" python3.13t -mpytest test.py
+export TSAN_OPTIONS="suppressions=$PWD/tsan-suppressions" python -m pytest test.py
 ```
 
 [^1]: This feature is not correctly working on `lldb` after CPython 3.12.
