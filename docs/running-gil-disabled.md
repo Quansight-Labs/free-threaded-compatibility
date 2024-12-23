@@ -61,5 +61,5 @@ this within your code:
 ```python
 import sysconfig
 
-is_freethreaded = bool(sysconfig.get_config_var('Py_GIL_DISABLED'))
+is_freethreaded = bool(sysconfig.get_config_var("Py_GIL_DISABLED"))
 ```
