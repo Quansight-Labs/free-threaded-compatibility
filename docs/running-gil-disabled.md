@@ -17,7 +17,7 @@
     free-threaded binary, that means the free-threaded option was not selected
     during installation.
 
-You can verify your build of CPython itself has the GIL disabled with the
+You can verify if your build of CPython itself has the GIL disabled with the
 following incantation:
 
 ```bash
@@ -30,11 +30,19 @@ If you are using Python 3.13b1 or newer, you should see a message like:
 Python 3.13.0b1+ experimental free-threading build (heads/3.13:d93c4f9, May 21 2024, 10:54:14) [Clang 15.0.0 (clang-1500.1.0.2.5)]
 ```
 
-Verify that the GIL is disabled at runtime with the following incantation:
+To verify whether the GIL is disabled at runtime or not, you can use this in
+your code:
 
-```bash
-python -c "import sys; print(sys._is_gil_enabled())"
+```python
+import sys
+
+sys._is_gil_enabled()
 ```
+
+This will be `True` on the free-threaded build when the GIL is re-enabled at
+runtime, but should be `False` before importing any packages. Note that
+`sys._is_gil_enabled()` is only available on Python 3.13 and newer, you will
+see an `AttributeError` on older Python versions.
 
 To force Python to keep the GIL disabled even after importing a module
 that does not support running without it, use the `PYTHON_GIL` environment
@@ -44,4 +52,14 @@ variable or the `-X gil` command line option:
 # these are equivalent
 PYTHON_GIL=0 python
 python -Xgil=0
+```
+
+To check whether the Python interpreter you're using is a free-threaded build,
+irrespective of whether the GIL was re-enabled at runtime or not, you can use
+this within your code:
+
+```python
+import sysconfig
+
+is_freethreaded = bool(sysconfig.get_config_var("Py_GIL_DISABLED"))
 ```

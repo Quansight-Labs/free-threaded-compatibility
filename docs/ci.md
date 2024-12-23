@@ -115,3 +115,16 @@ disabled during tests, at least until you can register that your extension
 modules support disabling the GIL via `Py_mod_gil` and all of your runtime test
 dependencies do the same. See [the porting guide](porting.md) for more
 information about declaring support for free-threaded python in your extension.
+
+!!! info
+    If a dependency of your package does not support free-threading or has not
+    yet done a release which includes `cp313t` wheels, this can be tricky to
+    work around because an environment marker for free-threading does not exist
+    (see [this Discourse thread](https://discuss.python.org/t/environment-marker-for-free-threading/60007)).
+    Hence it is not possible to special-case free-threading with static metadata
+    in `pyproject.toml`. It's fine to still upload `cp313t` wheels for your
+    package to PyPI; the user may then be responsible for getting the
+    dependency installed (e.g., from a nightly wheel or building the
+    dependency's `main` branch from source) if the last release of the
+    dependency doesn't cleanly build from source or doesn't work under
+    free-threading.
