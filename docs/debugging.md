@@ -271,22 +271,26 @@ slower than a compiled version, so you should default to installing the wheel in
 CI instead of compiling Cython, which can take up to a few minutes on some CI
 runners.
 
-### Compiling CPython and foundational packages with thread sanitizer (TSAN)
+## Compiling CPython and foundational packages with thread sanitizer (TSAN)
 
 [Thread sanitizer](https://github.com/google/sanitizers/wiki/ThreadSanitizerCppManual) (or TSAN) helps
 to detect C/C++ data races in concurrent systems. This tool can help to reveal free-threading
 related bugs in CPython and foundational packages (e.g. `numpy`).
-In this section we provide the commands to build free-threading compatible CPython and packages with TSAN and other hints to discover potential data races.
+In this section we provide the commands to build a free-threading compatible
+CPython interpreter and packages with TSAN and other hints to discover
+potential data races.
 
-#### Compile free-threading CPython with TSAN
+### Compile free-threaded CPython with TSAN
 
-- Clone free-threading stable branch, e.g. 3.13
+- Clone the latest stable branch (`3.13`):
 
 ```bash
 git clone https://github.com/python/cpython.git -b 3.13
 ```
 
-- Configure and build the interpreter. Below instructions are for Linux (Windows and macOS may require some changes). We skip the instructions on how to install Clang compiler.
+- Configure and build the interpreter. Below instructions are for Linux
+  (Windows and macOS may require some changes). We skip the instructions on how
+  to install the Clang compiler.
 
 ```bash
 cd cpython
@@ -295,12 +299,12 @@ make -j 8
 make install
 ```
 
-- Use built Python interpreter:
+- To use the built Python interpreter:
 
 ```bash
-# Create virtual environment:
+# Create a virtual environment:
 $PWD/cpython-tsan/bin/python3.13t -m venv ~/tsanvenv
-# Activate it:
+# Then activate it:
 source ~/tsanvenv/bin/activate
 
 python -VV
@@ -308,24 +312,24 @@ python -VV
 PYTHON_GIL=0 python -c "import sys; print(sys._is_gil_enabled())"
 # False
 
-# Optionally, exit cpython folder
+# Exit the `cpython` folder (preparation for the next step below)
 cd ..
 ```
 
-#### Compile NumPy with TSAN
+### Compile NumPy with TSAN
 
-- Get the source code (for example, `main` branch)
+- Get the source code (for example, the `main` branch)
 
 ```bash
 git clone --recursive https://github.com/numpy/numpy.git
 ```
 
-- Install build requirements:
+- Install the build requirements:
 
 ```bash
 cd numpy
 python -m pip install -r requirements/build_requirements.txt
-# Make sure to install compatible Cython version
+# Make sure to install a compatible Cython version (master branch is best for now)
 python -m pip install -U git+https://github.com/cython/cython
 ```
 
@@ -343,13 +347,13 @@ python -m pip install -v . --no-build-isolation
 
 ### Useful TSAN options
 
-- By default TSAN reports warnings. How to stop execution on TSAN error:
+- By default TSAN reports warnings. To stop execution on TSAN errors, use:
 
 ```bash
 TSAN_OPTIONS=halt_on_error=1 python -m pytest test.py
 ```
 
-- How to add TSAN suppressions (written in a file: `tsan-suppressions`):
+- To add TSAN suppressions (written in a file: `tsan-suppressions`):
 
 ```bash
 # Let's show an example content of suppressions,
