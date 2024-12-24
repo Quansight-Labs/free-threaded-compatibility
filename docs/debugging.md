@@ -289,8 +289,8 @@ git clone https://github.com/python/cpython.git -b 3.13
 ```
 
 - Configure and build the interpreter. Below instructions are for Linux
-  (Windows and macOS may require some changes). We skip the instructions on how
-  to install the Clang compiler.
+    (Windows and macOS may require some changes). We skip the instructions on how
+    to install the Clang compiler.
 
 ```bash
 cd cpython
