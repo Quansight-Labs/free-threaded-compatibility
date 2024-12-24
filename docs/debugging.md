@@ -271,4 +271,101 @@ slower than a compiled version, so you should default to installing the wheel in
 CI instead of compiling Cython, which can take up to a few minutes on some CI
 runners.
 
+## Compiling CPython and foundational packages with thread sanitizer (TSAN)
+
+[Thread sanitizer](https://github.com/google/sanitizers/wiki/ThreadSanitizerCppManual) (or TSAN) helps
+to detect C/C++ data races in concurrent systems. This tool can help to reveal free-threading
+related bugs in CPython and foundational packages (e.g. `numpy`).
+In this section we provide the commands to build a free-threading compatible
+CPython interpreter and packages with TSAN and other hints to discover
+potential data races.
+
+### Compile free-threaded CPython with TSAN
+
+- Clone the latest stable branch (`3.13`):
+
+```bash
+git clone https://github.com/python/cpython.git -b 3.13
+```
+
+- Configure and build the interpreter. Below instructions are for Linux
+    (Windows and macOS may require some changes). We skip the instructions on how
+    to install the Clang compiler.
+
+```bash
+cd cpython
+CC=clang-18 CXX=clang++-18 ./configure --disable-gil --with-thread-sanitizer --prefix $PWD/cpython-tsan
+make -j 8
+make install
+```
+
+- To use the built Python interpreter:
+
+```bash
+# Create a virtual environment:
+$PWD/cpython-tsan/bin/python3.13t -m venv ~/tsanvenv
+# Then activate it:
+source ~/tsanvenv/bin/activate
+
+python -VV
+# Python 3.13.1 experimental free-threading build (tags/v3.13.1:06714517797, Dec 19 2024, 10:06:54) [Clang 18.1.3 (1ubuntu1)]
+PYTHON_GIL=0 python -c "import sys; print(sys._is_gil_enabled())"
+# False
+
+# Exit the `cpython` folder (preparation for the next step below)
+cd ..
+```
+
+### Compile NumPy with TSAN
+
+- Get the source code (for example, the `main` branch)
+
+```bash
+git clone --recursive https://github.com/numpy/numpy.git
+```
+
+- Install the build requirements:
+
+```bash
+cd numpy
+python -m pip install -r requirements/build_requirements.txt
+# Make sure to install a compatible Cython version (master branch is best for now)
+python -m pip install -U git+https://github.com/cython/cython
+```
+
+- Build the package
+
+```bash
+export CC=clang-18
+export CXX=clang++-18
+export CFLAGS=-fsanitize=thread
+export CXXFLAGS=-fsanitize=thread
+export LDFLAGS=-fsanitize=thread
+
+python -m pip install -v . --no-build-isolation
+```
+
+### Useful TSAN options
+
+- By default TSAN reports warnings. To stop execution on TSAN errors, use:
+
+```bash
+TSAN_OPTIONS=halt_on_error=1 python -m pytest test.py
+```
+
+- To add TSAN suppressions (written in a file: `tsan-suppressions`):
+
+```bash
+# Let's show an example content of suppressions,
+# more info: https://github.com/google/sanitizers/wiki/ThreadSanitizerSuppressions
+cat $PWD/tsan-suppressions
+
+race:llvm::RuntimeDyldELF::registerEHFrames
+race:partial_vectorcall_fallback
+race:dnnl_sgemm
+
+
+export TSAN_OPTIONS="suppressions=$PWD/tsan-suppressions" python -m pytest test.py
+```
+
 [^1]: This feature is not correctly working on `lldb` after CPython 3.12.
