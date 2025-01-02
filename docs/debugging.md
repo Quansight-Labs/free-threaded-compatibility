@@ -299,21 +299,6 @@ make -j 8
 make install
 ```
 
-!!! note
-    On MacOS, you may see messages like this when you start Python:
-
-    ```
-    python(7027,0x1f6dfc240) malloc: nano zone abandoned due to inability to reserve vm space.
-    ```
-
-    This message is being emmitted by the MacOS malloc implementation. As
-    [explained
-    here](https://stackoverflow.com/questions/64126942/malloc-nano-zone-abandoned-due-to-inability-to-preallocate-reserved-vm-space),
-    this happens for any program compiled with thread sanitizer on MacOS and can
-    be safely ignored by setting the `MallocNanoZone` environment variable to
-    0\. You should only set this in session you are running thread sanitizer
-    under, as this setting will slow down other programs that allocate memory.
-
 - To use the built Python interpreter:
 
 ```bash
@@ -330,6 +315,21 @@ PYTHON_GIL=0 python -c "import sys; print(sys._is_gil_enabled())"
 # Exit the `cpython` folder (preparation for the next step below)
 cd ..
 ```
+
+!!! note
+    On MacOS, you may see messages like this when you start Python:
+
+    ```
+    python(7027,0x1f6dfc240) malloc: nano zone abandoned due to inability to reserve vm space.
+    ```
+
+    This message is being emmitted by the MacOS malloc implementation. As
+    [explained
+    here](https://stackoverflow.com/questions/64126942/malloc-nano-zone-abandoned-due-to-inability-to-preallocate-reserved-vm-space),
+    this happens for any program compiled with thread sanitizer on MacOS and can
+    be safely ignored by setting the `MallocNanoZone` environment variable to
+    0\. You should only set this in session you are running thread sanitizer
+    under, as this setting will slow down other programs that allocate memory.
 
 ### Compile NumPy with TSAN
 
