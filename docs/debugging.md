@@ -351,13 +351,7 @@ python -m pip install -U git+https://github.com/cython/cython
 - Build the package
 
 ```bash
-export CC=clang-18
-export CXX=clang++-18
-export CFLAGS=-fsanitize=thread
-export CXXFLAGS=-fsanitize=thread
-export LDFLAGS=-fsanitize=thread
-
-python -m pip install -v . --no-build-isolation
+CC=clang-18 CXX=clang++-18 python -m pip install -v . --no-build-isolation -C'setup-args=-Db_sanitize=thread
 ```
 
 ### Useful TSAN options
