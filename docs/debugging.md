@@ -328,7 +328,7 @@ cd ..
     here](https://stackoverflow.com/questions/64126942/malloc-nano-zone-abandoned-due-to-inability-to-preallocate-reserved-vm-space),
     this happens for any program compiled with thread sanitizer on MacOS and can
     be safely ignored by setting the `MallocNanoZone` environment variable to
-    0. You should only set this in session you are running thread sanitizer
+    0\. You should only set this in session you are running thread sanitizer
     under, as this setting will slow down other programs that allocate memory.
 
 ### Compile NumPy with TSAN
