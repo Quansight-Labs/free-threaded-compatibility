@@ -356,7 +356,6 @@ CC=clang-18 CXX=clang++-18 python -m pip install -v . --no-build-isolation -Cset
 # CC=clang-18 CXX=clang++-18 python -m pip install -v . --no-build-isolation -Csetup-args=-Db_sanitize=thread -C'setup-args=-Dbuildtype=debugoptimized'
 ```
 
-
 ### Useful TSAN options
 
 - By default TSAN reports warnings. To stop execution on TSAN errors, use:
