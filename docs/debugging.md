@@ -352,6 +352,8 @@ python -m pip install -U git+https://github.com/cython/cython
 
 ```bash
 CC=clang-18 CXX=clang++-18 python -m pip install -v . --no-build-isolation -Csetup-args=-Db_sanitize=thread
+# or with debug info
+# CC=clang-18 CXX=clang++-18 python -m pip install -v . --no-build-isolation -Csetup-args=-Db_sanitize=thread -Csetup-args=-Dbuildtype=debugoptimized
 ```
 
 ### Useful TSAN options
