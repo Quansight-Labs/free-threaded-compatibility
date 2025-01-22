@@ -20,25 +20,49 @@ from the python.org installers to Linux distro and Conda package managers.
 ??? question "As a packager, what should I name the package and interpreter?"
     Please see [this guidance from the Python Steering Council](https://github.com/python/steering-council/issues/221#issuecomment-1841593283)
 
-### python.org installers
+### python.org and nuget installers
 
 The [python.org downloads page](https://www.python.org/download/pre-releases/)
-provides macOS and Windows installers that have experimental support. Note
-that you have to customize the install - e.g., for Windows there is a
-_Download free-threaded binaries_ checkbox under "Advanced Options".
-See also the [Using Python on Windows](https://docs.python.org/3.13/using/windows.html#installing-free-threaded-binaries)
+provides macOS and Windows installers that have experimental support.
+
+Note that you have to customize the install - e.g., for Windows there is a
+_Download free-threaded binaries_ checkbox under "Advanced Options".  See also
+the [Using Python on
+Windows](https://docs.python.org/3.13/using/windows.html#installing-free-threaded-binaries)
 section of the Python 3.13 docs.
 
 Automating the process of downloading the official installers
 and installing the free-threaded binaries is also possible:
 
 === "Windows"
-    On Windows, you can invoke the installer from the command-line prompt:
+    Due to limitations of the Windows Python.org installer, using free-threaded Python
+    installed from the Python.org installer may lead to trouble. In particular, if you
+    install both a free-threaded and gil-enabled build of Python 3.13 using the Python.org
+    installer, both installs will share a `site-packages` folder. This can very quickly
+    lead to broken environments if packages for both versions are simultaneously installed.
+
+    For that reason, we suggest using the `nuget` installer, which provides a
+    separate `python-freethreaded` package that does not share an installation
+    with the `python` package.
 
     ```powershell
-    $url = 'https://www.python.org/ftp/python/3.13.0/python-3.13.0-amd64.exe'
-    Invoke-WebRequest -Uri $url -OutFile 'python-3.13.0-amd64.exe'
-    .\python-3.13.0-amd64.exe /quiet Include_freethreaded=1
+    $url = 'https://www.nuget.org/api/v2/package/python-freethreaded/3.13.1'
+    Invoke-WebRequest -Uri $url -OutFile 'python-freethreaded.3.13.1.nupkg'
+    Install-Package python-freethreaded -Scope CurrentUser -Source $pwd
+    $env:path = (Get-Item((Get-Package -Name python-freethreaded).Source)).DirectoryName + "tools;" + $env:Path
+    ```
+
+    This will only modify your Path for the current Powershell session, so you
+    will also need to permanently add the nuget package location to your Path to
+    use it after closing the current session.
+
+    If for some reason you *need* to use the Python.org installer, despite the problems
+    described above, you can install it like so:
+
+    ```powershell
+    $url = 'https://www.python.org/ftp/python/3.13.1/python-3.13.1-amd64.exe'
+    Invoke-WebRequest -Uri $url -OutFile 'python-3.13.1-amd64.exe'
+    .\python-3.13.1-amd64.exe /quiet Include_freethreaded=1
     ```
 
     If you are running this script without administrator privileges,
