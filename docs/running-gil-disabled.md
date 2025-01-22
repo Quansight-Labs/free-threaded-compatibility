@@ -27,7 +27,7 @@ python -VV
 If you are using Python 3.13b1 or newer, you should see a message like:
 
 ```bash
-Python 3.13.0b1+ experimental free-threading build (heads/3.13:d93c4f9, May 21 2024, 10:54:14) [Clang 15.0.0 (clang-1500.1.0.2.5)]
+Python 3.13.1 experimental free-threading build (main, Dec 10 2024, 14:07:41) [Clang 16.0.0 (clang-1600.0.26.4)]
 ```
 
 To verify whether the GIL is disabled at runtime or not, you can use this in
