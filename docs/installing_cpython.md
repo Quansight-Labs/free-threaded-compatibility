@@ -49,7 +49,8 @@ and installing the free-threaded binaries is also possible:
     $url = 'https://www.nuget.org/api/v2/package/python-freethreaded/3.13.1'
     Invoke-WebRequest -Uri $url -OutFile 'python-freethreaded.3.13.1.nupkg'
     Install-Package python-freethreaded -Scope CurrentUser -Source $pwd
-    $env:path = (Get-Item((Get-Package -Name python-freethreaded).Source)).DirectoryName + "tools;" + $env:Path
+    $python_dir = (Get-Item((Get-Package -Name python-freethreaded).Source)).DirectoryName
+    $env:path = $python_dir + "\tools;" + $python_dir + "\tools\Scripts;" + $env:Path
     ```
 
     This will only modify your Path for the current Powershell session, so you
