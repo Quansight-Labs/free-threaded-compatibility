@@ -2,7 +2,7 @@
 description: py-free-threading is a centralized collection of documentation and trackers around compatibility with free-threaded CPython for the Python open source ecosystem
 ---
 
-# Introduction
+# Python free-threading guide
 
 Free-threaded CPython is coming! :material-language-python: :thread:
 
@@ -13,8 +13,8 @@ a lot of work is happening both in CPython itself and across the Python ecosyste
 
 This website aims to serve as a centralized resource both for Python package
 maintainers and end users interested in supporting or experimenting with
-free-threaded Python. An overview of the compatibility status of various Python
-libraries is maintained in:
+free-threaded Python. We are tracking the compatibility of a number of packages
+that include native code, you can take a look at our progress here:
 
 - [Compatibility Status Tracking](tracking.md)
 
