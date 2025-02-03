@@ -41,7 +41,7 @@ jobs:
       - name: custom python install script
         shell: pwsh
         run: |
-          $pythonInstallerUrl = "https://www.nuget.org/api/v2/package/python-freethreaded/3.13.1'
+          $pythonInstallerUrl = 'https://www.nuget.org/api/v2/package/python-freethreaded/3.13.1'
           Invoke-WebRequest $pythonInstallerUrl -OutFile 'python-freethreaded.3.13.1.nupkg'
           Install-Package python-freethreaded -Scope CurrentUser -Source $pwd
           $python_dir = (Get-Item((Get-Package -Name python-freethreaded).Source)).DirectoryName
