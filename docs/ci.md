@@ -4,10 +4,10 @@ Currently the `setup-python` GitHub Action [does not
 support](https://github.com/actions/setup-python/issues/771) installing a
 free-threaded build. For now, here are some relatively easy ways:
 
-## Ubuntu Linux CI setup via `deadsnakes-action`
+## CI setup via `setup-uv`
 
 The easiest way to get a free-threaded Python build on a CI runner is with the
-`deadsnakes` Ubuntu PPA and the `deadsnakes-action` GitHub Action:
+[`setup-uv`](https://github.com/astral-sh/setup-uv) Github Action:
 
 ```yaml
 jobs:
@@ -15,15 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@...
-      - uses: deadsnakes/action@...
+      - uses: astral-sh/setup-uv@...
         with:
-          python-version: 3.13-dev
-          nogil: true
+          python-version: 3.13t
 ```
 
-You should replace the ellipses with versions for the actions. If there is a
-newer CPython 3.13 release available since this document was written or
-updated, use that version instead.
+You should replace the ellipses with versions for the actions.
 
 ## Windows CI setup via custom PowerShell
 
@@ -44,11 +41,11 @@ jobs:
       - name: custom python install script
         shell: pwsh
         run: |
-          $pythonInstallerUrl = "https://www.python.org/ftp/python/3.13.1/python-3.13.1-amd64.exe"
-          Invoke-WebRequest $pythonInstallerUrl -OutFile setup-python.exe
-          Start-Process "setup-python.exe" -argumentlist "/quiet PrependPath=1 TargetDir=C:\Python313 Include_freethreaded=1" -wait
-          C:\Python313\python3.13t.exe -m pip install -r requirements.txt
-          C:\Python313\python3.13t.exe -c "import sys; print(sys._is_gil_enabled())"
+          $pythonInstallerUrl = 'https://www.nuget.org/api/v2/package/python-freethreaded/3.13.1'
+          Invoke-WebRequest $pythonInstallerUrl -OutFile 'python-freethreaded.3.13.1.nupkg'
+          Install-Package python-freethreaded -Scope CurrentUser -Source $pwd
+          $python_dir = (Get-Item((Get-Package -Name python-freethreaded).Source)).DirectoryName
+          $env:path = $python_dir + "\tools;" + $python_dir + "\tools\Scripts;" + $env:Path
 ```
 
 ## Building free-threaded wheels with cibuildwheel
