@@ -114,6 +114,7 @@ dependencies do the same. See [the porting guide](porting.md) for more
 information about declaring support for free-threaded python in your extension.
 
 !!! info
+
     If a dependency of your package does not support free-threading or has not
     yet done a release which includes `cp313t` wheels, this can be tricky to
     work around because an environment marker for free-threading does not exist

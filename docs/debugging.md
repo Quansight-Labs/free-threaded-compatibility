@@ -317,6 +317,7 @@ cd ..
 ```
 
 !!! note
+
     On MacOS, you may see messages like this when you start Python:
 
     ```

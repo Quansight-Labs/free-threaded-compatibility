@@ -19,6 +19,7 @@ an issue spans multiple projects or there's an ecosystem-wide point to discuss,
 please open an issue on [this issue tracker](https://github.com/Quansight-Labs/free-threaded-compatibility/issues).
 
 !!! tip
+
     It's early days for free-threaded support - bugs in CPython itself and in
     widely used libraries with extension modules are being fixed every week.
     It may be useful to use nightly wheels (when available) of packages
