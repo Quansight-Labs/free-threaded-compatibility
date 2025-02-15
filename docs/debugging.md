@@ -336,7 +336,8 @@ cd ..
 - Get the source code (for example, the `main` branch)
 
 ```bash
-git clone --recursive https://github.com/numpy/numpy.git
+git clone --recursive \
+https://github.com/numpy/numpy.git
 ```
 
 - Install the build requirements:

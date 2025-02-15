@@ -9,7 +9,7 @@ repos:
       - id: requirements-txt-fixer
 
   - repo: https://github.com/executablebooks/mdformat
-    rev: 42b9462bb3d6f151faff3cd5c6426d6531474f50 # 0.7.18
+    rev: 83dc2ce5ca115d3390b9b5561d2898366faf0742 # 0.7.22
     hooks:
       - id: mdformat
         additional_dependencies:
