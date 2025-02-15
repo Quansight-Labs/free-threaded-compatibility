@@ -317,6 +317,7 @@ cd ..
 ```
 
 !!! note
+
     On MacOS, you may see messages like this when you start Python:
 
     ```
@@ -337,7 +338,7 @@ cd ..
 
 ```bash
 git clone --recursive \
-https://github.com/numpy/numpy.git
+    https://github.com/numpy/numpy.git
 ```
 
 - Install the build requirements:

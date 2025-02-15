@@ -12,12 +12,14 @@ There are a growing number of options to install a free-threaded interpreter,
 from the python.org installers to Linux distro and Conda package managers.
 
 !!! note
+
     For any of these options, please check after the install succeeds that you
     have a `pip` version that is recent enough (`>=24.1`), and upgrade it if
     that isn't the case. Older `pip` versions will select wheels with the
     `cp313` tag (binary-incompatible) rather than the `cp313t` tag.
 
 ??? question "As a packager, what should I name the package and interpreter?"
+
     Please see [this guidance from the Python Steering Council](https://github.com/python/steering-council/issues/221#issuecomment-1841593283)
 
 ### python.org and nuget installers
@@ -26,7 +28,7 @@ The [python.org downloads page](https://www.python.org/download/pre-releases/)
 provides macOS and Windows installers that have experimental support.
 
 Note that you have to customize the install - e.g., for Windows there is a
-_Download free-threaded binaries_ checkbox under "Advanced Options".  See also
+_Download free-threaded binaries_ checkbox under "Advanced Options". See also
 the [Using Python on
 Windows](https://docs.python.org/3.13/using/windows.html#installing-free-threaded-binaries)
 section of the Python 3.13 docs.
@@ -35,6 +37,7 @@ Automating the process of downloading the official installers
 and installing the free-threaded binaries is also possible:
 
 === "Windows"
+
     Due to limitations of the Windows Python.org installer, using free-threaded Python
     installed from the Python.org installer may lead to trouble. In particular, if you
     install both a free-threaded and gil-enabled build of Python 3.13 using the Python.org
@@ -74,6 +77,7 @@ and installing the free-threaded binaries is also possible:
     for more information.
 
 === "macOS"
+
     On macOS, you can use `installer` to install a macOS package you've
     downloaded:
 
@@ -112,6 +116,7 @@ and installing the free-threaded binaries is also possible:
 ### Linux distros
 
 === "Fedora"
+
     Fedora ships a packaged version, which you can install with:
 
     ```bash
@@ -121,6 +126,7 @@ and installing the free-threaded binaries is also possible:
     This will install the interpreter at `/usr/bin/python3.13t`.
 
 === "Nixpkgs"
+
     Nixpkgs provides cached builds under the [`python313FreeThreading`](https://search.nixos.org/packages?channel=unstable&show=python313FreeThreading&type=packages)
     attribute from NixOS 24.05 and newer.
 
@@ -138,6 +144,7 @@ and installing the free-threaded binaries is also possible:
     ```
 
 === "Ubuntu"
+
     For Ubuntu you can use the [deadsnakes PPA](https://launchpad.net/%7Edeadsnakes/+archive/ubuntu/ppa/+packages)
     by adding it to your repositories and then installing `python3.13-nogil`:
 
@@ -150,6 +157,7 @@ and installing the free-threaded binaries is also possible:
 ### Multi-platform Package Managers
 
 === "Conda-forge"
+
     ```bash
     mamba create -n nogil -c conda-forge python-freethreading
     ```
@@ -161,8 +169,9 @@ and installing the free-threaded binaries is also possible:
     ```
 
 === "Anaconda Testing"
+
     Anaconda's test channel includes the Python interpreter and ABI-compatible
-    builds of many common packages, like NumPy, Cython, Pandas, etc.  These
+    builds of many common packages, like NumPy, Cython, Pandas, etc. These
     packages use the `python_abi` metapackage and should be compatible with
     conda-forge:
 
@@ -173,6 +182,7 @@ and installing the free-threaded binaries is also possible:
     [Full list of Anaconda test packages built with free-threading ABI.](https://anaconda.org/ad-testing/repo?label=py313_nogil&type=any)
 
 === "Homebrew"
+
     On macOS and Linux, you can use Homebrew:
 
     ```bash

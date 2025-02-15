@@ -1,10 +1,12 @@
 # Running Python with the GIL Disabled
 
 !!! info
+
     Most of the content on this page is also covered in the Python 3.13
     [release notes](https://docs.python.org/3.13/whatsnew/3.13.html#free-threaded-cpython).
 
 !!! note
+
     The free-threaded Python executable will always have a `python3.13t` alias
     (for Python 3.13); whether `python`, `python3` and/or `python3.13` point at
     the free-threaded executable or not will depend on the installation method

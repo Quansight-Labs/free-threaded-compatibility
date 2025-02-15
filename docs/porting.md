@@ -26,6 +26,7 @@ disabled, otherwise a warning is printed and the GIL is re-enabled at runtime
 after importing a module that does not support the GIL.
 
 === "C API"
+
     C or C++ extension modules using multi-phase initialization can specify the
     [`Py_mod_gil`](https://docs.python.org/3.13/c-api/module.html#c.Py_mod_gil)
     module slot like this:
@@ -64,6 +65,7 @@ after importing a module that does not support the GIL.
     ```
 
 === "Pybind11"
+
     C++ extension modules making use of `pybind11` can easily declare support for
     running with the GIL disabled via the
     [`gil_not_used`](https://pybind11.readthedocs.io/en/stable/reference.html#_CPPv4N7module_23create_extension_moduleEPKcPKcP10module_def16mod_gil_not_used)
@@ -79,6 +81,7 @@ after importing a module that does not support the GIL.
     ```
 
 === "Cython"
+
     Cython code can be thread-unsafe and just like C and C++ code can exhibit
     undefined behavior due to data races.
 
@@ -118,10 +121,12 @@ after importing a module that does not support the GIL.
     Or via a build system specific way of passing directives to Cython.
 
     !!! tip
+
         Here are a few examples of how to globally enable the directive in a few popular
         build systems:
 
         === "setuptools"
+
             When using setuptools, you can pass the `compiler_directives` keyword argument
             to `cythonize`:
 
@@ -142,6 +147,7 @@ after importing a module that does not support the GIL.
             ```
 
         === "Meson"
+
             When using Meson, you can add the directive to the `cython_args` you're
             passing to `py.extension_module`:
 
@@ -174,6 +180,7 @@ after importing a module that does not support the GIL.
     how to build projects that depend on Cython.
 
 === "Rust"
+
     If you use the CPython C API via [PyO3](https://pyo3.rs), then you
     can follow the [PyO3 Guide
     section](https://pyo3.rs/latest/free-threading.html) on supporting
@@ -215,6 +222,7 @@ after importing a module that does not support the GIL.
     the PyO3 source code.
 
 === "f2py"
+
     Starting with NumPy 2.1.0, extension modules containing f2py-wrapped
     Fortran code can declare they are thread-safe and support free-threading
     using the
@@ -537,6 +545,7 @@ int function_accessing_the_cache(void) {
 ```
 
 !!! note
+
     Note that, while the NumPy PR linked above uses `PyThread_type_lock`, that is
     only because `PyMutex` was not part of the public Python C API at the time. We
     recommend always using `PyMutex`. For pointers on how to do that, check
