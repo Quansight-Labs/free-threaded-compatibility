@@ -386,8 +386,7 @@ export TSAN_OPTIONS="suppressions=$PWD/tsan-suppressions" python -m pytest test.
 
 By default, pytest [captures all output from
 tests](https://docs.pytest.org/en/stable/how-to/capture-stdout-stderr.html),
-this means that you might only see output like `ThreadSanitizer: reported 2
-warnings`, but with no accompanying report with details about the warning.
+this means that you might only see output like `ThreadSanitizer: reported 2 warnings`, but with no accompanying report with details about the warning.
 
 To ensure that pytest doesn't capture any output from ThreadSanitizer, you can
 pass `-s` (short for `--show-capture`) to your pytest invocation.
