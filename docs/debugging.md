@@ -391,6 +391,10 @@ this means that you might only see output like `ThreadSanitizer: reported 2 warn
 To ensure that pytest doesn't capture any output from ThreadSanitizer, you can
 pass `-s` (short for `--show-capture`) to your pytest invocation.
 
+Some authors of this guide have observed hangs running pytest with
+`halt_on_error=1`. If you observe hangs, try setting `halt_on_error=0` in
+TSAN_OPTIONS.
+
 The [pytest-xdist](https://github.com/pytest-dev/pytest-xdist) plugin can also
 sometimes be problematic if a test runner happens to crash during
 execution. While `pytest-xdist` does have some support for detecting crashed
