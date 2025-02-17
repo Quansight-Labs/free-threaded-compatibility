@@ -357,6 +357,8 @@ CC=clang-18 CXX=clang++-18 python -m pip install -v . --no-build-isolation -Cset
 # CC=clang-18 CXX=clang++-18 python -m pip install -v . --no-build-isolation -Csetup-args=-Db_sanitize=thread -Csetup-args=-Dbuildtype=debugoptimized
 ```
 
+## Running python under TSAN
+
 ### Useful TSAN options
 
 - By default TSAN reports warnings. To stop execution on TSAN errors, use:
@@ -399,10 +401,12 @@ The [pytest-xdist](https://github.com/pytest-dev/pytest-xdist) plugin can also
 sometimes be problematic if a test runner happens to crash during
 execution. While `pytest-xdist` does have some support for detecting crashed
 worker, it is not foolproof and the authors of this guide have observed hangs on
-CI due to pytest-xdist not properly handling a worker failing. The
-`pytest-xdist` plugin also [makes it impossible to obtain stdout from a test
-runner](https://github.com/pytest-dev/pytest-xdist/issues/82), so there is no
-way to see TSAN output if there is an issue. This can lead to hangs on CI
+CI due to pytest-xdist not properly handling a worker failing due to a TSAN
+error.
+
+The `pytest-xdist` plugin also [makes it impossible to obtain stdout from
+a test runner](https://github.com/pytest-dev/pytest-xdist/issues/82), so there
+is no way to see TSAN output if there is an issue. This can lead to hangs on CI
 machines with no accompanying error report to explain the nature of the
 hang. For that reason we suggest uninstalling `pytest-xdist` from your
 environment to ensure it isn't used. If you need to use `pytest-xdist` to make
