@@ -280,6 +280,16 @@ In this section we provide the commands to build a free-threading compatible
 CPython interpreter and packages with TSAN and other hints to discover
 potential data races.
 
+### `cpython_sanity` docker images
+
+To ease working with thread sanitizer in projects that use Python, NumPy, and
+SciPy, we have create a set of docker images that contain a pre-built Python
+interpreter and common dependencies that can be tricky to build.
+
+See [the `cpython_sanity`
+repository](https://github.com/nascheme/cpython_sanity) for more information
+about how to use the docker images.
+
 ### Compile free-threaded CPython with TSAN
 
 - Clone the latest stable branch (`3.13`):
@@ -315,6 +325,14 @@ PYTHON_GIL=0 python -c "import sys; print(sys._is_gil_enabled())"
 # Exit the `cpython` folder (preparation for the next step below)
 cd ..
 ```
+
+If you use pyenv, you can also enable a thread sanitizer build with `pyenv install` like so:
+
+```bash
+CC=/path/to/clang CXX=/path/to/clang++ CONFIGURE_OPTS="--with-thread-sanitizer" pyenv install 3.14t-dev
+```
+
+And then activate the build with e.g. `pyenv local 3.14t-dev`.
 
 !!! note
 
