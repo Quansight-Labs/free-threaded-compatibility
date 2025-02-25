@@ -282,8 +282,8 @@ potential data races.
 
 ### `cpython_sanity` docker images
 
-To ease working with thread sanitizer in projects that use Python, Numpy, and
-Scipy, we have create a set of docker images that contain a pre-built Python
+To ease working with thread sanitizer in projects that use Python, NumPy, and
+SciPy, we have create a set of docker images that contain a pre-built Python
 interpreter and common dependencies that can be tricky to build.
 
 See [the `cpython_sanity`
