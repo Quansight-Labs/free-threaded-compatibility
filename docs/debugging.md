@@ -443,10 +443,46 @@ your test suite then you can set `exitcode=0` in `TSAN_OPTIONS` to make TSAN
 quit "successfully" if a warning is detected. For example, you might set this if
 a subprocess returning a nonzero exit code unexpectedly breaks a test.
 
+You might also find that running your test suite is very slow under
+TSAN. Consider skipping tests that do not use threads, for example by only
+testing files that import `threading` or
+`concurrent.futures.ThreadPoolExecutor`. This will miss tests that spawn threads
+in native code (e.g. with OpenMP or other threading primitives), but is a good
+option if native extensions in your library do not do that.
+
 Altogether, a pytest invocation using TSAN might look like:
 
 ```
 $ TSAN_OPTIONS='allocator_may_return_null=1 halt_on_error=1' pytest -s
 ```
+
+### Using address sanitizer to detect thread safety issues
+
+Since thread sanitizer adds significant overhead to both the Python interpreter
+and any native code compiled under thread sanitizer, many projects will be unable
+to run their full test suite under thread sanitizer.
+
+For that reason, we also suggest setting up CI run for your full test suite
+using [address
+sanitizer](https://github.com/google/sanitizers/wiki/addresssanitizer) (or
+ASAN). Address sanitizer will detect if there are any memory safety issues
+triggered by multithreaded tests. While it will not detect data races that do
+not lead to observable memory safety issues, it will detect races that could
+lead to e.g. a segmentation fault and give precise debugging information about
+the nature of the memory safety issue. A developer could then look more closely
+at the issue using thread sanitizer outside of CI to more fully understand whether
+data races contributed to the memory safety issue.
+
+You can build Python with address sanitizer by passing `--with-address-sanitizer`
+to the CPython configure script. You can build NumPy with address sanitizer by passing
+`-Csetup-args=-Db_sanitize=address` as an argument to `pip install`.
+
+Like thread sanitizer, address sanitizer also accepts a number of options to
+control its behavior. See [the
+documentation](https://github.com/google/sanitizers/wiki/addresssanitizerflags)
+for more details. Note that both the CPython interpreter and many extensions
+have harmless memory leaks, so consider disabling the [leak
+sanitizer](https://github.com/google/sanitizers/wiki/AddressSanitizerLeakSanitizer)
+built into address sanitizer by setting `ASAN_OPTIONS="detect_leaks=0"`.
 
 [^1]: This feature is not correctly working on `lldb` after CPython 3.12.
