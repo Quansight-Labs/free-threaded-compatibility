@@ -271,13 +271,13 @@ slower than a compiled version, so you should default to installing the wheel in
 CI instead of compiling Cython, which can take up to a few minutes on some CI
 runners.
 
-## Compiling CPython and foundational packages with thread sanitizer (TSAN)
+## Compiling CPython and foundational packages with ThreadSanitizer (TSAN)
 
 [Thread sanitizer](https://github.com/google/sanitizers/wiki/ThreadSanitizerCppManual) (or TSAN) helps
 to detect C/C++ data races in concurrent systems. This tool can help to reveal free-threading
 related bugs in CPython and foundational packages (e.g. `numpy`).
 In this section we provide the commands to build a free-threading compatible
-CPython interpreter and packages with TSAN and other hints to discover
+CPython interpreter and packages with ThreadSanitizer and other hints to discover
 potential data races.
 
 ### `cpython_sanity` docker images
@@ -290,7 +290,7 @@ See [the `cpython_sanity`
 repository](https://github.com/nascheme/cpython_sanity) for more information
 about how to use the docker images.
 
-### Compile free-threaded CPython with TSAN
+### Compile free-threaded CPython with ThreadSanitizer
 
 - Clone the latest stable branch (`3.13`):
 
@@ -345,12 +345,12 @@ And then activate the build with e.g. `pyenv local 3.14t-dev`.
     This message is being emmitted by the MacOS malloc implementation. As
     [explained
     here](https://stackoverflow.com/questions/64126942/malloc-nano-zone-abandoned-due-to-inability-to-preallocate-reserved-vm-space),
-    this happens for any program compiled with thread sanitizer on MacOS and can
+    this happens for any program compiled with ThreadSanitizer on MacOS and can
     be safely ignored by setting the `MallocNanoZone` environment variable to
-    0\. You should only set this in session you are running thread sanitizer
+    0\. You should only set this in session you are running ThreadSanitizer
     under, as this setting will slow down other programs that allocate memory.
 
-### Compile NumPy with TSAN
+### Compile NumPy with ThreadSanitizer
 
 - Get the source code (for example, the `main` branch)
 
@@ -375,19 +375,19 @@ CC=clang-18 CXX=clang++-18 python -m pip install -v . --no-build-isolation -Cset
 # CC=clang-18 CXX=clang++-18 python -m pip install -v . --no-build-isolation -Csetup-args=-Db_sanitize=thread -Csetup-args=-Dbuildtype=debugoptimized
 ```
 
-## Running python under TSAN
+## Running python under ThreadSanitizer
 
-### Useful TSAN options
+### Useful ThreadSanitizer options
 
-- By default TSAN reports warnings. To stop execution on TSAN errors, use:
+- By default ThreadSanitizer reports warnings. To stop execution on ThreadSanitizer errors, use:
 
 ```bash
 TSAN_OPTIONS=halt_on_error=1 python -m pytest test.py
 ```
 
-See [the TSAN documentation](https://github.com/google/sanitizers/wiki/ThreadSanitizerFlags) for a full listing of options accepted by TSAN.
+See [the ThreadSanitizer documentation](https://github.com/google/sanitizers/wiki/ThreadSanitizerFlags) for a full listing of options accepted by ThreadSanitizer.
 
-- To add TSAN suppressions (written in a file: `tsan-suppressions`):
+- To add ThreadSanitizer suppressions (written in a file: `tsan-suppressions`):
 
 ```bash
 # Let's show an example content of suppressions,
@@ -402,7 +402,7 @@ race:dnnl_sgemm
 export TSAN_OPTIONS="suppressions=$PWD/tsan-suppressions" python -m pytest test.py
 ```
 
-### Running pytest tests under TSAN
+### Running pytest tests under ThreadSanitizer
 
 By default, pytest [captures all output from
 tests](https://docs.pytest.org/en/stable/how-to/capture-stdout-stderr.html),
@@ -419,12 +419,12 @@ The [pytest-xdist](https://github.com/pytest-dev/pytest-xdist) plugin can also
 sometimes be problematic if a test runner happens to crash during
 execution. While `pytest-xdist` does have some support for detecting crashed
 worker, it is not foolproof and the authors of this guide have observed hangs on
-CI due to pytest-xdist not properly handling a worker failing due to a TSAN
+CI due to pytest-xdist not properly handling a worker failing due to a ThreadSanitizer
 error.
 
 The `pytest-xdist` plugin also [makes it impossible to obtain stdout from
 a test runner](https://github.com/pytest-dev/pytest-xdist/issues/82), so there
-is no way to see TSAN output if there is an issue. This can lead to hangs on CI
+is no way to see ThreadSanitizer output if there is an issue. This can lead to hangs on CI
 machines with no accompanying error report to explain the nature of the
 hang. For that reason we suggest uninstalling `pytest-xdist` from your
 environment to ensure it isn't used. If you need to use `pytest-xdist` to make
@@ -432,57 +432,59 @@ the tests complete in a reasonable amount of time, we suggest using
 [`pytest-timeout`](https://pypi.org/project/pytest-timeout/) to ensure hung
 tests eventually exit, particularly on CI.
 
-TSAN includes a check to ensure allocators never fail. This can lead to runtime
+ThreadSanitizer includes a check to ensure allocators never fail. This can lead to runtime
 crashes if a test happens to try allocating a very large block of memory
 specifically to ensure such an allocation does fail correctly. Set
 `allocator_may_return_null=1` in `TSAN_OPTIONS` to avoid this.
 
-If a TSAN warning is detected, the exit code of the running process will be set
+If a ThreadSanitizer warning is detected, the exit code of the running process will be set
 to a nonzero value (66, by default). If for some reason that is problematic in
-your test suite then you can set `exitcode=0` in `TSAN_OPTIONS` to make TSAN
+your test suite then you can set `exitcode=0` in `TSAN_OPTIONS` to make ThreadSanitizer
 quit "successfully" if a warning is detected. For example, you might set this if
 a subprocess returning a nonzero exit code unexpectedly breaks a test.
 
 You might also find that running your test suite is very slow under
-TSAN. Consider skipping tests that do not use threads, for example by only
+ThreadSanitizer. Consider skipping tests that do not use threads, for example by only
 testing files that import `threading` or
-`concurrent.futures.ThreadPoolExecutor`. This will miss tests that spawn threads
-in native code (e.g. with OpenMP or other threading primitives), but is a good
-option if native extensions in your library do not do that.
+`concurrent.futures.ThreadPoolExecutor`. See [this NumPy CI
+workflow](https://github.com/numpy/numpy/blob/da268d45aab791023c8d953db6f4597019f770cb/.github/workflows/compiler_sanitizers.yml#L128)
+that runs pytest on a subset of NumPy's tests. This will miss tests that spawn
+threads in native code (e.g. with OpenMP or other threading primitives) or use
+Python packages that spawn threads, but is a good option if your library doesn't
+do that.
 
-Altogether, a pytest invocation using TSAN might look like:
+Altogether, a pytest invocation using ThreadSanitizer might look like:
 
 ```
 $ TSAN_OPTIONS='allocator_may_return_null=1 halt_on_error=1' pytest -s
 ```
 
-### Using address sanitizer to detect thread safety issues
+### Using AddressSanitizer to detect thread safety issues
 
-Since thread sanitizer adds significant overhead to both the Python interpreter
-and any native code compiled under thread sanitizer, many projects will be unable
-to run their full test suite under thread sanitizer.
+Since ThreadSanitizer adds significant overhead to both the Python interpreter
+and any native code compiled under ThreadSanitizer, many projects will be unable
+to run their full test suite under ThreadSanitizer in CI.
 
 For that reason, we also suggest setting up CI run for your full test suite
-using [address
-sanitizer](https://github.com/google/sanitizers/wiki/addresssanitizer) (or
-ASAN). Address sanitizer will detect if there are any memory safety issues
+using [AddressSanitizer](https://github.com/google/sanitizers/wiki/addresssanitizer) (or
+ASAN). AddressSanitizer will detect if there are any memory safety issues
 triggered by multithreaded tests. While it will not detect data races that do
 not lead to observable memory safety issues, it will detect races that could
 lead to e.g. a segmentation fault and give precise debugging information about
 the nature of the memory safety issue. A developer could then look more closely
-at the issue using thread sanitizer outside of CI to more fully understand whether
+at the issue using ThreadSanitizer outside of CI to more fully understand whether
 data races contributed to the memory safety issue.
 
-You can build Python with address sanitizer by passing `--with-address-sanitizer`
-to the CPython configure script. You can build NumPy with address sanitizer by passing
+You can build Python with AddressSanitizer by passing `--with-address-sanitizer`
+to the CPython configure script. You can build NumPy with AddressSanitizer by passing
 `-Csetup-args=-Db_sanitize=address` as an argument to `pip install`.
 
-Like thread sanitizer, address sanitizer also accepts a number of options to
+Like ThreadSanitizer, AddressSanitizer also accepts a number of options to
 control its behavior. See [the
 documentation](https://github.com/google/sanitizers/wiki/addresssanitizerflags)
 for more details. Note that both the CPython interpreter and many extensions
 have harmless memory leaks, so consider disabling the [leak
 sanitizer](https://github.com/google/sanitizers/wiki/AddressSanitizerLeakSanitizer)
-built into address sanitizer by setting `ASAN_OPTIONS="detect_leaks=0"`.
+built into AddressSanitizer by setting `ASAN_OPTIONS="detect_leaks=0"`.
 
 [^1]: This feature is not correctly working on `lldb` after CPython 3.12.
