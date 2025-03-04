@@ -313,7 +313,7 @@ free-threaded build:
 
 We suggest focusing on safety over single-threaded performance. For example, if
 adding a lock to a global cache would harm multithreaded scaling, and turning
-off the cache implies a a small performance hit, consider doing the simpler
+off the cache implies a small performance hit, consider doing the simpler
 thing and disabling the cache in the free-threaded build. Single-threaded
 performance can always be improved later, once you've established free-threaded
 support and hopefully improved test coverage for multithreaded workflows.
