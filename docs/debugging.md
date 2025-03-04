@@ -271,9 +271,9 @@ slower than a compiled version, so you should default to installing the wheel in
 CI instead of compiling Cython, which can take up to a few minutes on some CI
 runners.
 
-## Compiling CPython and foundational packages with ThreadSanitizer (TSAN)
+## Compiling CPython and foundational packages with ThreadSanitizer
 
-[Thread sanitizer](https://github.com/google/sanitizers/wiki/ThreadSanitizerCppManual) (or TSAN) helps
+[Thread sanitizer](https://github.com/google/sanitizers/wiki/ThreadSanitizerCppManual) (or TSan) helps
 to detect C/C++ data races in concurrent systems. This tool can help to reveal free-threading
 related bugs in CPython and foundational packages (e.g. `numpy`).
 In this section we provide the commands to build a free-threading compatible
@@ -342,7 +342,7 @@ And then activate the build with e.g. `pyenv local 3.14t-dev`.
     python(7027,0x1f6dfc240) malloc: nano zone abandoned due to inability to reserve vm space.
     ```
 
-    This message is being emmitted by the MacOS malloc implementation. As
+    This message is being emitted by the MacOS malloc implementation. As
     [explained
     here](https://stackoverflow.com/questions/64126942/malloc-nano-zone-abandoned-due-to-inability-to-preallocate-reserved-vm-space),
     this happens for any program compiled with ThreadSanitizer on MacOS and can
@@ -375,7 +375,7 @@ CC=clang-18 CXX=clang++-18 python -m pip install -v . --no-build-isolation -Cset
 # CC=clang-18 CXX=clang++-18 python -m pip install -v . --no-build-isolation -Csetup-args=-Db_sanitize=thread -Csetup-args=-Dbuildtype=debugoptimized
 ```
 
-## Running python under ThreadSanitizer
+## Running Python under ThreadSanitizer
 
 ### Useful ThreadSanitizer options
 
@@ -467,7 +467,7 @@ to run their full test suite under ThreadSanitizer in CI.
 
 For that reason, we also suggest setting up CI run for your full test suite
 using [AddressSanitizer](https://github.com/google/sanitizers/wiki/addresssanitizer) (or
-ASAN). AddressSanitizer will detect if there are any memory safety issues
+ASan). AddressSanitizer will detect if there are any memory safety issues
 triggered by multithreaded tests. While it will not detect data races that do
 not lead to observable memory safety issues, it will detect races that could
 lead to e.g. a segmentation fault and give precise debugging information about
