@@ -7,7 +7,7 @@ specific to the free-threaded build.
 
 If you are unable to run your package with the GIL disabled because of problems
 in extension modules or in dependencies, you can still test with the GIL enabled
-by lowing the thread switch interval to a very small value (e.g. a microsecond
+by setting the thread switch interval to a very small value (e.g. a microsecond
 or shorter). You can call
 [`sys.setswitchiterval`](https://docs.python.org/3/library/sys.html#sys.setswitchinterval)
 before running multithreaded tests to force Python to release the GIL more often
