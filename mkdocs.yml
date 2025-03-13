@@ -27,6 +27,7 @@ nav:
   - 'installing_cpython.md'
   - 'running-gil-disabled.md'
   - 'porting.md'
+  - 'testing.md'
   - 'porting-extensions.md'
   - 'ci.md'
   - 'debugging.md'
