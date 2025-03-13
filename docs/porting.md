@@ -63,9 +63,11 @@ performance can always be improved later, once you've established free-threaded
 support and hopefully improved test coverage for multithreaded workflows.
 
 NumPy, for example, decided *not* to add explicit locking to the ndarray object
-and [does not support mutating shared ndarrays](<>). This was a pragmatic choice
-given existing heavy multithreaded use of NumPy in the GIL-enabled build and a
-desire to not introducing scaling bottlenecks in existing workflows.
+and [does not support mutating shared
+ndarrays](https://numpy.org/devdocs/reference/thread_safety.html#thread-safety). This
+was a pragmatic choice given existing heavy multithreaded use of NumPy in the
+GIL-enabled build and a desire to not introducing scaling bottlenecks in
+existing workflows.
 
 Eventually NumPy may need to offer explicitly thread-safe data structures, but
 it is a valid choice to initially support free-threading while still exposing
