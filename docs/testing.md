@@ -40,11 +40,15 @@ Generally global mutable state is not safe in the free-threaded build without
 some form of locking. Many projects use global mutable state (e.g. module-level
 or class-level state) for convenience with the assumption that the GIL provides
 locking on the state. That will most likely not be valid without some form of
-locking on the free-threaded build. It is also likely that there are thread
-safety issues related to use of global state even in the GIL-enabled build. See
-the section below on [global state in
+explicit locking on the free-threaded build. It is also likely that there are
+latent thread-safety issues related to use of global state even in the GIL-enabled
+build.
+
+Many test suites are implemented using global mutable state or assume that tests
+cannot run simultaneously. See the section below on [global state in
 tests](porting.md#fixing-thread-unsafe-tests) for more information about
-updating test suites to work with the free-threaded build.
+updating test suites to work with the free-threaded build and dealing with tests
+that become flaky when run in a thread pool
 
 You can look at
 [pytest-run-parallel](https://github.com/Quansight-Labs/pytest-run-parallel) as
@@ -133,6 +137,12 @@ assertion might be merely that a crash doesn't happen, in which case no explicit
 asserts are necessary.
 
 ## Fixing thread-unsafe tests.
+
+Tests that fail due to thread safety issues are inherently
+[flaky](https://testautomationpatterns.org/wiki/index.php/FLAKY_TESTS). You
+should not be surprised to see tests that pass or fail randomly, or even fail a
+very small percentage of the time. When writing multithreaded tests your goal
+should be to maximize the chances of triggering a thread safety issue.
 
 Many existing tests are written using global state. This is not a problem if the
 test only runs once, but if you would like to use your tests to check for

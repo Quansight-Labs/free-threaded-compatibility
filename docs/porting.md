@@ -118,7 +118,8 @@ Basulto's [tutorial from PyCon
 The most common source of thread safety issues in Python packages is use of
 global mutable state. Many projects use module-level or class-level caches to
 speed up execution but do not envision filling the cache simultaneously from
-multiple threads.
+multiple threads. See the [testing guide](testing.md) for strategies to add
+tests to detect problematic global state.
 
 For example, the `do_calculation` function in the following module is not
 thread-safe:
