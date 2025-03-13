@@ -97,7 +97,7 @@ Python, we suggest reading the
 documentation, particularly the section on [the impact of the global interpreter
 lock on multithreaded Python
 programs](https://github.com/facebookincubator/ft_utils/blob/main/docs/ft_worked_examples.md#understanding-the-global-interpreter-lock-gil-and-its-impact-on-multithreaded-python-programs). Many
-pure Python operation are not atomic and are susceptible to race conditions, or
+pure Python operations are not atomic and are susceptible to race conditions, or
 only appear to be thread-safe because of the timing of the GIL's default
 thread-switch interval.
 
