@@ -25,7 +25,8 @@ will be. The following resources should get you started:
 - [Installing Free-Threaded Python](installing_cpython.md)
 - [Running Python with the GIL Disabled](running-gil-disabled.md)
 - [Porting Python Packages to Support Free-Threading](porting.md)
-- [Setting up CI](ci.md)
+- [Updating Native Extensions to Support Free-Threading](porting-extensions.md)
+- [Setting up Continuous Integration](ci.md)
 - [Uncovering Concurrency Issues, Testing and Debugging](debugging.md)
 - [More Resources](resources.md)
 
