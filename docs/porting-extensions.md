@@ -279,8 +279,8 @@ holding the lock, `PyMutex` has no special advantages over other mutexes, beside
 low-level details like performance or the size of the mutex object in memory.
 
 See the section on [dealing with thread-unsafe low-level
-libraries](porting.md#dealing-with-thread-unsafe-libraries) below for an example
-using PyMutex to lock around a thread-unsafe C library.
+libraries](porting-extensions.md#dealing-with-thread-unsafe-native-libraries)
+below for an example using PyMutex to lock around a thread-unsafe C library.
 
 ### Critical Sections
 
@@ -307,7 +307,7 @@ custom object that you fully control. You can apply critical sections around
 modification of internal state to effectively serialize access to that state.
 
 See the section below on [dealing with thread-unsafe
-objects](porting.md##dealing-with-thread-unsafe-objects) for an example using
+objects](porting-extensions.md#dealing-with-thread-unsafe-objects) for an example using
 the critical section API.
 
 ## Dealing with global state

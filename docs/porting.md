@@ -24,7 +24,7 @@ GIL-enabled build.
 Below, we outline a plan of attack for updating a Python project to support the
 free-threaded build. Since the changes required in native extensions are more
 substantial, we have split off the guide for porting extension modules into the
-[next section](portind-extensions.md).
+[next section](porting-extensions.md).
 
 ## Suggested Plan of Attack
 
@@ -71,7 +71,7 @@ state) for convenience with the assumption that the GIL provides locking on the
 state. That will most likely not be valid without some form of locking on the
 free-threaded build. It is also likely that there are thread safety issues
 related to use of global state even in the GIL-enabled build. See the section
-below on [global state in tests](porting.md#dealing-with-global-state-in-tests)
+below on [global state in tests](porting.md#fixing-thread-unsafe-tests)
 for more information about updating test suites to work with the free-threaded
 build.
 
