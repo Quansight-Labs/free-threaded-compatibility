@@ -202,7 +202,7 @@ def do_calculation(arg):
 
 ```
 
-Note that the lock after acquiring the lock, we first check if the requested key
+Note that after acquiring the lock, we first check if the requested key
 has been filled by another thread, to prevent unnecessary calls to
 `_do_expensive_calculation` if another thread filled the cache while the thread
 currently holding the lock was blocked on acquiring the lock. Also note that
