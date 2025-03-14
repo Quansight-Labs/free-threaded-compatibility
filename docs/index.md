@@ -97,7 +97,7 @@ that best describes you:
     Free-threading is implemented in CPython such that pure Python code is
     thread-safe, at least to the same extent as it is with the GIL enabled
     today. We use "thread-safe" here to mean that CPython should not crash
-    running multithreaded pure python code, not necessarily that a multithreaded
+    running multithreaded pure Python code, not necessarily that a multithreaded
     program will always produce deterministic results, even if the GIL-enabled
     build is deterministic. It is up to the author of a program, application, or
     library to ensure safe multithreaded usage when using the library in a

@@ -16,7 +16,7 @@ free-threading, many more users will want to use Python threads.
 This means we must analyze Python codebases to identify supported and
 unsupported multithreaded workflows and make changes to fix thread safety
 issues. This need is particularly acute for low-level code exposed to Python
-including C, C++, Cython, and Rust code exposed to Python, but even pure-python
+including C, C++, Cython, and Rust code exposed to Python, but even pure Python
 codebases can exhibit non-determinism and racies in the free-threaded build that
 are either very unlikely or impossible in the default configuration of the
 GIL-enabled build.
@@ -151,7 +151,7 @@ In pure Python, you can create a thread-local cache using an instance of
 thread will see independent versions of the thread-local object. You could
 rewrite the above example to use a thread-local cache like so:
 
-```
+```python
 import threading
 
 from internals import _do_expensive_calculation
@@ -185,7 +185,7 @@ waiting to acquire the lock is allowed to run.
 You could rewrite the above thread-unsafe example to be thread-safe using a lock
 like this:
 
-```
+```python
 import threading
 
 from internals import _do_expensive_calculation

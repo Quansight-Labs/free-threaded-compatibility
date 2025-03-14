@@ -48,7 +48,7 @@ Many test suites are implemented using global mutable state or assume that tests
 cannot run simultaneously. See the section below on [global state in
 tests](porting.md#fixing-thread-unsafe-tests) for more information about
 updating test suites to work with the free-threaded build and dealing with tests
-that become flaky when run in a thread pool
+that become flaky when run in a thread pool.
 
 You can look at
 [pytest-run-parallel](https://github.com/Quansight-Labs/pytest-run-parallel) as
