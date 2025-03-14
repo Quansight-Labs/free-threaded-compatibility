@@ -160,6 +160,7 @@ local = threading.local()
 
 local.cache = {}
 
+
 def do_calculation(arg):
     if arg not in local.cache:
         local.cache[arg] = _do_expensive_calculation(arg)
@@ -193,6 +194,7 @@ from internals import _do_expensive_calculation
 cache_lock = threading.Lock()
 global_cache = {}
 
+
 def do_calculation(arg):
     if arg in global_cache:
         return global_cache[arg]
@@ -202,7 +204,6 @@ def do_calculation(arg):
         global_cache[arg] = _do_expensive_calculation(arg)
     cache_lock.release()
     return global_cache[arg]
-
 ```
 
 Note that after acquiring the lock, we first check if the requested key
