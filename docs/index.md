@@ -67,6 +67,11 @@ that best describes you:
     table](tracking.md) for more details about the status of free-threaded
     support in Python libraries.
 
+    If your dependencies advertise free-threaded support, good news! If you do
+    not use the `threading` module and do not plan to, then you're done and you
+    can feel safe declaring support for running your project on the
+    free-threaded build.
+
     If you make use of the `threading` module internally and already have
     multithreaded tests, consider experimenting with your existing tests with a
     very short [thread switch
@@ -75,11 +80,11 @@ that best describes you:
     `threading` or thread pools internally your tool or app should behave
     identically under free-threading.
 
-    If your dependencies advertise free-threaded support, good news! You should
-    read the documentation of your dependencies and learn about their thread
-    safety guarantess. This is particularly true of libraries that expose
-    mutable objects, doubly so if you want to mutate a shared object from many
-    threads.
+    If you would like to use the `threading` module to improve the performance of
+    your project, you should read the documentation of your dependencies and
+    learn about their thread safety guarantees. This is particularly true of
+    libraries that expose mutable objects, doubly so if you want to mutate a
+    shared object from many threads.
 
     Pure Python code can exhibit thread safety issues, so you may also want to
     look at the first section of the porting guide, particularly on the thread
