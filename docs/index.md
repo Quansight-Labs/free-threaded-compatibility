@@ -83,6 +83,7 @@ that best describes you:
     - [Porting Python Packages to Support Free-Threading](porting.md)
 
 ??? success "I maintain a pure Python package with a public Python API"
+
     Free-threading is implemented in CPython such that pure Python code is
     thread-safe, at least to the same extent as it is with the GIL enabled today. We
     use "thread-safe" here to mean that CPython should not crash running
@@ -117,7 +118,6 @@ that best describes you:
     - [Porting Python Packages to Support Free-Threading](porting.md)
     - [Improving Multithreaded Test Coverage](testing.md)
     - [Updating Native Extensions to Support Free-Threading](porting-extensions.md)
-
 
 ## Advanced topics for package maintainers
 
