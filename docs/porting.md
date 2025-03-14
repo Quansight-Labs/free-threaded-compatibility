@@ -244,13 +244,14 @@ access to state stored in a Python object. Consider the following class:
 import time
 import random
 
+
 class RaceyCounter:
     def __init__(self):
         self.value = 0
 
     def increment(self):
         current_value = self.value
-        time.sleep(random.randint(0, 10)*.0001)
+        time.sleep(random.randint(0, 10) * 0.0001)
         self.value = current_value + 1
 ```
 
@@ -258,8 +259,8 @@ Here we're simulating doing an in-place addition on an expensive function. A
 real example might have a method that looks something like this:
 
 ```python
-    def increment(self):
-        self.value += do_some_expensive_calulation()
+def increment(self):
+    self.value += do_some_expensive_calulation()
 ```
 
 If we run this example in a thread pool, you'll see that the answer you get will
@@ -270,8 +271,10 @@ from concurrent.futures import ThreadPoolExecutor
 
 counter = RaceyCounter()
 
+
 def closure(counter):
     counter.increment()
+
 
 with ThreadPoolExecutor(max_workers=8) as tpe:
     futures = [tpe.submit(closure, counter) for _ in range(1000)]
@@ -289,6 +292,7 @@ We can ensure the above script has determistic answers by adding a lock to our c
 ```python
 import threading
 
+
 class SafeCounter:
     def __init__(self):
         self.value = 0
@@ -297,7 +301,7 @@ class SafeCounter:
     def increment(self):
         self.lock.acquire()
         current_value = self.value
-        time.sleep(random.randint(0, 10)*.0001)
+        time.sleep(random.randint(0, 10) * 0.0001)
         self.value = current_value + 1
         self.lock.release()
 ```
