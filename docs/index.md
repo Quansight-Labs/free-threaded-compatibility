@@ -85,12 +85,13 @@ that best describes you:
 ??? success "I maintain a pure Python package with a public Python API"
 
     Free-threading is implemented in CPython such that pure Python code is
-    thread-safe, at least to the same extent as it is with the GIL enabled today. We
-    use "thread-safe" here to mean that CPython should not crash running
-    multithreaded pure python code, not necessarily that a multithreaded program
-    will always produce deterministic results. It is up to the author of a program,
-    application, or library to ensure safe multithreaded usage when using the
-    library in a supported manner.
+    thread-safe, at least to the same extent as it is with the GIL enabled
+    today. We use "thread-safe" here to mean that CPython should not crash
+    running multithreaded pure python code, not necessarily that a multithreaded
+    program will always produce deterministic results, even if the GIL-enabled
+    build is deterministic. It is up to the author of a program, application, or
+    library to ensure safe multithreaded usage when using the library in a
+    supported manner.
 
     There are a few ways you can create thread safety issues in your own
     code. The most common ones are: using global state for configuration or other
