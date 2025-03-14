@@ -1,4 +1,4 @@
-# Uncovering Concurrency Issues, Testing and Debugging
+# Debugging thread safety issues
 
 Until now, the GIL has allowed developers to ignore C
 safety issues when writing parallel programs, since the GIL ensured that
@@ -26,11 +26,6 @@ to the last two cases.
 
 In order to discover, handle and debug concurrency issues at large, there are
 several strategies, which we will summarize next.
-
-## Ensure that an extension module is free-threaded compliant
-
-We highly suggest reading the detailed guide presented on
-[Porting Extension Modules to Support Free-Threading](porting.md)
 
 ## pytest plugins to discover concurrency issues
 
