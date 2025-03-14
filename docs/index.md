@@ -94,11 +94,13 @@ that best describes you:
     supported manner.
 
     There are a few ways you can create thread safety issues in your own
-    code. The most common ones are: using global state for configuration or other
-    purposes, implementing a cache with a dict or other variable not meant for that
-    purpose, or using functionality of a dependency that itself isn't
-    thread-safe. If your package does none of those things, you are very likely
-    ready for free-threading already.
+    code. The most common ones are: using global state for configuration or
+    other purposes, implementing a cache with a dict or other variable not meant
+    for that purpose, or using functionality of a dependency that itself isn't
+    thread-safe. You should also think about whether you would like to support
+    multithreaded use of any mutable data structures exposed by your package. If
+    your package does none of those things, you are very likely ready for
+    free-threading already.
 
     What gets trickier is testing whether your package is thread-safe. For that
     you'll need multi-threaded tests, and that can be more involved - see [our guide
@@ -109,9 +111,9 @@ that best describes you:
 
 ??? success "I maintain a Python package with compiled extension modules"
 
-    As usual with native extensions, dealing with native code will take some
-    work but we hope that this guide will provide you with a toolkit to get
-    things working.
+    As usual with extensions, dealing with native code will take some work but
+    we hope that this guide will provide you with a toolkit to get things
+    working.
 
     We suggest reading through the the full porting guide, including the final
     section that focuses on considerations for native code.

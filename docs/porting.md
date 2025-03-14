@@ -17,16 +17,16 @@ This means we must analyze Python codebases to identify supported and
 unsupported multithreaded workflows and make changes to fix thread safety
 issues. This need is particularly acute for low-level code exposed to Python
 including C, C++, Cython, and Rust code exposed to Python, but even pure-python
-codebases can exhibit thread safety issues in the free-threaded build that are
-either very unlikely or impossible in the default configuration of the
+codebases can exhibit non-determinism and racies in the free-threaded build that
+are either very unlikely or impossible in the default configuration of the
 GIL-enabled build.
 
 ## Suggested Plan of Attack
 
 Below, we outline a plan of attack for updating a Python project to support the
 free-threaded build. Since the changes required in native extensions are more
-substantial, we have split off the guide for porting extension modules into the
-[next section](porting-extensions.md).
+substantial, we have split off the guide for porting extension modules into
+[a subsequent section](porting-extensions.md).
 
 ### Thread Safety of Pure Python Code.
 
@@ -34,10 +34,10 @@ The CPython interpreter protects you from low-level memory unsafety due to [data
 races](https://en.wikipedia.org/wiki/Race_condition#Data_race). It does not
 protect you from introducing thread safety issues due to [race
 conditions](https://en.wikipedia.org/wiki/Race_condition). It is possible to
-write algorithms that depend on the precise timing of how a thread completes
+write algorithms that depend on the precise timing of threads completing
 work. That means it is up to you as a user of multithreaded parallelism to
 ensure that any resources that need protection from multithreaded access or
-mutation is appropriate protected.
+mutation are appropriately protected.
 
 Below we describe various approaches for improving the determinism of
 multithreaded pure Python code. The correct approach will depend on exactly what
@@ -67,9 +67,11 @@ Eventually NumPy may need to offer explicitly thread-safe data structures, but
 it is a valid choice to initially support free-threading while still exposing
 possibly unsafe operations if users use the library unsafely.
 
-For pure-python packages, the unsafety would usually result in unexpected
+For pure Python packages, a racey algorithm might result in unexpected
 exceptions or silently incorrect results. Projects shipping extension modules
-might see crashes.
+might additionally see crashes or trigger undefined behavior. See [the section
+on supporting native code](porting-extensions.md) if you are curious about
+supporting compiled Python extensions in the free-threaded build.
 
 For your libraries, we suggest to focus on thread safety issues that only occur
 with the GIL disabled. Any non-critical preexisting thread safety issues can be
@@ -87,6 +89,10 @@ relatively low-level locking and synchronization primitives, as well as the
 [`ThreadPoolExecutor`](https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ThreadPoolExecutor)
 high-level thread pool interface.
 
+If you'd like to learn more about multithreaded Python programming in the
+GIL-enabled build, Santiago Basulto's [tutorial from PyCon
+2020](https://www.youtube.com/watch?v=18B1pznaU1o) is a good place to start.
+
 For a pedagogical introduction to multithreaded programming in free-threaded
 Python, we suggest reading the
 [`ft_utils`](https://github.com/facebookincubator/ft_utils/blob/main/docs/index.md)
@@ -94,18 +100,14 @@ documentation, particularly the section on [the impact of the global interpreter
 lock on multithreaded Python
 programs](https://github.com/facebookincubator/ft_utils/blob/main/docs/ft_worked_examples.md#understanding-the-global-interpreter-lock-gil-and-its-impact-on-multithreaded-python-programs). Many
 pure Python operations are not atomic and are susceptible to race conditions, or
-only appear to be thread-safe because of the timing of the GIL's default
-thread-switch interval.
+only appear to be thread-safe in the GIL-enabled build because of details of how
+CPython releases the GIL in a round-robin fasion to allow threads to run.
 
 Both the [`ft_utils`](https://github.com/facebookincubator/ft_utils) and
 [`cereggii`](https://github.com/dpdani/cereggii) libraries offer data structures
 that add enhanced atomicity to standard library primitives. We hope these sorts
 of tools to aid concurrent free-threaded programming continue to pop up and
 evolve, as they will be key to enabling scalable multithreaded workflows.
-
-If you'd like to learn more about multithreaded Python programming, Santiago
-Basulto's [tutorial from PyCon
-2020](https://www.youtube.com/watch?v=18B1pznaU1o) is a good place to start.
 
 ## Dealing with mutable global state
 
@@ -146,8 +148,8 @@ expensive or does not lead to excessive runtime network, CPU, or memory use.
 
 In pure Python, you can create a thread-local cache using an instance of
 [threading.local](https://docs.python.org/3/library/threading.html#thread-local-data). Each
-thread will see independent versions of the thread-local object. You could rewrite the above example
-to use a thread-local cache like so:
+thread will see independent versions of the thread-local object. You could
+rewrite the above example to use a thread-local cache like so:
 
 ```
 import threading
@@ -163,6 +165,10 @@ def do_calculation(arg):
         local.cache[arg] = _do_expensive_calculation(arg)
     return local.cache[arg]
 ```
+
+This wouldn't help a case where each thread having a copy of the cache would be
+prohibitive, but it does fix possible issues with resource leaks issues due to
+races filling a cache.
 
 ### Making mutable global caches thread-safe with locking
 
