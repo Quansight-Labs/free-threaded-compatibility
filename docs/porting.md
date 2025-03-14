@@ -21,33 +21,27 @@ codebases can exhibit thread safety issues in the free-threaded build that are
 either very unlikely or impossible in the default configuration of the
 GIL-enabled build.
 
+## Suggested Plan of Attack
+
 Below, we outline a plan of attack for updating a Python project to support the
 free-threaded build. Since the changes required in native extensions are more
 substantial, we have split off the guide for porting extension modules into the
 [next section](porting-extensions.md).
 
-## Suggested Plan of Attack
-
 ### Thread Safety of Pure Python Code.
 
-Free-threading is implemented in CPython such that pure Python code is
-thread-safe, at least to the same extent as it is with the GIL enabled today. We
-use "thread-safe" here to mean that CPython should not crash running
-multithreaded pure python code, not necessarily that a multithreaded program
-will always produce deterministic results. It is up to the author of a program,
-application, or library to ensure safe multithreaded usage when using the
-library in a supported manner.
+The CPython interpreter protects you from low-level memory unsafety due to [data
+races](https://en.wikipedia.org/wiki/Race_condition#Data_race). It does not
+protect you from introducing thread safety issues due to [race
+conditions](https://en.wikipedia.org/wiki/Race_condition). It is possible to
+write algorithms that depend on the precise timing of how a thread completes
+work. That means it is up to you as a user of multithreaded parallelism to
+ensure that any resources that need protection from multithreaded access or
+mutation is appropriate protected.
 
-There are a few ways you can create thread safety issues in your own
-code. The most common ones are: using global state for configuration or other
-purposes, implementing a cache with a dict or other variable not meant for that
-purpose, or using functionality of a dependency that itself isn't
-thread-safe. If your package does none of those things, you are very likely
-ready for free-threading already.
-
-What gets trickier is testing whether your package is thread-safe. For that
-you'll need multi-threaded tests, and that can be more involved - see [our guide
-to adding multithreaded test coverage](testing.md) to Python packages.
+Below we describe various approaches for improving the determinism of
+multithreaded pure Python code. The correct approach will depend on exactly what
+you are doing.
 
 ### General considerations for porting
 
