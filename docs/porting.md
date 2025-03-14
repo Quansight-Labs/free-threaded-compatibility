@@ -224,3 +224,87 @@ There is also
 [threading.RLock](https://docs.python.org/3/library/threading.html#rlock-objects),
 which provides a reentrant lock allowing threads to recursively acquire the same
 lock.
+
+## Dealing with thread-unsafe objects
+
+Mutability of objects is deeply embedded in the Python runtime and many tools freely
+assign to or mutate data stored in a python object.
+
+In the GIL-enabled build, in many cases, you can get away with mutating a shared
+object safely. This is true so long as whatever mutation you are attempting to
+do is fast enough that a thread switch is very unlikely to happen while you are
+doing work.
+
+In the free-threaded build there is no GIL to protect against mutation of state
+living on a Python object that is shared between threads. Just like when we used
+a lock to protect a global cache, we can also use a per-object lock to serialize
+access to state stored in a Python object. Consider the following class:
+
+```python
+import time
+import random
+
+class RaceyCounter:
+    def __init__(self):
+        self.value = 0
+
+    def increment(self):
+        current_value = self.value
+        time.sleep(random.randint(0, 10)*.0001)
+        self.value = current_value + 1
+```
+
+Here we're simulating doing an in-place addition on an expensive function. A
+real example might have a method that looks something like this:
+
+```python
+    def increment(self):
+        self.value += do_some_expensive_calulation()
+```
+
+If we run this example in a thread pool, you'll see that the answer you get will
+vary randomly depending on the timing of the sleeps:
+
+```python
+from concurrent.futures import ThreadPoolExecutor
+
+counter = RaceyCounter()
+
+def closure(counter):
+    counter.increment()
+
+with ThreadPoolExecutor(max_workers=8) as tpe:
+    futures = [tpe.submit(closure, counter) for _ in range(1000)]
+    for f in futures:
+        f.result()
+
+print(counter.value)
+```
+
+On both the free-threaded and GIL-enabled build, you will see the output of this
+script randomly vary.
+
+We can ensure the above script has determistic answers by adding a lock to our counter:
+
+```python
+import threading
+
+class SafeCounter:
+    def __init__(self):
+        self.value = 0
+        self.lock = threading.Lock()
+
+    def increment(self):
+        self.lock.acquire()
+        current_value = self.value
+        time.sleep(random.randint(0, 10)*.0001)
+        self.value = current_value + 1
+        self.lock.release()
+```
+
+If you replace `RaceyCounter` with `SafeCounter` in the script above, it will
+always output 1000.
+
+Of course this introduces a scaling bottleneck when `SafeCounter` instances are
+concurrently updated. It's possible to implement more optimized locking
+strategies, but doing so requires knowledge of the problem.
