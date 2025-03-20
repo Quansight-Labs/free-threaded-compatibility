@@ -28,7 +28,7 @@ free-threaded build. Since the changes required in native extensions are more
 substantial, we have split off the guide for porting extension modules into
 [a subsequent section](porting-extensions.md).
 
-### Thread Safety of Pure Python Code.
+### Thread Safety of Pure Python Code
 
 The CPython interpreter protects you from low-level memory unsafety due to [data
 races](https://en.wikipedia.org/wiki/Race_condition#Data_race). It does not
