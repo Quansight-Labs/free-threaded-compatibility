@@ -1,8 +1,17 @@
 # Setting up CI
 
-Currently the `setup-python` GitHub Action [does not
-support](https://github.com/actions/setup-python/issues/771) installing a
-free-threaded build. For now, here are some relatively easy ways:
+## CI setup via `setup-python`
+
+```yaml
+jobs:
+  free-threaded:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@...
+      - uses: actions/setup-python@...
+        with:
+          python-version: 3.13t
+```
 
 ## CI setup via `setup-uv`
 
