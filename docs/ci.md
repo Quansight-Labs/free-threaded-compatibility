@@ -2,6 +2,9 @@
 
 ## CI setup via `setup-python`
 
+The easiest way to get a free-threaded Python build on a CI runner is with the
+[`setup-python`](https://github.com/actions/setup-python) Github Action:
+
 ```yaml
 jobs:
   free-threaded:
@@ -15,7 +18,7 @@ jobs:
 
 ## CI setup via `setup-uv`
 
-The easiest way to get a free-threaded Python build on a CI runner is with the
+An alternative to `setup-python` is to use
 [`setup-uv`](https://github.com/astral-sh/setup-uv) Github Action:
 
 ```yaml
