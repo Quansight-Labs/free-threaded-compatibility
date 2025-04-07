@@ -88,8 +88,7 @@ specify the following variables in the environment for the cibuildwheel action:
   - name: Build wheels
     uses: pypa/cibuildwheel@...
     env:
-      CIBW_PRERELEASE_PYTHONS: true
-      CIBW_FREE_THREADED_SUPPORT: true
+      CIBW_ENABLE: cpython-freethreading
       CIBW_BUILD: cp313t-${{ matrix.buildplat }}
       # TODO:
       # remove when a released cython can build free-threaded extensions
