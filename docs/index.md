@@ -149,7 +149,8 @@ programming here:
 Any contributions are very much welcome - please open issues or pull requests
 [on this repo](https://github.com/Quansight-Labs/free-threaded-compatibility)
 for anything that seems in scope for this site or for tracking issues related
-to support for free-threaded Python across the ecosystem.
+to support for free-threaded Python across the ecosystem. See the
+[Contributing](contributing.md) page for more details.
 
 This site is maintained primarily by Quansight Labs, where a team is working
 together with the Python runtime team at Meta and stakeholders across the
