@@ -3,7 +3,6 @@
 We very much welcome ideas, questions and relevant contributions from anyone
 with an interest in improving the adoption and usage of free-threaded CPython.
 
-
 ## Contributing to this site
 
 Contributions can be made through issues on and pull requests to the
@@ -14,8 +13,7 @@ repository. Ways to contribute include:
 - Updates to the [status tracker](https://py-free-threading.github.io/tracking/).
 - Adding links to relevant examples, blog posts and other content.
 - For particularly exciting use cases or benchmarks, including them directly
-  into the site instead of only linking out to them.
-
+    into the site instead of only linking out to them.
 
 ## Contributing to the adoption of free-threading
 
@@ -26,12 +24,11 @@ years to complete the transition to free-threaded CPython, and your help will
 be valuable. Here are some ways to contribute today:
 
 1. Start experimenting! If the packages you rely on for some task or application,
-   try running it with a free-threaded interpreter. And consider whether it can
-   benefit performance or functionality-wise from Python-level threading.
-2. Implement support for free-threading in packages that are still lacking
-   support. We'll try to provide an outline of how to approach that in an open
-   source package below.
-
+    try running it with a free-threaded interpreter. And consider whether it can
+    benefit performance or functionality-wise from Python-level threading.
+1. Implement support for free-threading in packages that are still lacking
+    support. We'll try to provide an outline of how to approach that in an open
+    source package below.
 
 ### Implementing support for free-threading in a package
 
@@ -75,4 +72,3 @@ will be very useful.
 I will be happy to help and work on this. Please do let me know if you'd prefer
 me to hold off for any reason.
 ```
-
