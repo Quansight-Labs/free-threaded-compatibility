@@ -32,6 +32,7 @@ nav:
   - 'ci.md'
   - 'debugging.md'
   - 'resources.md'
+  - 'contributing.md'
 
 plugins:
   - search
