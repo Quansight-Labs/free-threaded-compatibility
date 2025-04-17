@@ -39,6 +39,9 @@ You can also ask questions in the [Threading
 category](https://discuss.python.org/c/threading/38) of the Python community
 Discourse forum.
 
+Please read and be mindful of community rules. Both communities enforce the
+Python Software Foundation Code of Conduct.
+
 ## Updating code to run on free-threaded Python
 
 If you are interested in updating your code to work on free-threaded Python,

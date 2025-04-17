@@ -10,3 +10,8 @@ that project's issue tracker.
 
 You can find documentation for various free-threading topics
 on [py-free-threading.github.io](https://py-free-threading.github.io).
+
+### Contributing
+
+You can find contribution instructions in [the
+documentation](https://py-free-threading.github.io/contributing/).
