@@ -30,6 +30,15 @@ to run with the GIL disabled and verify that is the case.
 - [Installing Free-Threaded Python](installing_cpython.md)
 - [Running Python with the GIL Disabled](running-gil-disabled.md)
 
+## Where to get help
+
+You can join the Free-threaded Python Community Discord using this invite link:
+https://discord.gg/rqgHCDqdRr.
+
+You can also ask questions in the [Threading
+category](https://discuss.python.org/c/threading/38) of the Python community
+Discourse forum.
+
 ## Updating code to run on free-threaded Python
 
 If you are interested in updating your code to work on free-threaded Python,
