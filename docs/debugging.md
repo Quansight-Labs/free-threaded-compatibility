@@ -229,43 +229,6 @@ by `gdb`/`lldb` at the moment of debugging. For more information regarding
 CPython installation sources, please visit the
 [Installing a free-threaded Python](installing_cpython.md) page.
 
-## Frequently seen errors and how to fix them
-
-These are error messages that we see come up often when working with code or
-development workflows that have not been updated to accommodate the
-free-threaded build. We also provide suggested fixes. Please send in pull
-requests to [the repository for this
-document](https://github.com/quansight-labs/free-threaded-compatibility) if you
-run into any confusing free-threading-specific errors that you suspect apply to
-other libraries and aren't covered here.
-
-### Cython compilation errors: `unknown type name '__pyx_vectorcallfunc'`
-
-This happens if you try to build a Cython extension for the free-threaded build
-using the current stable release of Cython (3.0.11 at the time of writing). The
-current stable release of Cython does not support the free-threaded build. You
-must either build Cython from the `master` branch [on
-Github](https://github.com/cython/cython) or use the nightly wheel:
-
-```bash
-pip install -i https://pypi.anaconda.org/scientific-python-nightly-wheels/simple cython
-```
-
-See [the porting guide](porting.md) for more detail about porting Cython code to
-work under free-threading.
-
-You may wonder why you are able to install a wheel for the current Cython
-release at all. This is because Cython ships a pure-python wheel tagged with
-`py2.py3-none-any`, which pip will install if it cannot find another wheel that
-is compatible. A future version of Cython will ship a wheel with compiled code
-that supports the free-threaded build.
-
-The current nightly wheel is a pure-python build, so it works on all
-architectures. The pure-python version of Cython is usually only marginally
-slower than a compiled version, so you should default to installing the wheel in
-CI instead of compiling Cython, which can take up to a few minutes on some CI
-runners.
-
 ## Compiling CPython and foundational packages with ThreadSanitizer
 
 [Thread sanitizer](https://github.com/google/sanitizers/wiki/ThreadSanitizerCppManual) (or TSan) helps
