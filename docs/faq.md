@@ -63,7 +63,7 @@ GIL-enabled python interpreter. See [our instructions](installing_cpython.md#ins
 installing a free-threaded Jupyter kernel for more details.
 
 That said, it *is* possible to install `jupyter` into a free-threaded Python
-environment launch jupyterlab on the free-threaded build, [see this
+environment and launch jupyterlab, [see this
 issue](https://github.com/jupyterlab/jupyterlab/issues/16915#issuecomment-2810114545)
 for more details.
 
