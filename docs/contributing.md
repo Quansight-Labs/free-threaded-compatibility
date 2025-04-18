@@ -3,8 +3,9 @@
 We very much welcome ideas, questions and relevant contributions from anyone
 with an interest in improving the adoption and usage of free-threaded CPython.
 
-Please read the Code of Conduct in the root of the repository and be mindful of
-the community rules while working on the project.
+Please read [the Code of
+Conduct](https://github.com/Quansight/.github/blob/master/CODE_OF_CONDUCT.md)
+and be mindful of the community rules while working on the project.
 
 ## Contributing to this site
 
