@@ -40,7 +40,7 @@ build.
 
 ## `pip install jupyter` fails
 
-This happens because some of the dependencies of the `jupyter` project on pypi
+This happens because some of the dependencies of the `jupyter` project on PyPI
 do not yet support the free-threaded build. In particular, `argon2-cffi` uses a
 C extension provided by the `argon2-cffi-bindings` project, which in turn uses
 CFFI to generate bindings for the `argon2` C password hashing library.
