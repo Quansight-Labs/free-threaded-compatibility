@@ -13,21 +13,29 @@ other libraries and aren't covered here.
 This happens if you try to build a Cython extension for the free-threaded build
 using the current stable release of Cython (3.0.11 at the time of writing). The
 current stable release of Cython does not support the free-threaded build. You
-must either build Cython from the `master` branch [on
-Github](https://github.com/cython/cython) or use the nightly wheel:
+must either install the Cython 3.1 beta by passing `--pre` to `pip`:
+
+```
+pip install cython --pre
+```
+
+use the nightly wheel:
 
 ```bash
 pip install -i https://pypi.anaconda.org/scientific-python-nightly-wheels/simple cython
 ```
 
+or build Cython from the `master` branch [on
+Github](https://github.com/cython/cython).
+
 See [the porting guide](porting.md) for more detail about porting Cython code to
 work under free-threading.
 
-The current nightly wheel is a pure-python build, so it works on all
+The beta and nightly wheel are pure-python builds, so they work on all
 architectures. The pure-python version of Cython is usually only marginally
-slower than a compiled version, so you should default to installing the wheel in
-CI instead of compiling Cython, which can take up to a few minutes on some CI
-runners.
+slower than a compiled version, so you should default to installing a
+pre-release wheel in CI instead of compiling Cython, which can take up to a few
+minutes on some CI runners.
 
 You may wonder why `pip install cython` succeeds on the current stable Cython
 release if free-threaded Python is not supported. This is because Cython ships a
@@ -35,8 +43,7 @@ pure-python wheel tagged with `py2.py3-none-any`, which pip will install if it
 cannot find another wheel that is compatible. Since there isn't a free-threaded
 wheel, pip installs the pure Python wheel instead, and there is no opportunity
 to catch this case at install time in e.g. a `setup.py` file. The Cython 3.1
-release will include a wheel with compiled code that supports the free-threaded
-build.
+release will fix this problem once and for all.
 
 ## `pip install jupyter` fails
 
@@ -49,13 +56,14 @@ Because CFFI does not yet ship a stable release that supports the free-threaded
 build, even if you have a compiler environment properly set up, the
 `argon2-cffi-bindings` build will fail.
 
-For now, we do not recomment trying to install jupyterlab into an environment
+For now, we do not recommend trying to install jupyterlab into an environment
 managed by a free-threaded Python interpreter. Instead, we suggest installing a
 free-threaded Python kernel into a jupyterlab installation managed by a
 GIL-enabled python interpreter. See [our instructions](installing_cpython.md#installing-a-jupyter-kernel) for
 installing a free-threaded Jupyter kernel for more details.
 
-It is also possible to launch jupyterlab on the free-threaded build, [see this
+That said, it *is* possible to install `jupyter` into a free-threaded Python
+environment launch jupyterlab on the free-threaded build, [see this
 issue](https://github.com/jupyterlab/jupyterlab/issues/16915#issuecomment-2810114545)
 for more details.
 
@@ -77,4 +85,12 @@ free-threaded builds.
 Until then, tools or libraries that *default* to using the stable ABI via the
 limited API will generate build errors on the free-threaded build. The fix is
 usually to disable the `Py_LIMITED_API` declaration that triggers use of the
-stable ABI.
+stable ABI on the free-threaded build by using the following incantation:
+
+```
+import sysconfig
+FREETHREADED_BUILD = bool(sysconfig.get_config_var("Py_GIL_DISABLED"))
+```
+
+If you spell it this way, `FREETHREADED_BUILD` will be `False` on the
+GIL-enabled build and `True` for free-threaded builds.
