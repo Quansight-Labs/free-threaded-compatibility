@@ -144,6 +144,10 @@ that best describes you:
     - [Improving Multithreaded Test Coverage](testing.md)
     - [Updating Native Extensions to Support Free-Threading](porting-extensions.md)
 
+## Frequently asked questions
+
+- [Frequently seen errors and how to fix them](faq.md)
+
 ## Advanced topics for package maintainers
 
 - [Setting up Continuous Integration](ci.md)

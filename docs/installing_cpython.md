@@ -208,6 +208,11 @@ python3.13t -m ipykernel install --name python3.13t --user
 And then you should be able to launch new jupyterlab or jupyter notebook
 sessions using the `python3.13t` kernel to experiment with free-threaded Python.
 
+It is also possible to launch jupyterlab on the free-threaded build, [see this
+issue
+comment](https://github.com/jupyterlab/jupyterlab/issues/16915#issuecomment-2810114545)
+for more details.
+
 ## Containers
 
 The [manylinux containers](https://github.com/pypa/manylinux) have free-threaded
