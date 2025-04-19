@@ -6,46 +6,39 @@ description: py-free-threading is a centralized collection of documentation and 
 
 Free-threaded CPython is coming! :material-language-python: :thread:
 
-After the [acceptance by the Python Steering Council](https://discuss.python.org/t/a-steering-council-notice-about-pep-703-making-the-global-interpreter-lock-optional-in-cpython/30474)
-of, and the [gradual rollout strategy](https://discuss.python.org/t/pep-703-making-the-global-interpreter-lock-optional-in-cpython-acceptance/37075) for,
-[PEP 703 - Making the Global Interpreter Lock Optional in CPython](https://peps.python.org/pep-0703/),
-a lot of work is happening both in CPython itself and across the Python ecosystem.
+## Status
 
-This website aims to serve as a centralized resource both for Python package
-maintainers and end users interested in supporting or experimenting with
-free-threaded Python. We are tracking the compatibility of a number of packages
-that include native code, you can take a look at our progress here:
+After the [acceptance by the Python Steering Council](https://discuss.python.org/t/a-steering-council-notice-about-pep-703-making-the-global-interpreter-lock-optional-in-cpython/30474) of
+[PEP 703 - Making the Global Interpreter Lock Optional in CPython](https://peps.python.org/pep-0703/), work is happening for the [gradual rollout strategy](https://discuss.python.org/t/pep-703-making-the-global-interpreter-lock-optional-in-cpython-acceptance/37075) in CPython.
+In parallel, efforts to support free-threading are underway across the Python ecosystem, including packages, third-party libraries, tooling, and education.
 
-- [Compatibility Status Tracking](tracking.md)
+## Purpose of this site
 
-This website also provide documentation and guidance for setting up a
+This website serves as a **centralized resource** for Python package
+maintainers, as well as end users, interested in supporting or experimenting with
+free-threaded Python.
+
+It also tracks the **compatibility status of packages**
+that include native code here:
+
+- [Free-threading Python Compatibility Status Tracker](tracking.md)
+
+It offers **documentation and guidance** for setting up a
 free-threaded Python development environment and getting code working under the
 free-threaded build.
 
-## Installing and Running Free-threaded Python
+## Install free-threaded Python
 
-The following sections describe how to install free-threaded Python and how
-to run with the GIL disabled and verify that is the case.
+The following sections describe how to install free-threaded Python, run it, and verify
+the GIL is disabled.
 
 - [Installing Free-Threaded Python](installing_cpython.md)
 - [Running Python with the GIL Disabled](running-gil-disabled.md)
 
-## Where to get help
-
-You can join the Free-threaded Python Community Discord using this invite link:
-https://discord.gg/rqgHCDqdRr.
-
-You can also ask questions in the [Threading
-category](https://discuss.python.org/c/threading/38) of the Python community
-Discourse forum.
-
-Please read and be mindful of community rules. Both communities enforce the
-Python Software Foundation Code of Conduct.
-
-## Updating code to run on free-threaded Python
+## Run your code on free-threaded Python
 
 If you are interested in updating your code to work on free-threaded Python,
-what you need to do depends on your needs and goals. Please select the option
+your next steps depend on your needs and goals. To begin, select the option
 that best describes you:
 
 ??? success "I am writing a Python script or application that uses Python libraries I don't maintain"
@@ -144,7 +137,7 @@ that best describes you:
     - [Improving Multithreaded Test Coverage](testing.md)
     - [Updating Native Extensions to Support Free-Threading](porting-extensions.md)
 
-## Frequently asked questions
+## Frequently asked questions about errors
 
 - [Frequently seen errors and how to fix them](faq.md)
 
@@ -155,18 +148,34 @@ that best describes you:
 
 ## Further reading
 
-We've collected more resources on free-threaded Python and multithreaded
+We've collected additional resources on free-threaded Python and multithreaded
 programming here:
 
 - [More Resources](resources.md)
 
-## About this site
+## News and getting help
 
-Any contributions are very much welcome - please open issues or pull requests
+You can join the Free-threaded Python Community Discord using this invite link:
+https://discord.gg/rqgHCDqdRr.
+
+You can also ask questions in the [Threading
+category](https://discuss.python.org/c/threading/38) of the Python community
+Discourse forum.
+
+Please read and be mindful of community rules. Both communities enforce the
+Python Software Foundation Code of Conduct.
+
+## Contributing
+
+We welcome your contributions.
+Please read the
+[Contributing](contributing.md) page for more details.
+Please open issues or pull requests
 [on this repo](https://github.com/Quansight-Labs/free-threaded-compatibility)
 for anything that seems in scope for this site or for tracking issues related
-to support for free-threaded Python across the ecosystem. See the
-[Contributing](contributing.md) page for more details.
+to support for free-threaded Python across the ecosystem.
+
+## About this site
 
 This site is maintained primarily by Quansight Labs, where a team is working
 together with the Python runtime team at Meta and stakeholders across the
