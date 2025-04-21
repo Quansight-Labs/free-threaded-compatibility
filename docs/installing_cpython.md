@@ -7,7 +7,7 @@ To install a free-threaded CPython interpreter, you can choose from the followin
 - use a container image
 - install a Jupyter kernel
 
-To get started quickly, use a pre-built binary with python.org and nuget installers, linux distribution installers, or multi-platform package managers.
+To get started quickly, use a pre-built binary with python.org installers (nuget for Windows), linux distribution installers, or multi-platform package managers.
 
 Building from source is straightforward too. If you
 hit a bug that may involve CPython itself then you may want to build from
@@ -30,7 +30,7 @@ including the python.org installers, Linux distro installers, and multi-platform
 
     Please see [this guidance from the Python Steering Council](https://github.com/python/steering-council/issues/221#issuecomment-1841593283)
 
-### python.org and nuget installers
+### python.org installer (using nuget for Windows)
 
 The [python.org downloads page](https://www.python.org/download/pre-releases/)
 provides macOS and Windows installers that have experimental support.
@@ -93,44 +93,44 @@ and installing the free-threaded binaries is also possible:
 
     1. Download the installer package from python.org.
 
-    ```bash
-    curl -O https://www.python.org/ftp/python/3.13.3/python-3.13.3-macos11.pkg
-    ```
+        ```bash
+        curl -O https://www.python.org/ftp/python/3.13.3/python-3.13.3-macos11.pkg
+        ```
 
-    2. Create a `choicechanges.plist` file to customize the install to enable the PythonTFramework-3.13 package and accept the other defaults (install all other packages).
+    1. Create a `choicechanges.plist` file to customize the install to enable the PythonTFramework-3.13 package and accept the other defaults (install all other packages).
 
-    ```bash
-    cat > ./choicechanges.plist <<EOF
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <array>
-            <dict>
-                    <key>attributeSetting</key>
-                    <integer>1</integer>
-                    <key>choiceAttribute</key>
-                    <string>selected</string>
-                    <key>choiceIdentifier</key>
-                    <string>org.python.Python.PythonTFramework-3.13</string>
-            </dict>
-    </array>
-    </plist>
-    EOF
-    ```
+        ```bash
+        cat > ./choicechanges.plist <<EOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <array>
+                <dict>
+                        <key>attributeSetting</key>
+                        <integer>1</integer>
+                        <key>choiceAttribute</key>
+                        <string>selected</string>
+                        <key>choiceIdentifier</key>
+                        <string>org.python.Python.PythonTFramework-3.13</string>
+                </dict>
+        </array>
+        </plist>
+        EOF
+        ```
 
-    3. Run the installer.
+    1. Run the installer.
 
-    ```bash
-    sudo installer -pkg ./python-3.13.3-macos11.pkg \
-        -applyChoiceChangesXML ./choicechanges.plist \
-        -target /
-    ```
+        ```bash
+        sudo installer -pkg ./python-3.13.3-macos11.pkg \
+            -applyChoiceChangesXML ./choicechanges.plist \
+            -target /
+        ```
 
-    4. Remove the package installer.
+    1. Remove the package installer.
 
-    ```bash
-    rm -f python-3.13.3-macos11.pkg
-    ```
+        ```bash
+        rm -f python-3.13.3-macos11.pkg
+        ```
 
     See also [this Github issue](https://github.com/python/cpython/issues/120098)
     for more information.
