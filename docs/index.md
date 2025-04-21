@@ -156,7 +156,7 @@ programming here:
 ## News and getting help
 
 You can join the Free-threaded Python Community Discord using this invite link:
-https://discord.gg/rqgHCDqdRr.
+[https://discord.gg/rqgHCDqdRr](https://discord.gg/rqgHCDqdRr).
 
 You can also ask questions in the [Threading
 category](https://discuss.python.org/c/threading/38) of the Python community
