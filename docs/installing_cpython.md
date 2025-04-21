@@ -1,22 +1,29 @@
 # Installing Free-Threaded Python
 
-To install a free-threaded CPython interpreter, you can either use a pre-built
-binary or build CPython from source. The former is quickest to get started
-with. Building from source is not too difficult either though, and in case you
+To install a free-threaded CPython interpreter, you can choose from the following options:
+
+- use a pre-built binary
+- build from source
+- use a container image
+- install a Jupyter kernel
+
+To get started quickly, use a pre-built binary with python.org and nuget installers, linux distribution installers, or multi-platform package managers.
+
+Building from source is straightforward too. If you
 hit a bug that may involve CPython itself then you may want to build from
 source.
 
-## Binary install options
+## Use a pre-built binary
 
 There are a growing number of options to install a free-threaded interpreter,
-from the python.org installers to Linux distro and Conda package managers.
+including the python.org installers, Linux distro installers, and multi-platform package managers, like conda.
 
 !!! note
 
-    For any of these options, please check after the install succeeds that you
-    have a `pip` version that is recent enough (`>=24.1`), and upgrade it if
-    that isn't the case. Older `pip` versions will select wheels with the
-    `cp313` tag (binary-incompatible) rather than the `cp313t` tag.
+    When using these options, please check your `pip` version after the install succeeds.
+    You should have a recent `pip` version (`>=24.1`). Upgrade it if
+    that isn't the case. Older `pip` versions will select incompatible wheels with the
+    `cp313` tag (binary-incompatible) rather than the `cp313t` tag (compatible).
 
 ??? question "As a packager, what should I name the package and interpreter?"
 
@@ -27,7 +34,7 @@ from the python.org installers to Linux distro and Conda package managers.
 The [python.org downloads page](https://www.python.org/download/pre-releases/)
 provides macOS and Windows installers that have experimental support.
 
-Note that you have to customize the install - e.g., for Windows there is a
+Currently, you must customize the install - e.g., for Windows there is a
 _Download free-threaded binaries_ checkbox under "Advanced Options". See also
 the [Using Python on
 Windows](https://docs.python.org/3.13/using/windows.html#installing-free-threaded-binaries)
@@ -79,14 +86,19 @@ and installing the free-threaded binaries is also possible:
 === "macOS"
 
     On macOS, you can use `installer` to install a macOS package you've
-    downloaded:
+    downloaded. This follows a similar process decribed in the CPython documentation for [installing a binary using the command line](https://docs.python.org/3/using/mac.html#installing-using-the-command-line).
+
+    This process installs the free-threaded version of Python 3.13.3, but you can install other versions by substituting the version number in the following steps.
+
+    1. Download the installer package from python.org.
 
     ```bash
-    curl -O https://www.python.org/ftp/python/3.13.1/python-3.13.1-macos11.pkg
+    curl -O https://www.python.org/ftp/python/3.13.3/python-3.13.3-macos11.pkg
+    ```
+    
+    2. Create a `choicechanges.plist` file to customize the install to enable the PythonTFramework-3.13 package and accept the other defaults (install all other packages).
 
-    # create installer choice changes to customize the install:
-    #    enable the PythonTFramework-3.13 package
-    #    while accepting the other defaults (install all other packages)
+    ```bash
     cat > ./choicechanges.plist <<EOF
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -103,17 +115,26 @@ and installing the free-threaded binaries is also possible:
     </array>
     </plist>
     EOF
+    ```
 
-    sudo installer -pkg ./python-3.13.1-macos11.pkg \
+    3. Run the installer.
+
+    ```bash
+    sudo installer -pkg ./python-3.13.3-macos11.pkg \
         -applyChoiceChangesXML ./choicechanges.plist \
         -target /
-    rm -f python-3.13.1-macos11.pkg
+    ```
+
+    4. Remove the package installer.
+
+    ```bash
+    rm -f python-3.13.3-macos11.pkg
     ```
 
     See also [this Github issue](https://github.com/python/cpython/issues/120098)
     for more information.
 
-### Linux distros
+### Linux distribution installers
 
 === "Fedora"
 
@@ -193,42 +214,7 @@ and installing the free-threaded binaries is also possible:
 
     On macOS, the Python framework built with the free-threading ABI can be found at `$(brew --prefix)/Frameworks/PythonT.framework`.
 
-## Installing a Jupyter Kernel
-
-While Jupyter [does not currently support free-threaded
-Python](https://github.com/jupyterlab/jupyterlab/issues/16915), you can use
-Jupyter with a regular build of Python and a free-threaded Jupyter kernel. To do
-so, install the kernel to a location that is visible to both Python
-installations:
-
-```bash
-python3.13t -m ipykernel install --name python3.13t --user
-```
-
-And then you should be able to launch new jupyterlab or jupyter notebook
-sessions using the `python3.13t` kernel to experiment with free-threaded Python.
-
-It is also possible to launch jupyterlab on the free-threaded build, [see this
-issue
-comment](https://github.com/jupyterlab/jupyterlab/issues/16915#issuecomment-2810114545)
-for more details.
-
-## Containers
-
-The [manylinux containers](https://github.com/pypa/manylinux) have free-threaded
-builds. You can use any of the actively supported images:
-
-- `quay.io/pypa/manylinux2014_...`
-- `quay.io/pypa/manylinux_2_28_...`
-- `quay.io/pypa/musllinux_1_1_...`
-- `quay.io/pypa/musllinux_1_2_...`
-
-Replace `...` with your desired architecture, such as `x86_64` or `aarch64`.
-
-These images have `python3.13t` available, along with other commonly used tools
-that can target it like the latest `pip`, `pipx`, and `uv`.
-
-## Building from source
+## Build from source
 
 Currently we suggest building CPython from source using the latest version of
 the CPython `main` branch. See
@@ -249,3 +235,42 @@ do that, you can use the following:
 ```bash
 pyenv install --debug --keep 3.13.1
 ```
+
+## Use containers
+
+The [manylinux containers](https://github.com/pypa/manylinux) have free-threaded
+builds. You can use any of the actively supported images:
+
+- `quay.io/pypa/manylinux2014_...`
+- `quay.io/pypa/manylinux_2_28_...`
+- `quay.io/pypa/musllinux_1_1_...`
+- `quay.io/pypa/musllinux_1_2_...`
+
+Replace `...` with your desired architecture, such as `x86_64` or `aarch64`.
+
+These images have `python3.13t` available, along with other commonly used tools
+that can target it like the latest `pip`, `pipx`, and `uv`.
+
+## Installing a free-threaded Jupyter kernel
+
+While Jupyter [does not currently support free-threaded
+Python](https://github.com/jupyterlab/jupyterlab/issues/16915), you can run
+Jupyter with a regular build of Python and a free-threaded Jupyter kernel.
+
+### Launch using regular Python and free-threaded Jupyter kernel
+
+Install the free-threaded Jupyter kernel to a location that is visible to both Python installations:
+
+```bash
+python3.13t -m ipykernel install --name python3.13t --user
+```
+
+You should be able to launch new jupyterlab or jupyter notebook
+sessions using the `python3.13t` kernel to experiment with free-threaded Python.
+
+### Launch using free-threaded Python and free-threaded Jupyter kernel
+
+It is also possible to launch jupyterlab on the free-threaded build, [see this
+issue
+comment](https://github.com/jupyterlab/jupyterlab/issues/16915#issuecomment-2810114545)
+for more details.
