@@ -20,7 +20,8 @@ including the python.org installers, Linux distro installers, and multi-platform
 
 !!! note
 
-    When using these options, please check your `pip` version after the install succeeds.
+    When using these options, please check your `pip` version after the install succeeds. To check the version, run `python3.13t -m pip -V`.
+    
     You should have a recent `pip` version (`>=24.1`). Upgrade it if
     that isn't the case. Older `pip` versions will select incompatible wheels with the
     `cp313` tag (binary-incompatible) rather than the `cp313t` tag (compatible).
