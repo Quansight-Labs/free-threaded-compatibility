@@ -65,7 +65,7 @@ PYTHON_GIL=0 python
 python -Xgil=0
 ```
 
-## Check if free-threaded build
+## Check if using a free-threaded build
 
 To check whether the Python interpreter you're using is a free-threaded build,
 irrespective of whether the GIL was re-enabled at runtime or not, you can use
