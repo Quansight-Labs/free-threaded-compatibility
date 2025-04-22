@@ -5,6 +5,7 @@ copyright: Copyright &copy; 2024- Quansight Labs & open source contributors
 theme:
   name: material
   features:
+    - content.code.copy
     - header.autohide
   palette:
     # Palette toggle for dark mode
