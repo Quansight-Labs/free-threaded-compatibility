@@ -71,25 +71,15 @@ after importing a module that does not support the GIL.
 
 === "Cython"
 
-    Cython code can be thread-unsafe and just like C and C++ code can exhibit
-    undefined behavior due to data races.
+    See [the Free threading
+    section](https://cython.readthedocs.io/en/latest/src/userguide/freethreading.html)
+    in the Cython user guide for detailed recommendations. Keep in mind that
+    support for free-threaded Python in Cython code is currently considered
+    experimental, so suggestions are subject to change.
 
-    Code operating on Python objects should not exhibit any low-level data corruption
-    or C undefined behavior due to Python-level semantics. If you find such a
-    case, it may be a Cython or CPython bug and should be reported as such.
-
-    That said, as opposed to data races, race conditions that produces random
-    results from a multithreaded algorithm are not undefined behavior and are
-    allowed in Python and therefore Cython as well. You will still need to add
-    locking or synchronization where appropriate to ensure reproducible results
-    when running a multithreaded algorithm on shared mutable data. See the
-    [suggested plan of attack](porting.md#suggested-plan-of-attack) below for
-    more details about discovering and fixing thread safety issues for Python
-    native extensions.
-
-    Starting with Cython 3.1.0 (available via the nightly wheels, a PyPI
-    pre-release or the `master` branch as of right now), extension modules
-    written in Cython can do so using the
+    Starting with Cython 3.1.0 (a PyPI prerelease, nightly wheels, or by
+    installing directly from the `master` branch as of right now), extension
+    modules written in Cython can do so using the
     [`freethreading_compatible`](https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#compiler-directives)
     compiler directive.
 
@@ -552,15 +542,22 @@ about `Py_BEGIN_CRITICAL_SECTION`, please see the
 
 ## Cython thread safety
 
-If your extension is written in Cython, you can generally assume that
-"Python-level" code that compiles to CPython C API operations on Python objects
-is thread-safe, but "C-level" code (e.g. code that will compile inside a
-`with nogil` block) may have thread safety issues. Note that not all code outside
-`with nogil` blocks is thread-safe. For example, a Python wrapper for a
-thread-unsafe C library is thread-unsafe if the GIL is disabled unless there is
-locking around uses of the thread-unsafe library. Another example: using
-thread-unsafe C-level constructs like a global variable is also thread-unsafe
-if the GIL is disabled.
+See [the free-threading
+section](https://cython.readthedocs.io/en/latest/src/userguide/freethreading.html)
+in the Cython user guide for recommendations from the Cython developers. In
+particular, see the recommendations about [thread
+safety](https://cython.readthedocs.io/en/latest/src/userguide/freethreading.html#thread-safety)
+and the [opinionated
+suggestions](https://cython.readthedocs.io/en/latest/src/userguide/freethreading.html#opinionated-suggestions)
+for how to deal with thread safety in Cython extensions. At the time of writing,
+Cython does not automatically ensure any significant level of thread safety, so
+it is up to the author of a Cython extension to add locking or make use of
+critical sections as needed to ensure thread safety.
+
+It is normal for an extension to build without modification using Cython 3.1.0
+or newer, but keep in mind that building or running without crashing does not
+imply that code will also be thread-safe and deterministic when used in a
+multithreaded context.
 
 ## CPython C API usage
 
