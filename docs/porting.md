@@ -1,12 +1,17 @@
 # Porting Python Packages to Support Free-Threading
 
-As of early 2025 Many Python packages, particularly packages relying on C
-extension modules, either do not consider multithreaded use or make strong
+This document discusses porting an existing Python package to support free-threading Python.
+
+## Current status (as of early 2025)
+
+Many Python packages, particularly packages relying on C
+extension modules, do not consider multithreaded use or make strong
 assumptions about the GIL providing sequential consistency in multithreaded
-contexts. This means that many packages either do not produce deterministic
-results on the free-threaded build, or if there are C extensions involved, may
-crash the interpreter in multithreaded use in ways that are impossible on the
-GIL-enabled build.
+contexts. These packages will:
+
+- fail to produce deterministic results on the free-threaded build
+- may, if there are C extensions involved, crash the interpreter in multithreaded use in ways that are impossible on the
+GIL-enabled build
 
 Because of the GIL, attempting to parallelize many workflows using the Python
 [threading](https://docs.python.org/3/library/threading.html) module will not
@@ -18,8 +23,8 @@ free-threading, many more users will want to use Python threads.
 
 This means we must analyze Python codebases to identify supported and
 unsupported multithreaded workflows and make changes to fix thread safety
-issues. This need is particularly acute for low-level C, C++, Cython, and Rust
-code exposed to Python, but even pure Python codebases can exhibit
+issues. Extra care must be taken to address this need, particularly when using low-level C, C++, Cython, and Rust
+code exposed to Python. Even pure Python codebases can exhibit
 non-determinism and races in the free-threaded build that are either very
 unlikely or impossible in the default configuration of the GIL-enabled build.
 
@@ -61,11 +66,15 @@ Many projects assume the GIL serializes access to state shared between threads,
 introducing the possibility of data races in native extensions and race
 conditions that are impossible when the GIL is enabled.
 
-We suggest focusing on safety and multithreaded scaling over single-threaded
-performance. For example, if adding a lock to a global cache would harm
+We suggest focusing on safety and multithreaded scaling before single-threaded
+performance. 
+
+Here's an example of this approach. If adding a lock to a global cache would harm
 multithreaded scaling, and turning off the cache implies a small performance
 hit, consider doing the simpler thing and disabling the cache in the
-free-threaded build. Single-threaded performance can always be improved later,
+free-threaded build. 
+
+Single-threaded performance can always be improved later,
 once you've established free-threaded support and hopefully improved test
 coverage for multithreaded workflows.
 
@@ -316,7 +325,7 @@ Of course this introduces a scaling bottleneck when `SafeCounter` instances are
 concurrently updated. It's possible to implement more optimized locking
 strategies, but doing so requires knowledge of the problem.
 
-## Third-party libraries
+### Third-party libraries
 
 Both the [`ft_utils`](https://github.com/facebookincubator/ft_utils) and
 [`cereggii`](https://github.com/dpdani/cereggii) libraries offer data structures
