@@ -120,7 +120,7 @@ pure Python operations are not atomic and are susceptible to race conditions, or
 only appear to be thread-safe in the GIL-enabled build because of details of how
 CPython releases the GIL in a round-robin fasion to allow threads to run.
 
-## Dealing with mutable global state
+### Dealing with mutable global state
 
 The most common source of thread safety issues in Python packages is use of
 global mutable state. Many projects use module-level or class-level caches to
