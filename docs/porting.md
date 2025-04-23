@@ -11,7 +11,7 @@ contexts. These packages will:
 
 - fail to produce deterministic results on the free-threaded build
 - may, if there are C extensions involved, crash the interpreter in multithreaded use in ways that are impossible on the
-GIL-enabled build
+    GIL-enabled build
 
 Because of the GIL, attempting to parallelize many workflows using the Python
 [threading](https://docs.python.org/3/library/threading.html) module will not
@@ -67,12 +67,12 @@ introducing the possibility of data races in native extensions and race
 conditions that are impossible when the GIL is enabled.
 
 We suggest focusing on safety and multithreaded scaling before single-threaded
-performance. 
+performance.
 
 Here's an example of this approach. If adding a lock to a global cache would harm
 multithreaded scaling, and turning off the cache implies a small performance
 hit, consider doing the simpler thing and disabling the cache in the
-free-threaded build. 
+free-threaded build.
 
 Single-threaded performance can always be improved later,
 once you've established free-threaded support and hopefully improved test
