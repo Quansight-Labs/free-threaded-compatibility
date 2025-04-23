@@ -79,7 +79,7 @@ after importing a module that does not support the GIL.
 
     Starting with Cython 3.1.0 (a PyPI prerelease, nightly wheels, or by
     installing directly from the `master` branch as of right now), extension
-    modules written in Cython can do so using the
+    modules written in Cython can declare free-threaded support using the
     [`freethreading_compatible`](https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#compiler-directives)
     compiler directive.
 
