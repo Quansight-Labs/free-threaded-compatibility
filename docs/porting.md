@@ -13,9 +13,9 @@ contexts. These packages will:
 - may, if there are C extensions involved, crash the interpreter in multithreaded use in ways that are impossible on the
     GIL-enabled build
 
-Because of the GIL, attempting to parallelize many workflows using the Python
+Attempting to parallelize many workflows using the Python
 [threading](https://docs.python.org/3/library/threading.html) module will not
-produce any speedups, so thread safety issues that are possible even with the
+produce any speedups on the GIL-enabled build, so thread safety issues that are possible even with the
 GIL are not hit often since users do not make use of threading as much as other
 parallelization strategies. This means many codebases have threading bugs that
 up-until-now have only been theoretical or present in niche use cases. With
@@ -51,10 +51,10 @@ work. It is up to you as a user of multithreaded parallelism to ensure that
 simultaneous reads and writes to the same Python variable are impossible.
 
 If you're maintaining a library, we suggest documenting what multithreaded
-workflows are supported and to document to what the library guards against
+workflows are supported and to document to what extent the library guards against
 races. If a variable is protected by a lock, you should document that, as it may
 impact multithreaded scaling. Similarly, if a mutable data structure does not
-offer locking, you should also document that explicitly.
+ensure state is synchronized if an object is shared between threads, you should also document that explicitly.
 
 Below we describe various approaches for improving the determinism of
 multithreaded pure Python code. The correct approach will depend on exactly what
