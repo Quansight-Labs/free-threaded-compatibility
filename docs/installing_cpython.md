@@ -231,6 +231,15 @@ and installing the free-threaded binaries is also possible:
 
     On macOS, the Python framework built with the free-threading ABI can be found at `$(brew --prefix)/Frameworks/PythonT.framework`.
 
+=== "uv"
+
+    If you have uv installed, you can create a virtual environment using
+    free-threaded Python by specifying "3.13t" as the python version:
+
+    ```bash
+    uv venv --python 3.13t
+    ```
+
 ## Build from source
 
 Currently we suggest building CPython from source using the latest version of
