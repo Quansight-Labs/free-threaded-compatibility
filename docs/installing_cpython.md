@@ -88,7 +88,7 @@ and installing the free-threaded binaries is also possible:
 
     **Install on a macOS laptop or desktop**
 
-    Th official Python documentation's section on [installing free-threaded binaries](https://docs.python.org/3.13/using/mac.html#installing-free-threaded-binaries)
+    The official Python documentation's section on [installing free-threaded binaries](https://docs.python.org/3.13/using/mac.html#installing-free-threaded-binaries)
     explains installation as well as any limitations of the free-threaded version.
     For convenience, we summarize the installation steps here:
 
