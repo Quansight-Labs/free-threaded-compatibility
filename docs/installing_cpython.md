@@ -86,70 +86,70 @@ and installing the free-threaded binaries is also possible:
 
 === "macOS"
 
-### Install on a macOS laptop or desktop
+    **Install on a macOS laptop or desktop**
 
-Th official Python documentation's section on [installing free-threaded binaries](https://docs.python.org/3.13/using/mac.html#installing-free-threaded-binaries)
-explains installation as well as any limitations of the free-threaded version.
-For convenience, we summarize the installation steps here:
+    The official Python documentation's section on [installing free-threaded binaries](https://docs.python.org/3.13/using/mac.html#installing-free-threaded-binaries)
+    explains installation as well as any limitations of the free-threaded version.
+    For convenience, we summarize the installation steps here:
 
-1. Download the macOS installer package from [python.org downloads page](https://www.python.org/downloads) or the [python.org pre-release downloads page](https://www.python.org/download/pre-releases/).
+    1. Download the macOS installer package from [python.org downloads page](https://www.python.org/downloads) or the [python.org pre-release downloads page](https://www.python.org/download/pre-releases/).
 
-1. Run the installer.
+    1. Run the installer.
 
-1. On the Installation Type screen ("Standard Installation on Macintosh HD"), click the "Customize" button.
+    1. On the Installation Type screen ("Standard Installation on Macintosh HD"), click the "Customize" button.
 
-1. On the "Customize Install on Macintosh HD" screen, check the " Free-threaded Python [experimental]" option, and click "install".
+    1. On the "Customize Install on Macintosh HD" screen, check the " Free-threaded Python [experimental]" option, and click "install".
 
-### Advanced installation (CI)
+    **Advanced installation (CI)**
 
-This process installs the free-threaded version of Python 3.13.3 using the command line for more complex cases, such as running CI.
-It follows a similar process decribed in the CPython documentation for [installing a binary using the command line](https://docs.python.org/3/using/mac.html#installing-using-the-command-line).
+    This process installs the free-threaded version of Python 3.13.3 using the command line for more complex cases, such as running CI.
+    It follows a similar process decribed in the CPython documentation for [installing a binary using the command line](https://docs.python.org/3/using/mac.html#installing-using-the-command-line).
 
-While this process installs the free-threaded version of Python 3.13.3, you can install other versions by substituting the version number in the following steps.
+    While this process installs the free-threaded version of Python 3.13.3, you can install other versions by substituting the version number in the following steps.
 
-1. Download the installer package from python.org.
+    1. Download the installer package from python.org.
 
-    ```bash
-    curl -O https://www.python.org/ftp/python/3.13.3/python-3.13.3-macos11.pkg
-    ```
+        ```bash
+        curl -O https://www.python.org/ftp/python/3.13.3/python-3.13.3-macos11.pkg
+        ```
 
-1. Create a `choicechanges.plist` file to customize the install to enable the PythonTFramework-3.13 package and accept the other defaults (install all other packages).
+    1. Create a `choicechanges.plist` file to customize the install to enable the PythonTFramework-3.13 package and accept the other defaults (install all other packages).
 
-    ```bash
-    cat > ./choicechanges.plist <<EOF
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <array>
-            <dict>
-                    <key>attributeSetting</key>
-                    <integer>1</integer>
-                    <key>choiceAttribute</key>
-                    <string>selected</string>
-                    <key>choiceIdentifier</key>
-                    <string>org.python.Python.PythonTFramework-3.13</string>
-            </dict>
-    </array>
-    </plist>
-    EOF
-    ```
+        ```bash
+        cat > ./choicechanges.plist <<EOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <array>
+                <dict>
+                        <key>attributeSetting</key>
+                        <integer>1</integer>
+                        <key>choiceAttribute</key>
+                        <string>selected</string>
+                        <key>choiceIdentifier</key>
+                        <string>org.python.Python.PythonTFramework-3.13</string>
+                </dict>
+        </array>
+        </plist>
+        EOF
+        ```
 
-1. Run the installer.
+    1. Run the installer.
 
-    ```bash
-    sudo installer -pkg ./python-3.13.3-macos11.pkg \
-        -applyChoiceChangesXML ./choicechanges.plist \
-        -target /
-    ```
+        ```bash
+        sudo installer -pkg ./python-3.13.3-macos11.pkg \
+            -applyChoiceChangesXML ./choicechanges.plist \
+            -target /
+        ```
 
-1. Remove the package installer.
+    1. Remove the package installer.
 
-    ```bash
-    rm -f python-3.13.3-macos11.pkg
-    ```
+        ```bash
+        rm -f python-3.13.3-macos11.pkg
+        ```
 
-See also [this Github issue](https://github.com/python/cpython/issues/120098)
-for more information.
+    See also [this Github issue](https://github.com/python/cpython/issues/120098)
+    for more information.
 
 ### Linux distribution installers
 
@@ -230,6 +230,15 @@ for more information.
     This will install the interpreter at `$(brew --prefix)/bin/python3.13t`.
 
     On macOS, the Python framework built with the free-threading ABI can be found at `$(brew --prefix)/Frameworks/PythonT.framework`.
+
+=== "uv"
+
+    If you have uv installed, you can create a virtual environment using
+    free-threaded Python by specifying "3.13t" as the python version:
+
+    ```bash
+    uv venv --python 3.13t
+    ```
 
 ## Build from source
 
