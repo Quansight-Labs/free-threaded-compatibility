@@ -53,22 +53,6 @@ after importing a module that does not support the GIL.
     }
     ```
 
-=== "Pybind11"
-
-    C++ extension modules making use of `pybind11` can easily declare support for
-    running with the GIL disabled via the
-    [`gil_not_used`](https://pybind11.readthedocs.io/en/stable/reference.html#_CPPv4N7module_23create_extension_moduleEPKcPKcP10module_def16mod_gil_not_used)
-    argument to `create_extension_module`. Example:
-
-    ```cpp
-    #include <pybind11/pybind11.h>
-    namespace py = pybind11;
-
-    PYBIND11_MODULE(example, m, py::mod_gil_not_used()) {
-        ...
-    }
-    ```
-
 === "Cython"
 
     See [the Free threading
@@ -158,9 +142,40 @@ after importing a module that does not support the GIL.
     free-threaded builds. See [the docs on setting up CI](ci.md) for advice on
     how to build projects that depend on Cython.
 
-=== "Rust"
+=== "Pybind11"
 
-    If you use the CPython C API via [PyO3](https://pyo3.rs), then you
+    C++ extension modules making use of `pybind11` can easily declare support for
+    running with the GIL disabled via the
+    [`gil_not_used`](https://pybind11.readthedocs.io/en/stable/reference.html#_CPPv4N7module_23create_extension_moduleEPKcPKcP10module_def16mod_gil_not_used)
+    argument to `create_extension_module`. Example:
+
+    ```cpp
+    #include <pybind11/pybind11.h>
+    namespace py = pybind11;
+
+    PYBIND11_MODULE(example, m, py::mod_gil_not_used()) {
+        ...
+    }
+    ```
+
+=== "nanobind"
+
+    C++ extension modules making use of `nanobind` can declare support for
+    running with the GIL disabled by passing the
+    [`FREE_THREADED`](https://nanobind.readthedocs.io/en/latest/free_threaded.html#opting-in)
+    argument to the `nanobind_add_module` CMake target command. Example:
+
+    ```cmake
+    nanobind_add_module(
+      my_ext                   # Target name
+      FREE_THREADED            # Opt into free-threading
+      my_ext.h                 # Source code files below
+      my_ext.cpp)
+    ```
+
+=== "PyO3"
+
+    If you use the CPython C API in Rust via [PyO3](https://pyo3.rs), then you
     can follow the [PyO3 Guide
     section](https://pyo3.rs/latest/free-threading.html) on supporting
     free-threaded Python. You must also update your extension to at least
