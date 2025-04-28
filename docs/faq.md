@@ -45,6 +45,24 @@ wheel, pip installs the pure Python wheel instead, and there is no opportunity
 to catch this case at install time in e.g. a `setup.py` file. The Cython 3.1
 release will fix this problem once and for all.
 
+## What does `RuntimeWarning: The global interpreter lock (GIL) has been enabled` mean?
+
+This happens when python imports a module defined in a native extension that does not explicitly declare support for running without the GIL. By default, native extensions do not support running without the GIL because of the long history of extensions assuming the GIL locks concurrent access to extension internals.
+
+As a precaution, when the free-threaded Python build imports such an extension,
+it assumes that the GIL is *necessary* to run the extension, and enables the GIL
+at runtime.
+
+If you have control over the code in the native extension, then you should
+update the extension to support the free-threaded build. See [the guide
+section](porting-extensions.md) on that topic. If you do not control the
+extension or simply want to test running with the GIL disabled despite the
+extension not explicitly supporting it, then you can set either the `PYTHON_GIL`
+or the `-X gil` command-like flag for the python interpreter to `0` (i.e. the
+GIL is disabled). This skips the runtime check for whether extensions support
+running with the GIL disabled. See the [section on running free-threaded
+Python](running-gil-disabled.md) for more details.
+
 ## `pip install jupyter` fails
 
 This happens because some of the dependencies of the `jupyter` project on PyPI
