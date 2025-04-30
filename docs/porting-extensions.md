@@ -182,11 +182,9 @@ after importing a module that does not support the GIL.
     version 0.23.
 
     You should write multithreaded tests of any code you expose to Python. See
-    the details about testing in our [suggested plan of
-    attack](porting.md#suggested-plan-of-attack) below as well as the guidance
-    for [updating test suites](porting.md#fixing-thread-unsafe-tests). You
-    should fix any thread safety issues you discover while running multithreaded
-    tests.
+    our guide on [updating test suites](testing.md#fixing-thread-unsafe-tests) for
+    more details. You should fix any thread safety issues you discover while
+    running multithreaded tests.
 
     As of PyO3 0.23, PyO3 enforces Rust's borrow checking rules at
     runtime and may produce runtime panics if you simultaneously mutably borrow
