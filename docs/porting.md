@@ -335,7 +335,7 @@ standard library primitives.
 ## Depending on PyYAML - use PyYAML-ft
 
 If your library depends on [PyYAML](https::/github.com/yaml/pyyaml), you will need
-to take extra case to use it with free-threaded Python. PyYAML currently does not
+to take extra care to use it with free-threaded Python. PyYAML currently does not
 support free-threading and has some thread-safety issues. Its maintainers [have
 decided to not port PyYAML](https://github.com/yaml/pyyaml/pull/830#issuecomment-2342475334)
 before free-threading and Cython support for it have been more extensively tested.
