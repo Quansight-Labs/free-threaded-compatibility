@@ -32,7 +32,7 @@ free-threaded build.
 The following sections describe how to install free-threaded Python, run it, and verify
 the GIL is disabled.
 
-- [Installing Free-Threaded Python](installing_cpython.md)
+- [Installing Free-Threaded Python](installing-cpython.md)
 - [Running Python with the GIL Disabled](running-gil-disabled.md)
 
 ## Run your code on free-threaded Python

@@ -227,7 +227,7 @@ This command will not only install a debug distribution of CPython, but also
 will ensure that the source files are kept as well, such files will be loaded
 by `gdb`/`lldb` at the moment of debugging. For more information regarding
 CPython installation sources, please visit the
-[Installing a free-threaded Python](installing_cpython.md) page.
+[Installing a free-threaded Python](installing-cpython.md) page.
 
 ## Compiling CPython and foundational packages with ThreadSanitizer
 
@@ -246,10 +246,10 @@ interpreter and common dependencies that can be tricky to build.
 
 See [the `cpython_sanity`
 repository](https://github.com/nascheme/cpython_sanity) for more information
-about how to use the docker images. Also see [NumPy PR
-#28808](https://github.com/numpy/numpy/pull/28808/files), which adjusted NumPy
-TSAN CI to use the `ghcr.io/nascheme/numpy-tsan:3.14t-dev` docker image instead
-of building Python from source, saving ten minutes of compute time per CI run.
+about how to use the docker images. Also see [NumPy PR #28808](https://github.com/numpy/numpy/pull/28808/files),
+which adjusted NumPy TSAN CI to use the `ghcr.io/nascheme/numpy-tsan:3.14t-dev`
+docker image instead of building Python from source, saving ten minutes of
+compute time per CI run.
 
 ### Compile free-threaded CPython with ThreadSanitizer
 

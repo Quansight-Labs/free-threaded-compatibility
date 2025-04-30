@@ -45,8 +45,8 @@ latent thread-safety issues related to use of global state even in the GIL-enabl
 build.
 
 Many test suites are implemented using global mutable state or assume that tests
-cannot run simultaneously. See the section below on [global state in
-tests](porting.md#fixing-thread-unsafe-tests) for more information about
+cannot run simultaneously. See the section on [global state in
+tests](testing.md#fixing-thread-unsafe-tests) for more information about
 updating test suites to work with the free-threaded build and dealing with tests
 that become flaky when run in a thread pool.
 
@@ -144,7 +144,7 @@ should be to maximize the chances of triggering a thread safety issue. You could
 pass `outer_iterations` to `run_threaded` to multiply the number of chances a
 thread triggers a thread safety issue in a single test.
 
-## Fixing thread-unsafe tests.
+## Fixing thread-unsafe tests
 
 Many existing tests are written using global state. This is not a problem if the
 test only runs once, but if you would like to use your tests to check for
