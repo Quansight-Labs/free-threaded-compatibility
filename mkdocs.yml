@@ -61,3 +61,10 @@ extra:
       link: https://github.com/Quansight-Labs/free-threaded-compatibility
     - icon: material/license
       link: https://github.com/Quansight-Labs/free-threaded-compatibility/blob/main/LICENSE
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  not_found: warn
+  unrecognized_links: warn
+  anchors: warn
