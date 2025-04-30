@@ -117,4 +117,6 @@ please open an issue on [this issue tracker](https://github.com/Quansight-Labs/f
 
 [^2]: Rust library released on [crates.io](https://crates.io/crates/pyo3)
 
-[^3]: PyYAML-ft is a fork of [PyYAML](https://github.com/yaml/pyyaml)
+[^3]: PyYAML-ft is a fork of [PyYAML](https://github.com/yaml/pyyaml).
+    For more details on how to use it, see our [PyYAML-specific section
+    on porting Python code](porting.md#depending-on-pyyaml-use-pyyaml-ft).
