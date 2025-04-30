@@ -137,7 +137,7 @@ assertion might be merely that a crash doesn't happen, in which case no explicit
 asserts are necessary.
 
 Tests that fail due to thread safety issues are inherently
-[flaky](https://testautomationpatterns.org/wiki/index.php/FLAKY_TESTS). You
+[flaky](https://testing.googleblog.com/2020/12/test-flakiness-one-of-main-challenges.html). You
 should not be surprised to see tests that pass or fail randomly, or even fail a
 very small percentage of the time. When writing multithreaded tests your goal
 should be to maximize the chances of triggering a thread safety issue. You could

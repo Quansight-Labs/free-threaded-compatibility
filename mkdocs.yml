@@ -45,6 +45,8 @@ markdown_extensions:
   - admonition
   - footnotes
   - attr_list
+  - toc:
+      permalink: "#"
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.tabbed:

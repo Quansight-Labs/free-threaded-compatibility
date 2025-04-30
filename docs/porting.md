@@ -186,11 +186,11 @@ races filling a cache.
 
 If a thread-local cache doesn't make sense, then you can serialize access to the
 cache with a lock. A
-[lock](<https://en.wikipedia.org/wiki/Lock_(computer_science)>) provides exclusive
+[lock](https://en.wikipedia.org/wiki/Lock_(computer_science)) provides exclusive
 access to some resource by forcing threads to *acquire* a lock instance before
 they can use the resource and *release* the lock when they are done. The lock
 ensures that only one thread at a time can use the acquired lock - all other
-threads [block execution](<https://en.wikipedia.org/wiki/Blocking_(computing)>)
+threads [block execution](https://en.wikipedia.org/wiki/Blocking_(computing))
 until the thread that holds the lock releases it, at which point only one thread
 waiting to acquire the lock is allowed to run.
 
