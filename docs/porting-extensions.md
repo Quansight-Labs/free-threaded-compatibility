@@ -231,6 +231,94 @@ as soon as basic support for the free-threaded build is established in the
 development branch. This will ease the work of libraries that depend on yours
 to also add support for the free-threaded build.
 
+## Working with the free-threaded CPython interpreter runtime
+
+Many people are surprised to learn that almost all native extensions written
+with the GIL-enabled build in mind build with minimal changes on the
+free-threaded build. They often ask questions like, "if there is no GIL, doesn't
+that mean there's no need to call e.g. `PyGilState_Ensure()` before calling into
+the C API and no need to call `Py_BEGIN_ALLOW_THREADS` to release the GIL before
+doing I/O or a long-running computation?". Binding generators like Cython, PyO3,
+or Pybind11 all also have syntax for explicitly acquiring and releasing the
+GIL. Won't all this code need to change?
+
+The answer is no. To understand, let's first take a look at the diagram below,
+which illustrates a snapshot of the state of a multithreaded Python application
+that has native extensions.
+
+![GIL execution diagram](assets/images/GIL_diagram.png){ width="400" }
+/// caption
+A diagramatic snapshot of the state of a multithreaded Python
+application running on the GIL-enabled interpreter
+///
+
+In this diagram, each thread spindle symbol represents a thread that is running
+code inside a native extension. The lock icon indicates whether the thread holds
+the GIL - only one thread can acquire the GIL at a time, indicated by the
+fastened lock on the thread calling into the CPython C API. The bottom row of
+symbols incdicates what work each thread is doing. You can see that even with
+the GIL it is possible to get multithreaded parallelism, so long as there are
+threads that do not have the GIL acquired and are not waiting to acquire the
+GIL. Usually, this means a thread is doing I/O or a long-running calculation
+that does not need any state or functionality from the CPython runtime.
+
+In addition to the lock icon indicating whether the GIL is acquired, each thread
+is either "plugged in" or "unplugged" from the interpreter runtime. This
+indicates whether a thread is "attached" to the runtime.
+
+Python threads can either be attached or detached. In the GIL-enabled build, an
+attached thread must hold the GIL.
+
+In the free-threaded build, the picture is only a little different.
+
+![free-threaded execution diagram](assets/images/free_threaded_diagram.png){ width="400" }
+/// caption
+A diagramatic snapshot of the state of a multithreaded Python
+application running on the free-threaded-enabled interpreter
+///
+
+There is no longer a GIL, so this diagram doesn't have lock icons. Because there
+is no GIL, threads do not need to wait to acquire it, and multiple threads can
+simultanously call into the CPython C API.
+
+You might wonder why it's still necessary to detach from the runtime when doing
+I/O or a long-running native calculation. This is because there are still times
+when the interpreter needs to globally synchronize the state of all threads. For
+example, the free-threaded interpreter uses a stop-the-world garbage collection
+scheme, which requires all threads to be detached from the runtime before it can
+start. If you don't explicitly detach before doing a long-running operation that
+does not require the runtime, the interpreter may be blocked on running the
+garbage collector or doing any other operation that requires a globally
+consistent view of all threads.
+
+The icons indicating whether threads are attached or detached are still
+present. This is because it is still necessary to explicitly attach and detach
+from the runtime in the free-threaded build, despite the fact that there isn't a
+GIL.
+
+![Attach and detach from the runtime diagram](assets/images/attach-detach-gil.png){ width="400" }
+/// caption
+Attaching and detaching from the runtime uses the same
+code as in the GIL-enabled build
+///
+
+As illustrated above, attaching and detaching from the runtime uses exactly the
+same code in the free-threaded build as is used in the GIL-enabled build to
+acquire and release the GIL. It is an unfortunate naming issue that
+`PyGILState_Ensure` and `PyGILState_Release` has "`GIL`" in the name of the
+function, despite the lack of a GIL on the free-threaded build. It's likely that
+the C API in future Python version will fix this naming issue.
+
+Hopefully you now have a better mental model for how native code interacts with
+the CPython interpreter runtime in the free-threaded build and how it is similar
+to what happens on the GIL-enabled build, and what exactly it means for multiple
+threads to simultaneously execute Python code.
+
+You might also see how given that many extension modules were written assuming
+Python can into the extension in one thread at a time, how that might lead to
+problematic thread-unsafe behavior if suddenly more than one Python thread can
+simultaneously access any state stored in the extension.
+
 ## Porting C Extensions
 
 The CPython C API exposes the `Py_GIL_DISABLED` macro in the free-threaded
