@@ -30,6 +30,7 @@ nav:
   - 'porting.md'
   - 'testing.md'
   - 'porting-extensions.md'
+  - 'dependencies.md'
   - 'ci.md'
   - 'debugging.md'
   - 'faq.md'
