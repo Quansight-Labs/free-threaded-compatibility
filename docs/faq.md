@@ -79,8 +79,8 @@ build, even if you have a compiler environment properly set up, the
 For now, we do not recommend trying to install jupyterlab into an environment
 managed by a free-threaded Python interpreter. Instead, we suggest installing a
 free-threaded Python kernel into a jupyterlab installation managed by a
-GIL-enabled python interpreter. See [our instructions](installing_cpython.md#installing-a-jupyter-kernel) for
-installing a free-threaded Jupyter kernel for more details.
+GIL-enabled python interpreter. See [our instructions](installing-cpython.md#installing-a-free-threaded-jupyter-kernel)
+for installing a free-threaded Jupyter kernel for more details.
 
 That said, it *is* possible to install `jupyter` into a free-threaded Python
 environment and launch jupyterlab, [see this

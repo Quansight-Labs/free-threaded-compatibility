@@ -10,7 +10,7 @@
     The free-threaded Python executable will always have a `python3.13t` alias
     (for Python 3.13); whether `python`, `python3` and/or `python3.13` point at
     the free-threaded executable depends on the installation method used
-    (see [the install guide](installing_cpython.md) for more details).
+    (see [the install guide](installing-cpython.md) for more details).
 
     For example, the Python 3.13 Windows installer from python.org
     installs the free-threaded binary as `python3.13t.exe` (with a "t" suffix
