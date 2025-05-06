@@ -331,3 +331,9 @@ Both the [`ft_utils`](https://github.com/facebookincubator/ft_utils) and
 [`cereggii`](https://github.com/dpdani/cereggii) libraries offer data structures
 that add enhanced atomicity or improved multithreaded scaling compared with
 standard library primitives.
+
+## Dependencies that don't support free-threading
+
+If one of your package's dependencies do not support free-threading, you might
+be able to switch to a fork that does. Find more details in
+[our guidance for handling dependencies that don't support free-threading](dependencies.md).
