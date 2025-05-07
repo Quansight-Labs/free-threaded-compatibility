@@ -234,11 +234,11 @@ to also add support for the free-threaded build.
 ## Working with the free-threaded CPython interpreter runtime
 
 Many people are surprised to learn that almost all native extensions written
-with the GIL-enabled build in mind build with minimal changes on the
+with the GIL-enabled build in mind compile and run with minimal changes on the
 free-threaded build. They often ask questions like, "if there is no GIL, doesn't
 that mean there's no need to call e.g. `PyGilState_Ensure()` before calling into
 the C API and no need to call `Py_BEGIN_ALLOW_THREADS` to release the GIL before
-doing I/O or a long-running computation?". Binding generators like Cython, PyO3,
+doing I/O or a long-running computation?". Bindings generators like Cython, PyO3,
 or Pybind11 all also have syntax for explicitly acquiring and releasing the
 GIL. Won't all this code need to change?
 
