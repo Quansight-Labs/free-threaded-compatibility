@@ -246,7 +246,7 @@ The answer is no. To understand, let's first take a look at the diagram below,
 which illustrates a snapshot of the state of a multithreaded Python application
 that has native extensions.
 
-![GIL execution diagram](assets/images/GIL_diagram.png){ width="400" }
+![GIL execution diagram](assets/images/GIL_diagram.png){ width="600" }
 /// caption
 A diagramatic snapshot of the state of a multithreaded Python
 application running on the GIL-enabled interpreter
@@ -271,7 +271,7 @@ attached thread must hold the GIL.
 
 In the free-threaded build, the picture is only a little different.
 
-![free-threaded execution diagram](assets/images/free_threaded_diagram.png){ width="400" }
+![free-threaded execution diagram](assets/images/free_threaded_diagram.png){ width="600" }
 /// caption
 A diagramatic snapshot of the state of a multithreaded Python
 application running on the free-threaded-enabled interpreter
@@ -280,6 +280,11 @@ application running on the free-threaded-enabled interpreter
 There is no longer a GIL, so this diagram doesn't have lock icons. Because there
 is no GIL, threads do not need to wait to acquire it, and multiple threads can
 simultanously call into the CPython C API.
+
+The icons indicating whether threads are attached or detached are still
+present. This is because it is still necessary to explicitly attach and detach
+from the runtime in the free-threaded build, despite the fact that there isn't a
+GIL.
 
 You might wonder why it's still necessary to detach from the runtime when doing
 I/O or a long-running native calculation. This is because there are still times
@@ -291,12 +296,7 @@ does not require the runtime, the interpreter may be blocked on running the
 garbage collector or doing any other operation that requires a globally
 consistent view of all threads.
 
-The icons indicating whether threads are attached or detached are still
-present. This is because it is still necessary to explicitly attach and detach
-from the runtime in the free-threaded build, despite the fact that there isn't a
-GIL.
-
-![Attach and detach from the runtime diagram](assets/images/attach-detach-gil.png){ width="400" }
+![Attach and detach from the runtime diagram](assets/images/attach-detach-gil.png){ width="600" }
 /// caption
 Attaching and detaching from the runtime uses the same
 code as in the GIL-enabled build
@@ -314,10 +314,11 @@ the CPython interpreter runtime in the free-threaded build and how it is similar
 to what happens on the GIL-enabled build, and what exactly it means for multiple
 threads to simultaneously execute Python code.
 
-You might also see how given that many extension modules were written assuming
-Python can into the extension in one thread at a time, how that might lead to
-problematic thread-unsafe behavior if suddenly more than one Python thread can
-simultaneously access any state stored in the extension.
+You might also see how extension modules written assuming that Python can call
+into the extension in one thread at a time might lead to problematic
+thread-unsafe behavior. Doubly so now that more than one Python thread can
+simultaneously access any state stored in the extension in the free-threaded
+build.
 
 ## Porting C Extensions
 
