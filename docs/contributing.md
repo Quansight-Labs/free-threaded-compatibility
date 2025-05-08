@@ -34,6 +34,18 @@ be valuable. Here are some ways to contribute today:
     support. We'll try to provide an outline of how to approach that in an open
     source package below.
 
+## News and getting help
+
+You can join the Free-threaded Python Community Discord using this invite link:
+[https://discord.gg/rqgHCDqdRr](https://discord.gg/rqgHCDqdRr).
+
+You can also ask questions in the [Threading
+category](https://discuss.python.org/c/threading/38) of the Python community
+Discourse forum.
+
+Please read and be mindful of community rules. Both communities enforce the
+Python Software Foundation Code of Conduct.
+
 ### Implementing support for free-threading in a package
 
 A good place to start is to check the current status of the package. Are there
