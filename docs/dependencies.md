@@ -1,5 +1,28 @@
 # Handling dependencies that don’t support free-threading
 
+## Build dependencies that don't support free-threading
+
+### CFFI fork with support for free-threading
+
+If your library depends on [CFFI](https://github.com/python-cffi/cffi), there's
+some additional work you need to do before you can ship support for the free-threaded
+build, since CFFI does not support it yet. Its maintainers [have argued for a
+fork themselves](https://github.com/python-cffi/cffi/pull/143#issuecomment-2580781899),
+so that free-threading support can be implemented and tested independently
+from the upstream package.
+
+There's [a fork under the Quansight-Labs org](https://github.com/Quansight-Labs/cffi)
+available, where free-threading support is currently being worked on. If you want to
+use this version of CFFI within your own library, you can install it in the
+following manner:
+
+```bash
+python -m pip install git+https://github.com/Quansight-Labs/cffi.git
+```
+
+Keep in mind that support for free-threading in this fork of CFFI is still very
+experimental.
+
 ## Runtime dependencies that don't support free-threading
 
 ### Depending on PyYAML - use PyYAML-ft
