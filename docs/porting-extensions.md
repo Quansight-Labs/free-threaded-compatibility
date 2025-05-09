@@ -744,3 +744,10 @@ time. This also means that code inside `#ifdef Py_GIL_DISABLED` checks can use C
 API constructs outside the limited API if you would like to do that, although
 these uses will need to be removed once the free-threaded build gains support
 for compiling with the limited API.
+
+# Dependencies that don't support free-threading
+
+If one of your build or runtime dependencies do not support free-threading,
+(e.g. CFFI currently doesn't), you might be able to switch to a fork. Find
+more details in [our guidance for handling dependencies that don't support
+free-threading](dependencies.md).
