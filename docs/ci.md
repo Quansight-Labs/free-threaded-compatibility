@@ -64,22 +64,7 @@ jobs:
 
 [cibuildwheel](https://cibuildwheel.pypa.io/en/stable/) has support
 for building free-threaded wheels on all platforms. If your project releases
-nightly wheels, we suggest configuring `cibuildwheel` to build nightly
-free-threaded wheels.
-
-If your project depends on Cython or the NumPy C API, you will need to install a
-Cython nightly wheel in the build, as the newest stable release of Cython cannot
-generate code that will compile under the free-threaded build. Cython 3.1.0 and
-NumPy 2.1.0 will be or are the first stable releases to support free-threaded
-python. See [the project tracker](tracking.md) for more detailed information
-about projects you may depend on.
-
-You can install nightly wheels for both Cython and NumPy using the following
-install command:
-
-```bash
-pip install -i https://pypi.anaconda.org/scientific-python-nightly-wheels/simple cython numpy
-```
+wheels, we suggest configuring `cibuildwheel` to build free-threaded wheels.
 
 To ensure wheels are built correctly under cibuildwheel, you will need to
 specify the following variables in the environment for the cibuildwheel action:
@@ -90,32 +75,9 @@ specify the following variables in the environment for the cibuildwheel action:
     env:
       CIBW_ENABLE: cpython-freethreading
       CIBW_BUILD: cp313t-${{ matrix.buildplat }}
-      # TODO:
-      # remove when a released cython can build free-threaded extensions
-      CIBW_BUILD_FRONTEND: 'pip; args: --no-build-isolation'
 ```
 
 As above, replace the ellipses with a `cibuildwheel` version.
-
-If for some reason disabling build isolation is unworkable, you can also tell
-pip about the nightly wheel index and it will use it in an isolated build. To
-do this, set:
-
-```yaml
-CIBW_BUILD_FRONTEND: 'pip; args: --pre --extra-index-url "https://pypi.anaconda.org/scientific-python-nightly-wheels/simple"'
-```
-
-Many projects use `build` instead of `pip` for the build frontend. See [the
-cibuildwheel](https://cibuildwheel.pypa.io/en/stable/options/#build-frontend)
-docs for more information about how to pass arguments to `build` and `pip`. See
-[this
-comment](https://github.com/pypa/build/issues/651#issuecomment-2243025713) on
-the `build` issue tracker if you need to use `build` and cannot disable build
-isolation.
-
-Note that nightly wheels may not be available on all platforms yet. Windows
-wheels, in particular, are not currently available for NumPy or projects that
-depend on NumPy (e.g., SciPy).
 
 You will also likely need to manually pass `-Xgil=0` or set `PYTHON_GIL=0` in
 your shell environment while running tests to ensure the GIL is actually

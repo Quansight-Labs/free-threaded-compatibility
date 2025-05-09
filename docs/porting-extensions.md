@@ -61,9 +61,8 @@ after importing a module that does not support the GIL.
     support for free-threaded Python in Cython code is currently considered
     experimental, so suggestions are subject to change.
 
-    Starting with Cython 3.1.0 (a PyPI prerelease, nightly wheels, or by
-    installing directly from the `master` branch as of right now), extension
-    modules written in Cython can declare free-threaded support using the
+    Starting with Cython 3.1.0 extension modules written in Cython can declare
+    free-threaded support using the
     [`freethreading_compatible`](https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#compiler-directives)
     compiler directive.
 
@@ -98,7 +97,7 @@ after importing a module that does not support the GIL.
             from packaging.version import Version
 
             compiler_directives = {}
-            if Version(cython_version) >= Version("3.1.0a0"):
+            if Version(cython_version) >= Version("3.1.0"):
                 compiler_directives["freethreading_compatible"] = True
 
             setup(

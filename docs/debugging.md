@@ -324,9 +324,6 @@ git clone --recursive https://github.com/numpy/numpy.git
 ```bash
 cd numpy
 python -m pip install -r requirements/build_requirements.txt
-# Make sure to install a compatible Cython version
-# (--pre is needed to get a 3.1.0 beta release)
-python -m pip install --pre cython
 ```
 
 - Build the package
