@@ -64,7 +64,8 @@ jobs:
 
 [cibuildwheel](https://cibuildwheel.pypa.io/en/stable/) has support
 for building free-threaded wheels on all platforms. If your project releases
-wheels, we suggest configuring `cibuildwheel` to build free-threaded wheels.
+nightly wheels, we suggest configuring `cibuildwheel` to build nightly
+free-threaded wheels.
 
 To ensure wheels are built correctly under cibuildwheel, you will need to
 specify the following variables in the environment for the cibuildwheel action:
