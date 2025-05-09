@@ -18,18 +18,6 @@ corresponding free-threading support tracking issue (see table below). If
 an issue spans multiple projects or there's an ecosystem-wide point to discuss,
 please open an issue on [this issue tracker](https://github.com/Quansight-Labs/free-threaded-compatibility/issues).
 
-!!! tip
-
-    It's early days for free-threaded support - bugs in CPython itself and in
-    widely used libraries with extension modules are being fixed every week.
-    It may be useful to use nightly wheels (when available) of packages
-    like `cython` or `numpy`, even if a first release is available on PyPI.
-    For example, you can install a NumPy nightly wheel by running:
-
-    ```bash
-    pip install -i https://pypi.anaconda.org/scientific-python-nightly-wheels/simple numpy
-    ```
-
 <!-- keep alphabetically ordered -->
 
 | Project              |                                Upstream issue                                |     Tested in CI      |        PyPI release        | First version with support |                       Nightly wheels                       |                                         Nightly link                                         |
@@ -46,7 +34,7 @@ please open an issue on [this issue tracker](https://github.com/Quansight-Labs/f
 | ContourPy            |     [:simple-github:](https://github.com/contourpy/contourpy/issues/407)     | :material-check-bold: |   :material-check-bold:    |           1.3.0            | :simple-linux: :simple-apple: :material-microsoft-windows: |    [:simple-anaconda:](https://anaconda.org/scientific-python-nightly-wheels/contourpy/)     |
 | cramjam              |    [:simple-github:](https://github.com/milesgranger/cramjam/issues/199)     |                       |                            |                            |                                                            |                                                                                              |
 | cryptography         |     [:simple-github:](https://github.com/pyca/cryptography/issues/12489)     |                       |                            |                            |                                                            |                                                                                              |
-| Cython               |       [:simple-github:](https://github.com/cython/cython/issues/6221)        | :material-check-bold: |                            |           3.1.0            | :simple-linux: :simple-apple: :material-microsoft-windows: |      [:simple-anaconda:](https://anaconda.org/scientific-python-nightly-wheels/cython/)      |
+| Cython               |       [:simple-github:](https://github.com/cython/cython/issues/6221)        | :material-check-bold: |   :material-check-bold:    |           3.1.0            | :simple-linux: :simple-apple: :material-microsoft-windows: |      [:simple-anaconda:](https://anaconda.org/scientific-python-nightly-wheels/cython/)      |
 | frozenlist           |      [:simple-github:](https://github.com/aio-libs/frozenlist/pull/618)      | :material-check-bold: |   :material-check-bold:    |           1.6.0            |                                                            |                                                                                              |
 | hatch                |         [:simple-github:](https://github.com/pypa/hatch/issues/1801)         |                       |                            |                            |                                                            |                                                                                              |
 | h5py                 |         [:simple-github:](https://github.com/h5py/h5py/issues/2475)          |                       |                            |                            |                                                            |                                                                                              |

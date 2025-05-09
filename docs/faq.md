@@ -11,39 +11,8 @@ other libraries and aren't covered here.
 ## Cython compilation errors: `unknown type name '__pyx_vectorcallfunc'`
 
 This happens if you try to build a Cython extension for the free-threaded build
-using the current stable release of Cython (3.0.11 at the time of writing). The
-current stable release of Cython does not support the free-threaded build. You
-must either install the Cython 3.1 beta by passing `--pre` to `pip`:
-
-```
-pip install cython --pre
-```
-
-use the nightly wheel:
-
-```bash
-pip install -i https://pypi.anaconda.org/scientific-python-nightly-wheels/simple cython
-```
-
-or build Cython from the `master` branch [on
-Github](https://github.com/cython/cython).
-
-See [the porting guide](porting.md) for more detail about porting Cython code to
-work under free-threading.
-
-The beta and nightly wheel are pure-python builds, so they work on all
-architectures. The pure-python version of Cython is usually only marginally
-slower than a compiled version, so you should default to installing a
-pre-release wheel in CI instead of compiling Cython, which can take up to a few
-minutes on some CI runners.
-
-You may wonder why `pip install cython` succeeds on the current stable Cython
-release if free-threaded Python is not supported. This is because Cython ships a
-pure-python wheel tagged with `py2.py3-none-any`, which pip will install if it
-cannot find another wheel that is compatible. Since there isn't a free-threaded
-wheel, pip installs the pure Python wheel instead, and there is no opportunity
-to catch this case at install time in e.g. a `setup.py` file. The Cython 3.1
-release will fix this problem once and for all.
+using a release of Cython that does not support it (\<3.1.0). See [the porting guide](porting.md)
+for more details about porting Cython code to work under free-threading.
 
 ## What does `RuntimeWarning: The global interpreter lock (GIL) has been enabled` mean?
 
