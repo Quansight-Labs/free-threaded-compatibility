@@ -118,7 +118,7 @@ lock on multithreaded Python
 programs](https://github.com/facebookincubator/ft_utils/blob/main/docs/ft_worked_examples.md#understanding-the-global-interpreter-lock-gil-and-its-impact-on-multithreaded-python-programs). Many
 pure Python operations are not atomic and are susceptible to race conditions, or
 only appear to be thread-safe in the GIL-enabled build because of details of how
-CPython releases the GIL in a round-robin fasion to allow threads to run.
+CPython releases the GIL in a round-robin fashion to allow threads to run.
 
 ### Dealing with mutable global state
 
@@ -152,7 +152,7 @@ access, resource leaks, or wasted unnecessary compute cost.
 ### Converting global state to thread-local state
 
 One way of dealing with issues like this is to convert a shared global cache
-into a thread-local cache. In this apprach, each thread will see its own private
+into a thread-local cache. In this approach, each thread will see its own private
 copy of the cache, making races between threads impossible. This approach makes
 sense if having extra copies of the cache in each thread is not prohibitively
 expensive or does not lead to excessive runtime network, CPU, or memory use.
@@ -299,7 +299,7 @@ print(counter.value)
 On both the free-threaded and GIL-enabled build, you will see the output of this
 script randomly vary.
 
-We can ensure the above script has determistic answers by adding a lock to our counter:
+We can ensure the above script has deterministic answers by adding a lock to our counter:
 
 ```python
 import threading
