@@ -195,7 +195,7 @@ simultaneously, since they will randomly pass or fail depending on thread
 timing.
 
 Hopefully in the future it will be possible for Python to write a scalable
-infrastucture for tracking warnings to fix this issue once and for all. See [the
+infrastructure for tracking warnings to fix this issue once and for all. See [the
 CPython issue](https://github.com/python/cpython/issues/91505) tracking this
 problem for more information.
 

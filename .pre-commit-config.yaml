@@ -21,3 +21,10 @@ repos:
           - mdformat-beautysh
           - mdformat-config
           - setuptools
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: 63c8f8312b7559622c0d82815639671ae42132ac # v2.4.1
+    hooks:
+    - id: codespell
+      additional_dependencies:
+        - tomli

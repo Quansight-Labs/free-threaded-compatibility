@@ -274,7 +274,7 @@ application running on the free-threaded-enabled interpreter
 
 There is no longer a GIL, so this diagram doesn't have lock icons. Because there
 is no GIL, threads do not need to wait to acquire it, and multiple threads can
-simultanously call into the CPython C API.
+simultaneously call into the CPython C API.
 
 The icons indicating whether threads are attached or detached are still
 present. This is because it is still necessary to explicitly attach and detach
