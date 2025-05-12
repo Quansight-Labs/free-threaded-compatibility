@@ -103,7 +103,7 @@ and installing the free-threaded binaries is also possible:
     **Advanced installation (CI)**
 
     This process installs the free-threaded version of Python 3.13.3 using the command line for more complex cases, such as running CI.
-    It follows a similar process decribed in the CPython documentation for [installing a binary using the command line](https://docs.python.org/3/using/mac.html#installing-using-the-command-line).
+    It follows a similar process described in the CPython documentation for [installing a binary using the command line](https://docs.python.org/3/using/mac.html#installing-using-the-command-line).
 
     While this process installs the free-threaded version of Python 3.13.3, you can install other versions by substituting the version number in the following steps.
 
