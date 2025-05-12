@@ -44,16 +44,16 @@ substantial, we have split off the guide for porting extension modules into
 
 !!! note
 
-   This advice is primarily targeted at library authors or anyone who maintains
-   Python code that others might use in their own application or library.
+This advice is primarily targeted at library authors or anyone who maintains
+Python code that others might use in their own application or library.
 
 Broadly, we think a Python package can indicate support for the free-threaded
 build at one of four levels:
 
-* Not supported at all.
-* Supported for experimental use, multithreaded use may lead to issues
-* Supported for production use, multithreaded use is tested, and thread safety issues are clearly documented.
-* Fully supported and fully thread safe.
+- Not supported at all.
+- Supported for experimental use, multithreaded use may lead to issues
+- Supported for production use, multithreaded use is tested, and thread safety issues are clearly documented.
+- Fully supported and fully thread safe.
 
 You can see how supporting the free-threaded build is not all all-or-nothing
 thing. It is a perfectly valid choice to, for example, only support running on
@@ -76,10 +76,10 @@ You can indicate the level of support for free-threading in your library by
 adding a [trove classifier](https://pypi.org/classifiers/) to the metadata of
 your package. The currently supported trove classifiers for this purpose are:
 
-* `Programming Language :: Python :: Free Threading :: 1 - Unstable`
-* `Programming Language :: Python :: Free Threading :: 2 - Beta`
-* `Programming Language :: Python :: Free Threading :: 3 - Stable`
-* `Programming Language :: Python :: Free Threading :: 4 - Resilient`
+- `Programming Language :: Python :: Free Threading :: 1 - Unstable`
+- `Programming Language :: Python :: Free Threading :: 2 - Beta`
+- `Programming Language :: Python :: Free Threading :: 3 - Stable`
+- `Programming Language :: Python :: Free Threading :: 4 - Resilient`
 
 ### Thread Safety of Pure Python Code
 
@@ -282,18 +282,19 @@ see an error at runtime when they try to share a compression context like this:
 ```python
 from dataclasses import dataclass
 
+
 @dataclass
 class CompressionContext:
-   lock: threading.Lock
-   state: _LowLevelCompressionContext
+    lock: threading.Lock
+    state: _LowLevelCompressionContext
 
-   def compress(self, data):
-       if not self.lock.acquire(blocking=False):
-           raise RuntimeError("Concurrent use detected!")
-       try:
-           self.state.compress(data)
-       finally:
-           self.lock.release()
+    def compress(self, data):
+        if not self.lock.acquire(blocking=False):
+            raise RuntimeError("Concurrent use detected!")
+        try:
+            self.state.compress(data)
+        finally:
+            self.lock.release()
 ```
 
 This does require paying the cost of acquiring and releasing a mutex, but
