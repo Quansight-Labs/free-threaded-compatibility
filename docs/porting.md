@@ -40,6 +40,47 @@ free-threaded build. Since the changes required in native extensions are more
 substantial, we have split off the guide for porting extension modules into
 [a subsequent section](porting-extensions.md).
 
+### Define and document thread safety guarantees
+
+!!! note
+
+   This advice is primarily targeted at library authors or anyone who maintains
+   Python code that others might use in their own application or library.
+
+Broadly, we think a Python package can indicate support for the free-threaded
+build at one of four levels:
+
+* Not supported at all.
+* Supported for experimental use, multithreaded use may lead to issues
+* Supported for production use, multithreaded use is tested, and thread safety issues are clearly documented.
+* Fully supported and fully thread safe.
+
+You can see how supporting the free-threaded build is not all all-or-nothing
+thing. It is a perfectly valid choice to, for example, only support running on
+the free-threaded build in effectively single-threaded contexts and not support
+shared use of objects. It is then up to the users of your library to add locking
+where appropriate or needed. The advantage of this choice is it does not force
+all consumers of your library to pay any cost associated with ensuring thread
+safety.
+
+Consider adding a section to your documentation clearly documenting the thread
+safety guarantees of your library. Note any use of global state as well as
+whether the mutable data structures exposed by your library support sequentially
+consistent shared concurrent use. If a variable is protected by a lock, you
+should document that, as it may impact multithreaded scaling. Encourage user
+feedback, particularly for reports of thread-unsafe behavior in code that is
+documented to be thread-safe, as well as reports of poort multithreaded scaling
+in code that you expect to scale well.
+
+You can indicate the level of support for free-threading in your library by
+adding a [trove classifier](https://pypi.org/classifiers/) to the metadata of
+your package. The currently supported trove classifiers for this purpose are:
+
+* `Programming Language :: Python :: Free Threading :: 1 - Unstable`
+* `Programming Language :: Python :: Free Threading :: 2 - Beta`
+* `Programming Language :: Python :: Free Threading :: 3 - Stable`
+* `Programming Language :: Python :: Free Threading :: 4 - Resilient`
+
 ### Thread Safety of Pure Python Code
 
 The CPython interpreter protects you from low-level memory unsafety due to [data
@@ -49,12 +90,6 @@ conditions](https://en.wikipedia.org/wiki/Race_condition). It is possible to
 write algorithms that depend on the precise timing of threads completing
 work. It is up to you as a user of multithreaded parallelism to ensure that
 simultaneous reads and writes to the same Python variable are impossible.
-
-If you're maintaining a library, we suggest documenting what multithreaded
-workflows are supported and to document to what extent the library guards against
-races. If a variable is protected by a lock, you should document that, as it may
-impact multithreaded scaling. Similarly, if a mutable data structure does not
-ensure state is synchronized if an object is shared between threads, you should also document that explicitly.
 
 Below we describe various approaches for improving the determinism of
 multithreaded pure Python code. The correct approach will depend on exactly what
