@@ -272,6 +272,34 @@ There is also
 which provides a reentrant lock allowing threads to recursively acquire the same
 lock.
 
+### Raising errors under shared concurrent use.
+
+Sometimes it's a programming error to share an object between threads. An
+example might be a wrapper for a low-level C compression library that does not
+support sharing compression contexts between threads. You could make it so users
+see an error at runtime when they try to share a compression context like this:
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class CompressionContext:
+   lock: threading.Lock
+   state: _LowLevelCompressionContext
+
+   def compress(self, data):
+       if not self.lock.acquire(blocking=False):
+           raise RuntimeError("Concurrent use detected!")
+       try:
+           self.state.compress(data)
+       finally:
+           self.lock.release()
+```
+
+This does require paying the cost of acquiring and releasing a mutex, but
+because no thread ever blocks on acuring the lock, this thread cannot introduce
+hidden multithreaded scaling issues.
+
 ## Dealing with thread-unsafe objects
 
 Mutability of objects is deeply embedded in the Python runtime and many tools freely
