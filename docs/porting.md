@@ -43,6 +43,7 @@ substantial, we have split off the guide for porting extension modules into
 ### Define and document thread safety guarantees
 
 !!! note
+
     This advice is primarily targeted at library authors or anyone who maintains Python code that others might use in their own application or library.
 
 Broadly, we think a Python package can indicate support for the free-threaded
