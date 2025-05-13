@@ -63,9 +63,9 @@ your package. The currently supported trove classifiers for this purpose are:
 The numeric level of support in the classifier corresponds to the level of support. To give some guidance as to what that means:
 
 1. For experimentation and feedback only.
-2. Free threaded usage is supported, but documentation of constraints and limitations may be incomplete.
-3. Supported for production use, multithreaded use is tested, and thread safety issues are clearly documented.
-4. Fully supported and fully thread safe.
+1. Free threaded usage is supported, but documentation of constraints and limitations may be incomplete.
+1. Supported for production use, multithreaded use is tested, and thread safety issues are clearly documented.
+1. Fully supported and fully thread safe.
 
 You can see how supporting the free-threaded build is not all all-or-nothing
 thing. It is a perfectly valid choice to, for example, only support running on
