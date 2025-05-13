@@ -42,33 +42,13 @@ substantial, we have split off the guide for porting extension modules into
 
 ### Define and document thread safety guarantees
 
-!!! note
-
-    This advice is primarily targeted at library authors or anyone who maintains Python code that others might use in their own application or library.
-
-Broadly, we think a Python package can indicate support for the free-threaded
-build at one of four levels:
-
-- Not supported at all.
-- Supported for experimental use, multithreaded use may lead to issues
-- Supported for production use, multithreaded use is tested, and thread safety issues are clearly documented.
-- Fully supported and fully thread safe.
-
-You can see how supporting the free-threaded build is not all all-or-nothing
-thing. It is a perfectly valid choice to, for example, only support running on
-the free-threaded build in effectively single-threaded contexts and not support
-shared use of objects. It is then up to the users of your library to add locking
-where appropriate or needed. The advantage of this choice is it does not force
-all consumers of your library to pay any cost associated with ensuring thread
-safety.
-
 Consider adding a section to your documentation clearly documenting the thread
 safety guarantees of your library. Note any use of global state as well as
 whether the mutable data structures exposed by your library support sequentially
-consistent shared concurrent use. If a variable is protected by a lock, you
-should document that, as it may impact multithreaded scaling. Encourage user
+consistent shared concurrent use. You should document any locks that you expect
+might impact multithreaded scaling for realistic workflows. Encourage user
 feedback, particularly for reports of thread-unsafe behavior in code that is
-documented to be thread-safe, as well as reports of poort multithreaded scaling
+documented to be thread-safe, as well as reports of poor multithreaded scaling
 in code that you expect to scale well.
 
 You can indicate the level of support for free-threading in your library by
@@ -79,6 +59,21 @@ your package. The currently supported trove classifiers for this purpose are:
 - `Programming Language :: Python :: Free Threading :: 2 - Beta`
 - `Programming Language :: Python :: Free Threading :: 3 - Stable`
 - `Programming Language :: Python :: Free Threading :: 4 - Resilient`
+
+The numeric level of support in the classifier corresponds to the level of support. To give some guidance as to what that means:
+
+1. For experimentation and feedback only.
+2. Free threaded usage is supported, but documentation of constraints and limitations may be incomplete.
+3. Supported for production use, multithreaded use is tested, and thread safety issues are clearly documented.
+4. Fully supported and fully thread safe.
+
+You can see how supporting the free-threaded build is not all all-or-nothing
+thing. It is a perfectly valid choice to, for example, only support running on
+the free-threaded build in effectively single-threaded contexts and not support
+shared use of objects. It is then up to the users of your library to add locking
+where appropriate or needed. The advantage of this choice is that it does not
+force all consumers of your library to pay any cost associated with ensuring
+thread safety.
 
 ### Thread Safety of Pure Python Code
 
@@ -297,8 +292,8 @@ class CompressionContext:
 ```
 
 This does require paying the cost of acquiring and releasing a mutex, but
-because no thread ever blocks on acuring the lock, this thread cannot introduce
-hidden multithreaded scaling issues.
+because no thread ever blocks on acquiring the lock, this thread cannot
+introduce hidden multithreaded scaling issues.
 
 ## Dealing with thread-unsafe objects
 
