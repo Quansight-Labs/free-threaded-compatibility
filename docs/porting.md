@@ -40,6 +40,41 @@ free-threaded build. Since the changes required in native extensions are more
 substantial, we have split off the guide for porting extension modules into
 [a subsequent section](porting-extensions.md).
 
+### Define and document thread safety guarantees
+
+Consider adding a section to your documentation clearly documenting the thread
+safety guarantees of your library. Note any use of global state as well as
+whether the mutable data structures exposed by your library support sequentially
+consistent shared concurrent use. You should document any locks that you expect
+might impact multithreaded scaling for realistic workflows. Encourage user
+feedback, particularly for reports of thread-unsafe behavior in code that is
+documented to be thread-safe, as well as reports of poor multithreaded scaling
+in code that you expect to scale well.
+
+You can indicate the level of support for free-threading in your library by
+adding a [trove classifier](https://pypi.org/classifiers/) to the metadata of
+your package. The currently supported trove classifiers for this purpose are:
+
+- `Programming Language :: Python :: Free Threading :: 1 - Unstable`
+- `Programming Language :: Python :: Free Threading :: 2 - Beta`
+- `Programming Language :: Python :: Free Threading :: 3 - Stable`
+- `Programming Language :: Python :: Free Threading :: 4 - Resilient`
+
+The numeric level of support in the classifier corresponds to the level of support. To give some guidance as to what that means:
+
+1. For experimentation and feedback only.
+1. Free threaded usage is supported, but documentation of constraints and limitations may be incomplete.
+1. Supported for production use, multithreaded use is tested, and thread safety issues are clearly documented.
+1. Fully supported and fully thread safe.
+
+You can see how supporting the free-threaded build is not all all-or-nothing
+thing. It is a perfectly valid choice to, for example, only support running on
+the free-threaded build in effectively single-threaded contexts and not support
+shared use of objects. It is then up to the users of your library to add locking
+where appropriate or needed. The advantage of this choice is that it does not
+force all consumers of your library to pay any cost associated with ensuring
+thread safety.
+
 ### Thread Safety of Pure Python Code
 
 The CPython interpreter protects you from low-level memory unsafety due to [data
@@ -49,12 +84,6 @@ conditions](https://en.wikipedia.org/wiki/Race_condition). It is possible to
 write algorithms that depend on the precise timing of threads completing
 work. It is up to you as a user of multithreaded parallelism to ensure that
 simultaneous reads and writes to the same Python variable are impossible.
-
-If you're maintaining a library, we suggest documenting what multithreaded
-workflows are supported and to document to what extent the library guards against
-races. If a variable is protected by a lock, you should document that, as it may
-impact multithreaded scaling. Similarly, if a mutable data structure does not
-ensure state is synchronized if an object is shared between threads, you should also document that explicitly.
 
 Below we describe various approaches for improving the determinism of
 multithreaded pure Python code. The correct approach will depend on exactly what
@@ -236,6 +265,35 @@ There is also
 [threading.RLock](https://docs.python.org/3/library/threading.html#rlock-objects),
 which provides a reentrant lock allowing threads to recursively acquire the same
 lock.
+
+### Raising errors under shared concurrent use.
+
+Sometimes it's a programming error to share an object between threads. An
+example might be a wrapper for a low-level C compression library that does not
+support sharing compression contexts between threads. You could make it so users
+see an error at runtime when they try to share a compression context like this:
+
+```python
+from dataclasses import dataclass
+
+
+@dataclass
+class CompressionContext:
+    lock: threading.Lock
+    state: _LowLevelCompressionContext
+
+    def compress(self, data):
+        if not self.lock.acquire(blocking=False):
+            raise RuntimeError("Concurrent use detected!")
+        try:
+            self.state.compress(data)
+        finally:
+            self.lock.release()
+```
+
+This does require paying the cost of acquiring and releasing a mutex, but
+because no thread ever blocks on acquiring the lock, this thread cannot
+introduce hidden multithreaded scaling issues.
 
 ## Dealing with thread-unsafe objects
 
