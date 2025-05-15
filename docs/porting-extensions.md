@@ -251,20 +251,23 @@ In this diagram, each thread spindle symbol represents a thread that is running
 code inside a native extension. The lock icon indicates whether the thread holds
 the GIL - only one thread can acquire the GIL at a time, indicated by the
 fastened lock on the thread calling into the CPython C API. The bottom row of
-symbols incdicates what work each thread is doing. You can see that even with
+symbols indicates what work each thread is doing. You can see that even with
 the GIL it is possible to get multithreaded parallelism, so long as there are
 threads that do not have the GIL acquired and are not waiting to acquire the
 GIL. Usually, this means a thread is doing I/O or a long-running calculation
 that does not need any state or functionality from the CPython runtime.
 
 In addition to the lock icon indicating whether the GIL is acquired, each thread
-is either "plugged in" or "unplugged" from the interpreter runtime. This
-indicates whether a thread is "attached" to the runtime.
+icon is either plugged in or unplugged from the interpreter runtime, indicating
+it has an attached or detached thread state. In the GIL-enabled build, an
+attached thread holds the GIL and a detached thread cannot hold the GIL.
 
-Python threads can either be attached or detached. In the GIL-enabled build, an
-attached thread must hold the GIL.
+In the free-threaded build there is no GIL but threads can still either have
+attached or detached thread states. As in the GIL-enabled build, only attached
+threads can use interpreter state but, because there is no GIL, many threads can
+simultaneously call into the CPython C API.
 
-In the free-threaded build, the picture is only a little different.
+The state of a running free-threaded application is illustrated in the diagram below.
 
 ![free-threaded execution diagram](assets/images/free_threaded_diagram.png){ width="600" }
 /// caption
@@ -272,14 +275,14 @@ A diagramatic snapshot of the state of a multithreaded Python
 application running on the free-threaded-enabled interpreter
 ///
 
-There is no longer a GIL, so this diagram doesn't have lock icons. Because there
-is no GIL, threads do not need to wait to acquire it, and multiple threads can
-simultaneously call into the CPython C API.
+In the free-threaded build, there is no GIL, so this diagram doesn't have lock
+icons. Because there is no GIL, threads do not need to wait to acquire it, and
+multiple threads can simultaneously call into the CPython C API.
 
 The icons indicating whether threads are attached or detached are still
-present. This is because it is still necessary to explicitly attach and detach
-from the runtime in the free-threaded build, despite the fact that there isn't a
-GIL.
+present. As discussed above, this is because it is still necessary to explicitly
+attach and detach from the runtime in the free-threaded build, despite the fact
+that there isn't a GIL.
 
 You might wonder why it's still necessary to detach from the runtime when doing
 I/O or a long-running native calculation. This is because there are still times
