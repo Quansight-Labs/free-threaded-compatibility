@@ -259,10 +259,11 @@ that does not need any state or functionality from the CPython runtime.
 
 In addition to the lock icon indicating whether the GIL is acquired, each thread
 icon is either plugged in or unplugged from the interpreter runtime, indicating
-it has an attached or detached thread state. In the GIL-enabled build, an
-attached thread holds the GIL and a detached thread cannot hold the GIL.
+it has an attached or detached thread state. In the GIL-enabled build, only
+one thread can have an attached thread state and hold the GIL, while all
+other unplugged threads wait for the GIL to be released.
 
-In the free-threaded build there is no GIL but threads can still either have
+In the free-threaded build the GIL is disabled but threads can still either have
 attached or detached thread states. As in the GIL-enabled build, only attached
 threads can use interpreter state but, because there is no GIL, many threads can
 simultaneously call into the CPython C API.
@@ -275,7 +276,7 @@ A diagramatic snapshot of the state of a multithreaded Python
 application running on the free-threaded-enabled interpreter
 ///
 
-In the free-threaded build, there is no GIL, so this diagram doesn't have lock
+In the free-threaded build, the GIL is disabled, so this diagram doesn't have lock
 icons. Because there is no GIL, threads do not need to wait to acquire it, and
 multiple threads can simultaneously call into the CPython C API.
 
