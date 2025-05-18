@@ -257,8 +257,8 @@ calling `Lock.acquire()` recursively on the same lock leads to deadlocks. Also,
 in general, it is possible to create a deadlock in any program with more than
 one lock. Care must be taken to ensure that operations done while the lock is
 held cannot lead to recursive calls or lead to a situation where a thread owning
-the lock is blocked on acquiring a difference mutex. You do not need to worry
-about deadlocking with the GIL in pure Python code, the interpreter will handle
+the lock is blocked on acquiring a different mutex. Though, you do not need to worry
+about deadlocking with the GIL in pure Python code; the interpreter will handle
 that for you.
 
 There is also
@@ -383,12 +383,19 @@ Of course this introduces a scaling bottleneck when `SafeCounter` instances are
 concurrently updated. It's possible to implement more optimized locking
 strategies, but doing so requires knowledge of the problem.
 
+### Do I need to thread everything?
+Before you thread your code, you might consider whether another
+(possibly decideable) pattern like Message Passing with vector clocks
+could solve your problem without handling threads at all; 
+with task isolation, distributed over multiple processes on multiple nodes.
+
 ### Third-party libraries
 
 Both the [`ft_utils`](https://github.com/facebookincubator/ft_utils) and
 [`cereggii`](https://github.com/dpdani/cereggii) libraries offer data structures
 that add enhanced atomicity or improved multithreaded scaling compared with
 standard library primitives.
+
 
 ## Dependencies that don't support free-threading
 
