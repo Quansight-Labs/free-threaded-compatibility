@@ -257,7 +257,7 @@ calling `Lock.acquire()` recursively on the same lock leads to deadlocks. Also,
 in general, it is possible to create a deadlock in any program with more than
 one lock. Care must be taken to ensure that operations done while the lock is
 held cannot lead to recursive calls or lead to a situation where a thread owning
-the lock is blocked on acquiring a difference mutex. You do not need to worry
+the lock is blocked on acquiring a different mutex. You do not need to worry
 about deadlocking with the GIL in pure Python code, the interpreter will handle
 that for you.
 
