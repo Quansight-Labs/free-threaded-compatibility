@@ -267,10 +267,10 @@ pyenv install --debug --keep 3.13.1
 The [manylinux containers](https://github.com/pypa/manylinux) have free-threaded
 builds. You can use any of the actively supported images:
 
-- `quay.io/pypa/manylinux2014_...`
 - `quay.io/pypa/manylinux_2_28_...`
 - `quay.io/pypa/musllinux_1_1_...`
 - `quay.io/pypa/musllinux_1_2_...`
+- `quay.io/pypa/manylinux2014_...`
 
 Replace `...` with your desired architecture, such as `x86_64` or `aarch64`.
 
