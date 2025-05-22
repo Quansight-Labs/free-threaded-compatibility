@@ -271,7 +271,7 @@ lock.
 
 Finally, note how the above code will ensure that only a single call to
 `_do_expensive_calculation` will run at any given time, regardless of `arg`.
-This may not be desirable; one would want to allow calling the function in
+This may not be desirable; one could want to allow calling the function in
 parallel for different arguments. In that case, you need a separate lock for each
 `arg` - but you also need a global lock to manage your collection of locks!
 
