@@ -373,7 +373,7 @@ real example might have a method that looks something like this:
 
 ```python
 def increment(self):
-    self.value += do_some_expensive_calulation()
+    self.value = do_some_expensive_calulation(self.value)
 ```
 
 If we run this example in a thread pool, you'll see that the answer you get will
