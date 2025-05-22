@@ -272,42 +272,8 @@ lock.
 Finally, note how the above code will ensure that only a single call to
 `_do_expensive_calculation` will run at any given time, regardless of `arg`.
 This may not be desirable; one could want to allow calling the function in
-parallel for different arguments. In that case, you need a separate lock for each
-`arg` - but you also need a global lock to manage your collection of locks!
-
-```python
-import threading
-
-from internals import _do_expensive_calculation
-
-cache_locks_lock = threading.Lock()
-cache_locks = {}
-global_cache = {}
-
-
-def do_calculation(arg):
-    if arg in global_cache:
-        return global_cache[arg]
-
-    with cache_locks_lock:
-        # Note: setdefault() is not atomic!
-        lock = cache_locks.setdefault(threading.Lock())
-
-    lock.acquire()
-    try:
-        if arg not in global_cache:
-            global_cache[arg] = _do_expensive_calculation(arg)
-    finally:
-        lock.release()
-        # Ignore a potential double deletion.
-        # Don't assume `cache_locks.pop(arg)` to be thread-safe.
-        try:
-            del cache_locks[arg]
-        except KeyError:
-            pass
-
-    return global_cache[arg]
-```
+parallel for different arguments. This however would require a substantially more
+complex locking pattern.
 
 ### Raising errors under shared concurrent use.
 
