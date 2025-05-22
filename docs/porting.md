@@ -292,17 +292,18 @@ def do_calculation(arg):
     with cache_locks_lock:
         # Note: setdefault() is not atomic!
         lock = cache_locks.setdefault(threading.Lock())
+        lock.acquire()
 
-    lock.acquire()
     try:
         if arg not in global_cache:
             global_cache[arg] = _do_expensive_calculation(arg)
     finally:
         lock.release()
-        with cache_locks_lock:
-            # Ignore a potential double deletion.
-            # Don't assume dict.pop() to be thread-safe.
-            cache_locks.pop(arg)
+        # Ignore a potential double deletion.
+        try:
+            del cache_locks[arg]
+        except KeyError:
+            pass
 
     return global_cache[arg]
 ```
