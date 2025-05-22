@@ -412,11 +412,10 @@ class SafeCounter:
         self.lock = threading.Lock()
 
     def increment(self):
-        self.lock.acquire()
-        current_value = self.value
-        time.sleep(random.randint(0, 10) * 0.0001)
-        self.value = current_value + 1
-        self.lock.release()
+        with self.lock:
+            current_value = self.value
+            time.sleep(random.randint(0, 10) * 0.0001)
+            self.value = current_value + 1
 ```
 
 If you replace `RaceyCounter` with `SafeCounter` in the script above, it will
