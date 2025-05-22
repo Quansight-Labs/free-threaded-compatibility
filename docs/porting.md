@@ -239,32 +239,73 @@ def do_calculation(arg):
     if arg in global_cache:
         return global_cache[arg]
 
-    cache_lock.acquire()
-    if arg not in global_cache:
-        global_cache[arg] = _do_expensive_calculation(arg)
-    cache_lock.release()
+    with cache_lock:
+        if arg not in global_cache:
+            global_cache[arg] = _do_expensive_calculation(arg)
     return global_cache[arg]
 ```
 
 Note that after acquiring the lock, we first check if the requested key
 has been filled by another thread, to prevent unnecessary calls to
 `_do_expensive_calculation` if another thread filled the cache while the thread
-currently holding the lock was blocked on acquiring the lock. Also note that
+currently holding the lock was blocked on acquiring the lock. Also note that we
+avoid using
 [`Lock.acquire`](https://docs.python.org/3/library/threading.html#threading.Lock.acquire)
-*must* be followed by a call to
-[`Lock.release`](https://docs.python.org/3/library/threading.html#threading.Lock.release),
-calling `Lock.acquire()` recursively on the same lock leads to deadlocks. Also,
+and [`Lock.release`](https://docs.python.org/3/library/threading.html#threading.Lock.release)
+and instead we use the lock as a context manager. The difference is subtle: the context
+manager calls `Lock.release` in a `try...finally` clause, so if
+`_do_expensive_calculation` were to raise an exception, this ensures that the lock won't
+stay locked forever.
+
+Note that acquiring the same lock recursively leads to deadlocks. Also,
 in general, it is possible to create a deadlock in any program with more than
 one lock. Care must be taken to ensure that operations done while the lock is
 held cannot lead to recursive calls or lead to a situation where a thread owning
 the lock is blocked on acquiring a different mutex. You do not need to worry
 about deadlocking with the GIL in pure Python code, the interpreter will handle
 that for you.
-
 There is also
 [threading.RLock](https://docs.python.org/3/library/threading.html#rlock-objects),
 which provides a reentrant lock allowing threads to recursively acquire the same
 lock.
+
+Finally, note how the above code will ensure that only a single call to
+`_do_expensive_calculation` will run at any given time, regardless of `arg`.
+This may not be desirable; one would want to allow calling the function in
+parallel for different arguments. In that case, you need a separate lock for each
+`arg` - but you also need a global lock to manage your collection of locks!
+
+```python
+import threading
+
+from internals import _do_expensive_calculation
+
+cache_locks_lock = threading.Lock()
+cache_locks = {}
+global_cache = {}
+
+
+def do_calculation(arg):
+    if arg in global_cache:
+        return global_cache[arg]
+
+    with cache_locks_lock:
+        # Note: setdefault() is not atomic!
+        lock = cache_locks.setdefault(threading.Lock())
+
+    lock.acquire()
+    try:
+        if arg not in global_cache:
+            global_cache[arg] = _do_expensive_calculation(arg)
+    finally:
+        lock.release()
+        with cache_locks_lock:
+            # Ignore a potential double deletion.
+            # Don't assume dict.pop() to be thread-safe.
+            cache_locks.pop(arg)
+
+    return global_cache[arg]
+```
 
 ### Raising errors under shared concurrent use.
 
