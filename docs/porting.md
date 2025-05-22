@@ -300,6 +300,7 @@ def do_calculation(arg):
     finally:
         lock.release()
         # Ignore a potential double deletion.
+        # Don't assume `cache_locks.pop(arg)` to be thread-safe.
         try:
             del cache_locks[arg]
         except KeyError:
