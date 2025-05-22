@@ -253,7 +253,7 @@ avoid using
 [`Lock.acquire`](https://docs.python.org/3/library/threading.html#threading.Lock.acquire)
 and [`Lock.release`](https://docs.python.org/3/library/threading.html#threading.Lock.release)
 and instead we use the lock as a context manager. The difference is subtle: the context
-manager calls `Lock.release` in a `try...finally` clause, so if
+manager calls `Lock.release` in a `try` ... `finally` clause, so if
 `_do_expensive_calculation` were to raise an exception, this ensures that the lock won't
 stay locked forever.
 
