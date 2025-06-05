@@ -47,9 +47,6 @@ As expected, the multi-threaded approach with the GIL enabled has poor
 performance. Because the program's work is almost entirely CPU-bound, the GIL
 prevents multi-threading from providing any significant speed-up.
 
-the Python interpreter and using multi-threads provides essentially no
-speed-up.
-
 In the case of the free-threaded build, there is a small amount of overhead
 compared with the multi-process approach. There are two main factors that
 cause this. First, the free-threaded build is generally a bit slower overall
