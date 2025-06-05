@@ -27,7 +27,7 @@ https://github.com/nascheme/michi.git
 
 To run the program using multiple threads, use the following command line:
 
-python3 michi.py --force-threads tsbench
+python3 michi.py --force-threads tsbenchmark
 
 On an AMD Ryzen 5 7600X 6-core processor, the following performance is obtained:
 
