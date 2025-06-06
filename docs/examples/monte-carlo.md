@@ -3,9 +3,9 @@
 Modern computer programs that play the game of Go commonly use Monte Carlo Tree
 Search (MCTS) as the search algorithm. Examples of programs using this
 technique are AlphaGo, CrazyStone and Zen. Look for "AlphaGo - The Movie" on
-YouTube if you are interested in more background on the history of Go playing
-programs. Monte Carlo-based algorithms are typically good candidates for
-multi-threaded or multi-process parallelization.
+YouTube if you are interested in a story about how AlphaGo won a 5 game match
+verses a professional Go player.  Monte Carlo-based algorithms are typically
+good candidates for multi-threaded or multi-process parallelization.
 
 Michi is a minimal but relatively full-featured Go engine that uses MCTS. It
 was authored by Petr Baudis and released under the MIT license. We will use it
@@ -17,17 +17,22 @@ To get a copy of the program, clone the following GitHub repository:
 
 https://github.com/nascheme/michi.git
 
-To run the program using multiple threads, use the following command line:
+To run the program using multiple threads and with the GIL, use the following
+command line:
 
-python3 michi.py --force-threads tsbenchmark
+uv run --python=3.14 python michi.py --force-threads tsbenchmark
+
+To run with free-threaded Python, run the following command:
+
+uv run --python=3.14t python michi.py --force-threads tsbenchmark
 
 On an AMD Ryzen 5 7600X 6-core processor, the following performance is obtained:
 
 | Configuration                | Time [s] |
 | ---------------------------- | -------- |
-| default build, threads       | 63.1     |
-| default build, processes     | 5.0      |
-| free-threaded build, threads | 5.5      |
+| default build, threads       | 50.5     |
+| default build, processes     | 4.7      |
+| free-threaded build, threads | 4.8      |
 
 These results show that if a problem allows for multi-process parallelization,
 it can be the most efficient approach. In the case of Michi, the inter-process
