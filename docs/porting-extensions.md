@@ -242,6 +242,7 @@ which illustrates a snapshot of the state of a multithreaded Python application
 that has native extensions.
 
 ![GIL execution diagram](assets/images/GIL_diagram.png){ width="600" }
+
 /// caption
 A diagramatic snapshot of the state of a multithreaded Python
 application running on the GIL-enabled interpreter
@@ -271,6 +272,7 @@ simultaneously call into the CPython C API.
 The state of a running free-threaded application is illustrated in the diagram below.
 
 ![free-threaded execution diagram](assets/images/free_threaded_diagram.png){ width="600" }
+
 /// caption
 A diagramatic snapshot of the state of a multithreaded Python
 application running on the free-threaded-enabled interpreter
@@ -296,6 +298,7 @@ garbage collector or doing any other operation that requires a globally
 consistent view of all threads.
 
 ![Attach and detach from the runtime diagram](assets/images/attach-detach-gil.png){ width="600" }
+
 /// caption
 Attaching and detaching from the runtime uses the same
 code as in the GIL-enabled build
