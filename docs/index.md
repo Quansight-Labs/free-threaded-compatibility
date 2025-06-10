@@ -1,8 +1,8 @@
 ---
-description: py-free-threading is a centralized collection of documentation and trackers around compatibility with free-threaded CPython for the Python open source ecosystem
+description: The free-threading guide is a centralized collection of documentation and trackers around compatibility with free-threaded CPython for the Python open source ecosystem
 ---
 
-# Python free-threading guide
+# Python Free-Threading Guide
 
 Free-threaded CPython is coming! :material-language-python: :thread:
 
