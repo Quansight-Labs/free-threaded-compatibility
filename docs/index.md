@@ -12,6 +12,8 @@ After the [acceptance by the Python Steering Council](https://discuss.python.org
 [PEP 703 - Making the Global Interpreter Lock Optional in CPython](https://peps.python.org/pep-0703/), work is happening for the [gradual rollout strategy](https://discuss.python.org/t/pep-703-making-the-global-interpreter-lock-optional-in-cpython-acceptance/37075) in CPython.
 In parallel, efforts to support free-threading are underway across the Python ecosystem, including packages, third-party libraries, tooling, and education.
 
+Lysandros Nikolaou and Nathan Goldbaum presented a talk at PyCon 2025 based on content covered by this guide. You can see a recording of the talk [on YouTube](https://youtu.be/EuU3ksI1l04).
+
 ## Purpose of this site
 
 This website serves as a **centralized resource** for Python package
