@@ -45,6 +45,12 @@ nav:
   - 'resources.md'
   - 'contributing.md'
 
+# mkdocs-jupyter doesn't support putting notebooks in nav sections
+# so exclude until that is fixed.
+# See https://github.com/danielfrg/mkdocs-jupyter/issues/235.
+not_in_nav: |
+  examples/mandelbrot-threads.ipynb
+
 plugins:
   - search
   - git-revision-date-localized:
