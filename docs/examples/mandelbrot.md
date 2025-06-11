@@ -16,8 +16,7 @@ of the point's coordinates, so visualizing the set is very amenable to parallel
 speedups by breaking up the work into chunks of pixels.
 
 Algorithms to visualize the set range in complexity and sophistication. Here is
-a very basic version that calculates whether a given complex number, `z = x +
-y*1j`, is in the mandelbrot set. The function returns 0 for points inside the
+a very basic version that calculates whether a given complex number, `z = x + y*1j`, is in the mandelbrot set. The function returns 0 for points inside the
 set and returns the number of iterations executed for points outside the set:
 
 ```python
@@ -45,8 +44,8 @@ import numpy as np
 shape = (1000, 1000)
 
 iteration_array = np.zeros(shape)
-for (i, x) in enumerate(x_domain):
-    for (j, y) in enumerate(y_domain):
+for i, x in enumerate(x_domain):
+    for j, y in enumerate(y_domain):
         iteration_array[j, i] = mandelbrot(x, y)
 ```
 
@@ -58,8 +57,8 @@ making use of a worker function that processes a chunk of pixels:
 
 ```python
 def worker(j_y):
-    for (i, x) in enumerate(x_domain):
-        for (j, y) in j_y:
+    for i, x in enumerate(x_domain):
+        for j, y in j_y:
             iteration_array[j, i] = mandelbrot(x, y)
 ```
 
@@ -72,7 +71,7 @@ def run_thread_pool(num_workers):
         chunks = itertools.batched(enumerate(y_domain), 4, strict=True)
         futures = [tpe.submit(worker, arg) for arg in chunks]
         # block until all work finishes
-        concurrent.futures.wait(futures) 
+        concurrent.futures.wait(futures)
 ```
 
 In [the notebook accompanying this page](mandelbrot-threads.ipynb) you can see

@@ -70,4 +70,3 @@ With free-threaded Python, performance when using multiple threads is
 comparable to a multi-process solution. If data sharing between multiple
 processes is not practical or efficient, free-threaded Python could be a great
 tool for unlocking the performance of multi-core CPUs.
-
