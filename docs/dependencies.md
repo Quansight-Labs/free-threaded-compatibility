@@ -11,13 +11,13 @@ fork themselves](https://github.com/python-cffi/cffi/pull/143#issuecomment-25807
 so that free-threading support can be implemented and tested independently
 from the upstream package.
 
-There's [a fork under the Quansight-Labs org](https://github.com/Quansight-Labs/cffi)
+There's [a fork under the Quansight-Labs org](https://github.com/Quansight-Labs/cffi-ft)
 available, where free-threading support is currently being worked on. If you want to
 use this version of CFFI within your own library, you can install it in the
 following manner:
 
 ```bash
-python -m pip install git+https://github.com/Quansight-Labs/cffi.git
+python -m pip install git+https://github.com/Quansight-Labs/cffi-ft.git
 ```
 
 Keep in mind that support for free-threading in this fork of CFFI is still very
