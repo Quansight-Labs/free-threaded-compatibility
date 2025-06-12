@@ -53,3 +53,18 @@ dependencies = [
   "PyYAML-ft; python_version>='3.13'",
 ]
 ```
+
+#### Different module name
+
+PyYAML-ft uses a different module name (namely yaml_ft) than upstream PyYAML on
+purpose, so that both can be installed in an environment at the same time.
+
+If your library depends on both for different Python versions, you can do the
+following for ease of use:
+
+```python
+try:
+    import yaml_ft as yaml
+except ModuleNotFoundError:
+    import yaml
+```
