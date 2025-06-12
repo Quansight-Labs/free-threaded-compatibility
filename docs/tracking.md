@@ -113,7 +113,7 @@ please open an issue on [this issue tracker](https://github.com/Quansight-Labs/f
 
 [^1]: Release available in the [Bazel Central Registry](https://registry.bazel.build)
 
-[^2]: There's [a fork of cffi](https://github.com/Quansight-Labs/cffi) available
+[^2]: There's [a fork of cffi](https://github.com/Quansight-Labs/cffi-ft) available
     with support for free-threading. More details on our [CFFI section on
     dependencies that does not current support
     free-threading](dependencies.md#cffi-fork-with-support-for-free-threading).
