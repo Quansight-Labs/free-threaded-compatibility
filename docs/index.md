@@ -37,6 +37,13 @@ the GIL is disabled.
 - [Installing Free-Threaded Python](installing-cpython.md)
 - [Running Python with the GIL Disabled](running-gil-disabled.md)
 
+## Why is free-threaded Python exciting?
+
+We've put together a few example multithreaded Python applications where
+free-threaded Python is substantially faster than the GIL-enabled build.
+
+- [Examples for How to Use Free-Threaded Python in an Application](examples/index.md)
+
 ## Run your code on free-threaded Python
 
 If you are interested in updating your code to work on free-threaded Python,
