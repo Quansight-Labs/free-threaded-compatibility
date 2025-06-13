@@ -4,7 +4,7 @@ Modern computer programs that play the game of Go commonly use Monte Carlo Tree
 Search (MCTS) as the search algorithm. Examples of programs using this
 technique are AlphaGo, CrazyStone and Zen. Look for "AlphaGo - The Movie" on
 YouTube if you are interested in a story about how AlphaGo won a 5 game match
-verses a professional Go player.  Monte Carlo-based algorithms are typically
+verses a professional Go player. Monte Carlo-based algorithms are typically
 good candidates for multi-threaded or multi-process parallelization.
 
 Michi is a minimal but relatively full-featured Go engine that uses MCTS. It
