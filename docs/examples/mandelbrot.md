@@ -6,8 +6,7 @@
 
 The [Mandelbrot set](https://en.wikipedia.org/wiki/Mandelbrot_set) is a classic
 example of a [fractal](https://en.wikipedia.org/wiki/Fractal) - a mathematical
-structure with lots of inherent complexity that can be fun to
-visualize.
+structure characterized by self-similarity and spatial complexity.
 
 One way to compute a visualization of the set requires looping over coordinates
 in the complex plane corresponding to the centers of pixels in an image. Whether
@@ -21,9 +20,9 @@ set and returns the number of iterations executed for points outside the set:
 
 ```python
 def mandelbrot(x, y, max_iterations=500):
-    z = complex(0, 0)
+    z = x + y*1j
     p = 2
-    c = complex(x, y)
+    c = z
     for iteration_number in range(max_iterations):
         if abs(z) >= 2:
             return iteration_number
@@ -69,9 +68,13 @@ operate on a chunk of columns in the image:
 def run_thread_pool(num_workers):
     with ThreadPoolExecutor(max_workers=num_workers) as tpe:
         chunks = itertools.batched(enumerate(y_domain), 4, strict=True)
-        futures = [tpe.submit(worker, arg) for arg in chunks]
-        # block until all work finishes
-        concurrent.futures.wait(futures)
+        try:
+            futures = [tpe.submit(worker, arg) for arg in chunks]
+            # block until all work finishes
+            concurrent.futures.wait(futures)
+        finally:
+            # check for exceptions in worker threads
+            [f.result() for f in futures]
 ```
 
 In [the notebook accompanying this page](mandelbrot-threads.ipynb) you can see
