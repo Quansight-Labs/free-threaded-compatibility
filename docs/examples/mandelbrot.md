@@ -20,7 +20,7 @@ set and returns the number of iterations executed for points outside the set:
 
 ```python
 def mandelbrot(x, y, max_iterations=500):
-    z = x + y*1j
+    z = x + y * 1j
     p = 2
     c = z
     for iteration_number in range(max_iterations):
