@@ -1,8 +1,8 @@
-# Asyncio Web Scraping
+# Web Scraping with asyncio
 
 Web scraping is the process of extracting useful data from websites, and it becomes especially challenging and time-consuming when dealing with hundreds or thousands of pages. Traditional synchronous scraping processes one page at a time, and is slow. asyncio allows us to take advantage of asynchronous I/O to scrape multiple pages concurrently, significantly speeding up the process but it is limited to a single core.
 
-Modern computers often have multiple cores, but asyncio ony takes advantage of a single core. However, with free-threaded Python, we can run multiple asyncio workers in threads to take advantage of all available cores.
+Modern computers often have multiple cores, but asyncio only takes advantage of a single core. However, with free-threaded Python, we can run multiple asyncio workers in threads to take advantage of all available cores.
 
 This example demonstrates how to use free-threaded Python to run multiple asyncio workers in parallel, allowing us to scrape multiple pages concurrently across multiple cores.
 
