@@ -101,7 +101,7 @@ def main(multithreaded: bool) -> None:
     start_time = perf_counter()
     if multithreaded:
         print("Using multithreading for fetching stories...")
-        workers: int = 8 # no of CPU cores to use
+        workers: int = 8  # no of CPU cores to use
         with ThreadPoolExecutor(max_workers=workers) as executor:
             for _ in range(workers):
                 executor.submit(lambda: asyncio.run(worker(queue, all_stories)))
@@ -109,7 +109,9 @@ def main(multithreaded: bool) -> None:
         print("Using single thread for fetching stories...")
         asyncio.run(worker(queue, all_stories))
     end_time = perf_counter()
-    print(f"Scraping speed: {len(all_stories) / (end_time - start_time):.0f} stories/sec")
+    print(
+        f"Scraping speed: {len(all_stories) / (end_time - start_time):.0f} stories/sec"
+    )
 
 
 if __name__ == "__main__":
@@ -122,7 +124,6 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     main(args.multithreaded)
-
 ```
 
 To the program with single thread, run:
@@ -145,12 +146,11 @@ python -X gil=0 scraper.py --multithreaded
 
 Performance results on 12 core CPU:
 
-| Configuration                | Stories/sec |
-| ---------------------------- | ----------- |
-| default build, single thread | 12        |
-| default build, multithreaded | 35        |
-| free-threaded build, multithreaded | 80       |
-
+| Configuration                      | Stories/sec |
+| ---------------------------------- | ----------- |
+| default build, single thread       | 12          |
+| default build, multithreaded       | 35          |
+| free-threaded build, multithreaded | 80          |
 
 The default build performs better with multiple threads than better than single-threaded, because Python
 releases the GIL during I/O operations, allowing other threads to run while waiting for network responses. This leads to some paralelism, but it is limited by the GIL.
