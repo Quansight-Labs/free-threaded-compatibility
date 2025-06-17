@@ -153,6 +153,6 @@ Performance results on 12 core CPU:
 | free-threaded build, multithreaded | 80          |
 
 The default build performs better with multiple threads than better than single-threaded, because Python
-releases the GIL during I/O operations, allowing other threads to run while waiting for network responses. This leads to some paralelism, but it is limited by the GIL.
+releases the GIL during I/O operations, allowing other threads to run while waiting for network responses. This leads to some parallelism, but it is limited by the GIL.
 
 The free-threaded build, however, allows for true parallelism across multiple cores, significantly increasing the scraping speed. This demonstrates how free-threaded Python can be used to efficiently scrape large amounts of data from the web by leveraging multiple cores.
