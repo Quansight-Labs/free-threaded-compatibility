@@ -6,4 +6,4 @@ scale well on the GIL-enabled build due to lock contention.
 
 - [Mandelbrot Set Visualization](mandelbrot.md)
 - [Monte Carlo Simulation](monte-carlo.md)
-- [Asyncio benchmark](asyncio.md)
+- [Web Scraping with asyncio](asyncio.md)

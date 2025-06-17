@@ -1,24 +1,3 @@
-# Asyncio Web Scraping
-
-Web scraping is the process of extracting useful data from websites, and it becomes especially challenging and time-consuming when dealing with hundreds or thousands of pages. Traditional synchronous scraping processes one page at a time, and is slow. asyncio allows us to take advantage of asynchronous I/O to scrape multiple pages concurrently, significantly speeding up the process but it is limited to a single core.
-
-Modern computers often have multiple cores, but asyncio ony takes advantage of a single core. However, with free-threaded Python, we can run multiple asyncio workers in threads to take advantage of all available cores.
-
-This example demonstrates how to use free-threaded Python to run multiple asyncio workers in parallel, allowing us to scrape multiple pages concurrently across multiple cores.
-
-It uses `aiohttp` for asynchronous HTTP requests and `bs4` for parsing HTML. The script scrapes Hacker News stories and their comments, demonstrating how to efficiently scrape a large number of pages using asyncio and free-threaded Python.
-
-Install the required packages with:
-
-```bash
-pip install aiohttp beautifulsoup4
-```
-
-Code:
-
-```python
-# scraper.py
-
 import aiohttp
 import asyncio
 from bs4 import BeautifulSoup
@@ -122,37 +101,3 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     main(args.multithreaded)
-
-```
-
-To the program with single thread, run:
-
-```bash
-python scraper.py
-```
-
-To run the program with multiple threads, use the `--multithreaded` flag:
-
-```bash
-python scraper.py --multithreaded
-```
-
-To run the program with free-threaded Python:
-
-```bash
-python -X gil=0 scraper.py --multithreaded
-```
-
-Performance results on 12 core CPU:
-
-| Configuration                | Stories/sec |
-| ---------------------------- | ----------- |
-| default build, single thread | 12        |
-| default build, multithreaded | 35        |
-| free-threaded build, multithreaded | 80       |
-
-
-The default build performs better with multiple threads than better than single-threaded, because Python
-releases the GIL during I/O operations, allowing other threads to run while waiting for network responses. This leads to some paralelism, but it is limited by the GIL.
-
-The free-threaded build, however, allows for true parallelism across multiple cores, significantly increasing the scraping speed. This demonstrates how free-threaded Python can be used to efficiently scrape large amounts of data from the web by leveraging multiple cores.
