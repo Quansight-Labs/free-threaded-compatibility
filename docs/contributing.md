@@ -15,9 +15,8 @@ repository. Ways to contribute include:
 
 - Improvements to the documentation, from new content to copy-editing for clarity.
 - Updates to the [status tracker](https://py-free-threading.github.io/tracking/).
-- Adding links to relevant examples, blog posts and other content.
-- For particularly exciting use cases or benchmarks, including them directly
-    into the site instead of only linking out to them.
+- Add links to relevant examples, blog posts and other content.
+- Create example use cases or benchmarks and add them to the [listing of examples](examples/index.md).
 
 ## Contributing to the adoption of free-threading
 
