@@ -15,18 +15,20 @@ multiple processes also works well.
 
 ## Run the example
 
-1. To get a copy of the program, clone the following GitHub repository:
+1. To get a copy of the program, clone the following GitHub repository: https://github.com/nascheme/michi.git
 
-https://github.com/nascheme/michi.git
+1. To run the program using multiple threads and with the GIL, use the following
+    command line:
 
-2. To run the program using multiple threads and with the GIL, use the following
-command line:
+    ```
+    uv run --python=3.14 python michi.py --force-threads tsbenchmark
+    ```
 
-uv run --python=3.14 python michi.py --force-threads tsbenchmark
+1. To run with free-threaded Python, run the following command:
 
-3. To run with free-threaded Python, run the following command:
-
-uv run --python=3.14t python michi.py --force-threads tsbenchmark
+    ```
+    uv run --python=3.14t python michi.py --force-threads tsbenchmark
+    ```
 
 ## Understanding the results
 
@@ -73,4 +75,9 @@ generator state.
   +            worker_pool = Pool(processes=n_workers)
 ```
 
-This example demonstrates that if your problem involves a significant amount of CPU-bound calculation, Python's GIL renders multi-threading an ineffective solution. With free-threaded Python, performance when using multiple threads is comparable to a multi-process solution. In summary, if data sharing between multiple processes is not practical or efficient, free-threaded Python could be an excellent tool for unlocking the performance of multi-core CPUs.
+This example demonstrates that if your problem involves a significant amount of
+CPU-bound calculation, Python's GIL renders multi-threading an ineffective
+solution. With free-threaded Python, performance when using multiple threads is
+comparable to a multi-process solution. In summary, if data sharing between
+multiple processes is not practical or efficient, free-threaded Python could be
+an excellent tool for unlocking the performance of multi-core CPUs.

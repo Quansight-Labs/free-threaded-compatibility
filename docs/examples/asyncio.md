@@ -16,7 +16,7 @@ It uses `aiohttp` for asynchronous HTTP requests and `bs4` for parsing HTML. The
 pip install aiohttp beautifulsoup4
 ```
 
-2. Create the script file:
+1. Create the script file:
 
 ```python
 # scraper.py
@@ -128,19 +128,20 @@ if __name__ == "__main__":
     main(args.multithreaded)
 ```
 
-3. Run the script with single thread:
+1. Run the script with single thread:
+    v
 
 ```bash
 python scraper.py
 ```
 
-4. Run the script with multiple threads by using the `--multithreaded` flag:
+1. Run the script with multiple threads by using the `--multithreaded` flag:
 
 ```bash
 python scraper.py --multithreaded
 ```
 
-5. Run the script using free-threaded Python with multiple threads::
+1. Run the script using free-threaded Python with multiple threads:
 
 ```bash
 python -X gil=0 scraper.py --multithreaded
