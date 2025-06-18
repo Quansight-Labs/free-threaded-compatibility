@@ -4,15 +4,7 @@ description: The free-threading guide is a centralized collection of documentati
 
 # Python Free-Threading Guide
 
-Free-threaded CPython is coming! :material-language-python: :thread:
-
-## Status
-
-After the [acceptance by the Python Steering Council](https://discuss.python.org/t/a-steering-council-notice-about-pep-703-making-the-global-interpreter-lock-optional-in-cpython/30474) of
-[PEP 703 - Making the Global Interpreter Lock Optional in CPython](https://peps.python.org/pep-0703/), work is happening for the [gradual rollout strategy](https://discuss.python.org/t/pep-703-making-the-global-interpreter-lock-optional-in-cpython-acceptance/37075) in CPython.
-In parallel, efforts to support free-threading are underway across the Python ecosystem, including packages, third-party libraries, tooling, and education.
-
-Lysandros Nikolaou and Nathan Goldbaum presented a talk at PyCon 2025 based on content covered by this guide. You can see a recording of the talk [on YouTube](https://youtu.be/EuU3ksI1l04).
+Free-threaded CPython is here! :material-language-python: :thread:
 
 ## Purpose of this site
 
@@ -28,6 +20,26 @@ that include native code here:
 It offers **documentation and guidance** for setting up a
 free-threaded Python development environment and getting code working under the
 free-threaded build.
+
+Lysandros Nikolaou and Nathan Goldbaum presented a talk at PyCon 2025 based on
+content covered by this guide. You can see a recording of the talk [on
+YouTube](https://youtu.be/EuU3ksI1l04).
+
+## Status of Free-Threaded Python
+
+After the [acceptance by the Python Steering
+Council](https://discuss.python.org/t/a-steering-council-notice-about-pep-703-making-the-global-interpreter-lock-optional-in-cpython/30474)
+of [PEP 703 - Making the Global Interpreter Lock Optional in
+CPython](https://peps.python.org/pep-0703/), CPython 3.13 shipped an experimental
+free-threaded build. With [the
+acceptance](https://discuss.python.org/t/pep-779-criteria-for-supported-status-for-free-threaded-python/84319/123)
+of [PEP 779 - Criteria for supported status for free-threaded
+Python](https://peps.python.org/pep-0779/), the free-threaded interpreter is no
+longer considered experimental starting in Python 3.14, although it is not yet the default interpreter build.
+
+Work is underway across the ecosystem to update packages to support
+free-threaded Python alongside improvements to thread safety guarantees,
+testing, and documentation.
 
 ## Install free-threaded Python
 

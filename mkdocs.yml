@@ -24,7 +24,7 @@ theme:
         name: Switch to dark mode
 
 nav:
-  - 'index.md'
+  - Index: 'index.md'
   - 'tracking.md'
   - 'installing-cpython.md'
   - 'running-gil-disabled.md'
