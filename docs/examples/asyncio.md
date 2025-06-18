@@ -1,20 +1,22 @@
 # Web Scraping with asyncio
 
-Web scraping is the process of extracting useful data from websites, and it becomes especially challenging and time-consuming when dealing with hundreds or thousands of pages. Traditional synchronous scraping processes one page at a time, and is slow. asyncio allows us to take advantage of asynchronous I/O to scrape multiple pages concurrently, significantly speeding up the process but it is limited to a single core.
+Web scraping is the process of extracting useful data from websites, and it becomes especially challenging and time-consuming when dealing with hundreds or thousands of pages. The traditional synchronous approach scrapes only one page at a time and is slow. With asyncio, we can leverage asynchronous I/O to scrape multiple pages concurrently, which significantly speeds up the process; however, asyncio can only utilize a single CPU core.
 
-Modern computers often have multiple cores, but asyncio only takes advantage of a single core. However, with free-threaded Python, we can run multiple asyncio workers in threads to take advantage of all available cores.
+Modern computers have multiple CPU cores; yet, asyncio only takes advantage of a single core. However, with free-threaded Python, we can run multiple asyncio workers in threads to utilize all available cores.
 
-This example demonstrates how to use free-threaded Python to run multiple asyncio workers in parallel, allowing us to scrape multiple pages concurrently across multiple cores.
+## Web scraping example with free-threaded Python
 
-It uses `aiohttp` for asynchronous HTTP requests and `bs4` for parsing HTML. The script scrapes Hacker News stories and their comments, demonstrating how to efficiently scrape a large number of pages using asyncio and free-threaded Python.
+This example demonstrates how to use free-threaded Python to run multiple asyncio workers in parallel, allowing us to scrape numerous pages concurrently across multiple cores.
 
-Install the required packages with:
+It uses `aiohttp` for asynchronous HTTP requests and `bs4` for parsing HTML. The example script scrapes Hacker News stories and their comments, demonstrating how to efficiently scrape a large number of pages using asyncio and free-threaded Python.
+
+1. Install the required packages with:
 
 ```bash
 pip install aiohttp beautifulsoup4
 ```
 
-Code:
+2. Create the script file:
 
 ```python
 # scraper.py
@@ -126,25 +128,28 @@ if __name__ == "__main__":
     main(args.multithreaded)
 ```
 
-To the program with single thread, run:
+3. Run the script with single thread:
 
 ```bash
 python scraper.py
 ```
 
-To run the program with multiple threads, use the `--multithreaded` flag:
+4. Run the script with multiple threads by using the `--multithreaded` flag:
 
 ```bash
 python scraper.py --multithreaded
 ```
 
-To run the program with free-threaded Python:
+5. Run the script using free-threaded Python with multiple threads::
 
 ```bash
 python -X gil=0 scraper.py --multithreaded
 ```
 
-Performance results on 12 core CPU:
+## Example results and explanation
+
+Compare the performance results of each script run
+using a 12-core CPU:
 
 | Configuration                      | Stories/sec |
 | ---------------------------------- | ----------- |
@@ -152,7 +157,7 @@ Performance results on 12 core CPU:
 | default build, multithreaded       | 35          |
 | free-threaded build, multithreaded | 80          |
 
-The default build performs better with multiple threads than better than single-threaded, because Python
-releases the GIL during I/O operations, allowing other threads to run while waiting for network responses. This leads to some parallelism, but it is limited by the GIL.
+The default build performs better with multiple threads than with a single thread, because Python
+releases the GIL during I/O operations. This allows other threads to run while a thread is waiting for network responses. This leads to some parallelism, but it is limited by the Global Interpreter Lock (GIL).
 
-The free-threaded build, however, allows for true parallelism across multiple cores, significantly increasing the scraping speed. This demonstrates how free-threaded Python can be used to efficiently scrape large amounts of data from the web by leveraging multiple cores.
+The free-threaded build enables true parallelism across multiple cores, significantly increasing scraping speed. This example demonstrates how free-threaded Python can be used to efficiently scrape large amounts of data from the web by leveraging multiple CPU cores.

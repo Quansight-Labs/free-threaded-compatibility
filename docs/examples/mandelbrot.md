@@ -14,7 +14,7 @@ or not a point in the complex plane is in the mandelbrot set is a function only
 of the point's coordinates, so visualizing the set is very amenable to parallel
 speedups by breaking up the work into chunks of pixels.
 
-Algorithms to visualize the set range in complexity and sophistication. Here is
+Different algorithms for set visualization range in complexity and sophistication. Here is
 a very basic version that calculates whether a given complex number, `z = x + y*1j`, is in the mandelbrot set. The function returns 0 for points inside the
 set and returns the number of iterations executed for points outside the set:
 
@@ -51,7 +51,7 @@ for i, x in enumerate(x_domain):
 This sort of ["map-reduce"](https://en.wikipedia.org/wiki/MapReduce) workflow,
 where a problem reduces to looping over a batch of calculations, is particularly
 amenable to parallel computation. On free-threaded Python, we can transform the
-simple single-threaded for loop above into a multithreaded parallel loop by
+simple single-threaded `for` loop above into a multithreaded parallel loop by
 making use of a worker function that processes a chunk of pixels:
 
 ```python
@@ -61,7 +61,7 @@ def worker(j_y):
             iteration_array[j, i] = mandelbrot(x, y)
 ```
 
-This function can be called by a `concurrent.futures.ThreadPoolExecutor` and
+The `worker` function can be called by a `concurrent.futures.ThreadPoolExecutor` and
 operate on a chunk of columns in the image:
 
 ```python
