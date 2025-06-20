@@ -11,7 +11,7 @@ other libraries and aren't covered here.
 ## Cython compilation errors: `unknown type name '__pyx_vectorcallfunc'`
 
 This happens if you try to build a Cython extension for the free-threaded build
-using a release of Cython that does not support it (\<3.1.0). This might happen
+using a release of Cython that does not support it (< 3.1.0). This might happen
 if a package pins an older version of Cython. You should check the build
 dependencies of the package and try relaxing any Cython pin or otherwise
 establish why the latest Cython release is not being installed at build time.
