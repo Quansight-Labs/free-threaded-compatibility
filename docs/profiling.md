@@ -39,9 +39,9 @@ graph](https://profiler.firefox.com/docs/#/./guide-ui-tour-panels?id=the-flame-g
 and [stack
 chart](https://profiler.firefox.com/docs/#/./guide-ui-tour-panels?id=the-stack-chart)
 panels. The former allows identifying calls that are particularly expensive
-while the latter allows visualization how the call stack changes with time.
+while the latter allows visualization of how the call stack changes with time.
 
-See [the documentation](https://profiler.firefox.com/docs/#/) for more details
+See [the Firefox profiler documentation](https://profiler.firefox.com/docs/#/) for more details
 about how to use the interface.
 
 Note that by default, you will only see information about native
@@ -74,7 +74,7 @@ sharing profiling information over the internet is as easy as clicking a button
 in the UI.
 
 By default, samply runs the firefox profiler locally and does not share data it
-collects. You can optionally clock the upload button in the top-right corner of
+collects. You can optionally click the upload button in the top-right corner of
 the profiler interface to upload the profile data and generate a permalink. This
 uploads the data to profiler.firefox.com and others can view the exact same
 profiler interface as the one you see locally. This can be a powerful tool to
