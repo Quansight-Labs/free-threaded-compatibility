@@ -38,9 +38,10 @@ nav:
     - 'porting-extensions.md'
     - 'dependencies.md'
     - 'ci.md'
-  - Multithreaded Testing and Debugging:
+  - Testing, Debugging, and Profiling:
       - 'testing.md'
       - 'debugging.md'
+      - 'profiling.md'
   - 'faq.md'
   - 'resources.md'
   - 'contributing.md'
