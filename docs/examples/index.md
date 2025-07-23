@@ -7,6 +7,10 @@ scale well due to lock contention.
 - [Mandelbrot Set Visualization](mandelbrot.md)
 - [Monte Carlo Simulation](monte-carlo.md)
 - [Web Scraping with asyncio](asyncio.md)
+
+External examples:
+
+- [Improved Data Loading with Threads](https://developer.nvidia.com/blog/improved-data-loading-with-threads/)
 - [Using `AtomicDict.reduce()` for Multithreaded Aggregation](https://dpdani.github.io/cereggii/examples/AtomicDict/reduce/)
 
 We'd love to have more examples! See [the contribution guide](../contributing.md)
