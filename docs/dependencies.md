@@ -2,26 +2,30 @@
 
 ## Build dependencies that don't support free-threading
 
-### CFFI fork with support for free-threading
+### CFFI does not yet support the free-threaded Python build
 
-If your library depends on [CFFI](https://github.com/python-cffi/cffi), there's
-some additional work you need to do before you can ship support for the free-threaded
-build, since CFFI does not support it yet. Its maintainers [have argued for a
-fork themselves](https://github.com/python-cffi/cffi/pull/143#issuecomment-2580781899),
-so that free-threading support can be implemented and tested independently
-from the upstream package.
-
-There's [a fork under the Quansight-Labs org](https://github.com/Quansight-Labs/cffi-ft)
-available, where free-threading support is currently being worked on. If you want to
-use this version of CFFI within your own library, you can install it in the
-following manner:
+There is [an open pull request](https://github.com/python-cffi/cffi/pull/178)
+adding support for the free-threaded build to CFFI. You can install CFFI from
+the pull request branch like this:
 
 ```bash
-python -m pip install git+https://github.com/Quansight-Labs/cffi-ft.git
+python -m pip install git+https://github.com/ngoldbaum/cffi-ft.git@upstream-pr
 ```
 
-Keep in mind that support for free-threading in this fork of CFFI is still very
-experimental.
+Additionally, you can declare a build-time dependency on the pull request branch
+using the following `pyproject.toml` snippet:
+
+```toml
+[build-system]
+requires = [
+  "cffi @ git+https://github.com/ngoldbaum/cffi-ft@upstream-pr",
+]
+
+[project]
+dependencies = [
+  "cffi @ git+https://github.com/ngoldbaum/cffi-ft@upstream-pr",
+]
+```
 
 ## Runtime dependencies that don't support free-threading
 
