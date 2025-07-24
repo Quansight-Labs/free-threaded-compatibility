@@ -9,7 +9,7 @@ adding support for the free-threaded build to CFFI. You can install CFFI from
 the pull request branch like this:
 
 ```bash
-python -m pip install git+https://github.com/ngoldbaum/cffi-ft.git@upstream-pr
+python -m pip install git+https://github.com/ngoldbaum/cffi-ft.git@cffi-ft
 ```
 
 Additionally, you can declare a build-time dependency on the pull request branch
@@ -18,12 +18,12 @@ using the following `pyproject.toml` snippet:
 ```toml
 [build-system]
 requires = [
-  "cffi @ git+https://github.com/ngoldbaum/cffi-ft@upstream-pr",
+  "cffi @ git+https://github.com/ngoldbaum/cffi-ft@cffi-ft",
 ]
 
 [project]
 dependencies = [
-  "cffi @ git+https://github.com/ngoldbaum/cffi-ft@upstream-pr",
+  "cffi @ git+https://github.com/ngoldbaum/cffi-ft@cffi-ft",
 ]
 ```
 
