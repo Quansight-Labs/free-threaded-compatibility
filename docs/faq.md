@@ -42,24 +42,24 @@ running free-threaded Python](running-gil-disabled.md) for more details.
 ## `pip install jupyter` fails
 
 This happens because some of the dependencies of the `jupyter` project on PyPI
-do not yet support the free-threaded build. In particular, `argon2-cffi` uses a
-C extension provided by the `argon2-cffi-bindings` project, which in turn uses
-CFFI to generate bindings for the `argon2` C password hashing library.
+do not yet support the free-threaded build. You might see this if you do not
+have a compilation environment set up, since dependencies like `PyYAML` do not
+ship free-threaded binaries and require from-source compilation.
 
-Because CFFI does not yet ship a stable release that supports the free-threaded
-build, even if you have a compiler environment properly set up, the
-`argon2-cffi-bindings` build will fail.
+You also might see errors related to [CFFI] on free-threaded Python 3.13. This
+happens because one of Jupyter's dependencies, `argon2-cffi-bindings` uses CFFI
+to build a C extension. CFFI 2.0 added support for the free-threaded build, but
+only on Python 3.14 and newer. That means that `argon2-cffi-bindings` will never
+successfully build on Python 3.13 without some hacking to disable the extension
+or force CFFI to build.
 
-For now, we do not recommend trying to install jupyterlab into an environment
-managed by a free-threaded Python interpreter. Instead, we suggest installing a
-free-threaded Python kernel into a jupyterlab installation managed by a
-GIL-enabled python interpreter. See [our instructions](installing-cpython.md#installing-a-free-threaded-jupyter-kernel)
-for installing a free-threaded Jupyter kernel for more details.
-
-That said, it *is* possible to install `jupyter` into a free-threaded Python
-environment and launch jupyterlab, [see this
-issue](https://github.com/jupyterlab/jupyterlab/issues/16915#issuecomment-2810114545)
-for more details.
+For that reason, if you need to use Python 3.13 and Jupyter, we suggest
+installing a Jupyter kernel for the free-threaded build into a Jupyter
+installation that is installed using a GIL-enabled interpreter. See [the
+installation section of this
+guide](installing-cpython.md#installing-a-free-threaded-jupyter-kernel) for
+instructions to create a new python 3.13t kernel for use in any Jupyter
+installation.
 
 ## What does "Py_LIMITED_API is currently incompatible with Py_GIL_DISABLED" mean?
 

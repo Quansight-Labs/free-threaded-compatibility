@@ -749,7 +749,5 @@ for compiling with the limited API.
 
 # Dependencies that don't support free-threading
 
-If one of your build or runtime dependencies do not support free-threading,
-(e.g. CFFI currently doesn't), you might be able to switch to a fork. Find
-more details in [our guidance for handling dependencies that don't support
+See [our guidance for handling dependencies that don't support
 free-threading](dependencies.md).
