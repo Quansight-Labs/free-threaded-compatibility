@@ -54,7 +54,7 @@ successfully build on Python 3.13 without some hacking to disable the extension
 or force CFFI to build.
 
 For that reason, if you need to use Python 3.13 and Jupyter, we suggest
-installing a jupyter kernel for the free-threaded build into a Jupyter
+installing a Jupyter kernel for the free-threaded build into a Jupyter
 installation that is installed using a GIL-enabled interpreter. See [the
 installation section of this
 guide](installing-cpython.md#installing-a-free-threaded-jupyter-kernel) for
