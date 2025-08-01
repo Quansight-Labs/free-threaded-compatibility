@@ -4,7 +4,7 @@
 
 ### CFFI support for the free-threaded Python build
 
-CFFI added support for the free-threaded build of Python 3.14 in version 
+CFFI added support for the free-threaded build of Python 3.14 in version
 2.0.0b1. You can install it by passing a version constraint to pip:
 
 ```bash
