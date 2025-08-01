@@ -4,8 +4,8 @@
 
 ### CFFI support for the free-threaded Python build
 
-CFFI added support for the free-threaded build in version 2.0.0b1. You
-can install it by passing a version constraint to pip:
+CFFI added support for the free-threaded build of Python 3.14 in version 
+2.0.0b1. You can install it by passing a version constraint to pip:
 
 ```bash
 python -m pip install cffi>=2.0.0b1
@@ -37,6 +37,8 @@ requires = [
 
 You can declare a runtime dependency in the `project.dependencies` section using
 the same syntax.
+
+CFFI does not support the free-threaded build of Python 3.13.
 
 ### mypyc
 
