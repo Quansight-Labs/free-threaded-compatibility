@@ -5,7 +5,7 @@
 ### CFFI support for the free-threaded Python build
 
 CFFI added support for the free-threaded build in version 2.0.0b1. You
-can install it by passing it a version constraint to pip:
+can install it by passing a version constraint to pip:
 
 ```bash
 python -m pip install cffi>=2.0.0b1
@@ -31,6 +31,7 @@ to specify the constraint is only valid for Python 3.14 and newer:
 [build-system]
 requires = [
   "cffi>=2.0.0b1; python_version >= '3.14'",
+  "cffi; python_version < '3.14'",
 ]
 ```
 
