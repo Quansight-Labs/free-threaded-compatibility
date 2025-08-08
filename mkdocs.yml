@@ -41,6 +41,7 @@ nav:
   - Testing, Debugging, and Profiling:
       - 'testing.md'
       - 'debugging.md'
+      - 'thread_sanitizer.md'
       - 'profiling.md'
   - 'faq.md'
   - 'resources.md'
