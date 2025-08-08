@@ -9,7 +9,7 @@ behavior](https://en.wikipedia.org/wiki/Undefined_behavior).
 Thread Sanitizer specializes in finding data races, a form of undefined behavior
 that are possible in low-level multithreaded code. While Rust has compile-time
 guarantees to prevent most data races, C and C++ do not prevent data races from
-occuring and in practice many C and C++ extensions exhibit data races while
+occurring and in practice many C and C++ extensions exhibit data races while
 adding support for the free-threaded build.
 
 ## Compiling CPython and foundational packages with Thread Sanitizer
@@ -115,11 +115,11 @@ CC=/path/to/clang CXX=/path/to/clang++ python -m pip install -v . --no-build-iso
 While TSan is incredibly useful, it can also be difficult to securely fix all
 races detected by TSan. Some races are also more impactful than others. To avoid
 drowning out new issues with existing issues found under TSan testing, it's
-commont practice to create a [suppressions
+common practice to create a [suppressions
 file](https://github.com/google/sanitizers/wiki/ThreadSanitizerSuppressions) for
 known issues and point TSan at the suppressions when you run it.
 
-Here's an example suppresion file from the TSan docs:
+Here's an example suppression file from the TSan docs:
 
 ```
 race:llvm::RuntimeDyldELF::registerEHFrames
@@ -155,8 +155,8 @@ file might be a good place to start for your own testing, but you should make su
 
 In addition to CPython, we are aware of the following projects that run tests in CI with TSan and use suppressions:
 
-* NumPy ([TSan Suppresions](https://github.com/numpy/numpy/blob/main/tools/ci/tsan_suppressions.txt))
-* CFFI ([TSan Suppressions](https://github.com/python-cffi/cffi/blob/b4bbe7940d3f76027534db1aecbae9b61c35221a/suppressions_free_threading.txt))
+- NumPy ([TSan Suppressions](https://github.com/numpy/numpy/blob/main/tools/ci/tsan_suppressions.txt))
+- CFFI ([TSan Suppressions](https://github.com/python-cffi/cffi/blob/b4bbe7940d3f76027534db1aecbae9b61c35221a/suppressions_free_threading.txt))
 
 If you are aware of other suppression files used for TSan testing of Python
 projects, please add them here.
@@ -183,7 +183,7 @@ TSan testing with some options. We explain how to do that below.
 ### Useful TSan options
 
 - By default, TSan reports warnings. To stop execution on the first TSan report,
-  use:
+    use:
 
 ```bash
 TSAN_OPTIONS=halt_on_error=1 python -m pytest test.py
