@@ -166,6 +166,7 @@ that best describes you:
 
 - [Setting up Continuous Integration](ci.md)
 - [Debugging Thread Safety Issues](debugging.md)
+- [Validating Thread Safety with Thread Sanitizer](thread_sanitizer.md)
 - [Multithreaded Profiling](profiling.md)
 
 ## Further reading
