@@ -230,10 +230,16 @@ CPython installation sources, please visit the
 [Installing a free-threaded Python](installing-cpython.md) page.
 
 
-### Using ThreadSanitizer to detect thread safety issues.
+### Using Thread Sanitizer to detect thread safety issues.
 
-There is a [dedicated page](thread_sanitizer.md) in the guide offering help with
-ThreadSanitizer.
+Once you have your code running on the free-threaded build and have written some
+multithreaded tests, it may make sense to build your project with TSan
+instrumentation to check whether it detects data races when running
+multithreaded code. If you do see reports of races, you should try to understand
+them and add locking or other forms of synchronization to prevent the races from occuring.
+
+There is a [dedicated page](thread_sanitizer.md) in the guide offering help
+using TSan with Python and common Python testing tools.
 
 ### Using AddressSanitizer to detect thread safety issues
 
