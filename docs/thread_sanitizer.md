@@ -149,8 +149,9 @@ Depending on what you are doing, you may see races coming from code outside of y
 There are known races in CPython that are tracked in a suppressions file used
 for TSan testing in the CPython CI. You can see the version of this file in the
 the 3.14 branch of CPython
-[here](https://github.com/python/cpython/blob/3.14/Tools/tsan/suppressions.txt). This
-file might be a good place to start for your own testing, particularly if you see
+[here](https://github.com/python/cpython/blob/3.14/Tools/tsan/suppressions_free_threading.txt). This
+file might be a good place to start for your own testing, particularly if you
+see
 
 In addition to CPython, we are aware of the following projects that run tests in CI with TSan and use suppressions:
 
