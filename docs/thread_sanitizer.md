@@ -148,11 +148,9 @@ Depending on what you are doing, you may see races coming from code outside of y
 
 There are known races in CPython that are tracked in a suppressions file used
 for TSan testing in the CPython CI. You can see the version of this file in the
-3.13 branch of CPython
-[here](https://github.com/python/cpython/blob/3.13/Tools/tsan/suppressions.txt)
-and the 3.14 branch
+the 3.14 branch of CPython
 [here](https://github.com/python/cpython/blob/3.14/Tools/tsan/suppressions.txt). This
-file might be a good place to start for your own testing, but you should make sure the suppressions file you are using corresponds to the versions of CPython you are using.
+file might be a good place to start for your own testing, particularly if you see
 
 In addition to CPython, we are aware of the following projects that run tests in CI with TSan and use suppressions:
 
@@ -201,13 +199,17 @@ this means that you might only see output like `ThreadSanitizer: reported 2 warn
 To ensure that pytest doesn't capture any output from TSan, you can
 pass `-s` (short for `--show-capture`) to your pytest invocation.
 
+You can also set `log_path=/path/to/log_file` in TSAN_OPTIONS, and logs
+fill be written to `/path/to/log_file.pid`, where `pid` is the process ID
+instead of being directed to stderr, which is the default.
+
 Some authors of this guide have observed hangs running pytest with
 `halt_on_error=1`. If you observe hangs, try setting `halt_on_error=0` in
 TSAN_OPTIONS.
 
 The [pytest-xdist](https://github.com/pytest-dev/pytest-xdist) plugin can also
 sometimes be problematic if a test runner happens to crash during
-execution. While `pytest-xdist` does have some support for detecting crashed
+execution. While `pytest-xdist` does have some support for detecting a crashed
 worker, it is not foolproof and the authors of this guide have observed hangs on
 CI due to pytest-xdist not properly handling a worker failing due to a TSan
 error.
