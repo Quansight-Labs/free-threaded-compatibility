@@ -22,8 +22,8 @@ data races.
 
 To ease working with thread sanitizer in projects that use Python, NumPy, and
 SciPy, we have created a set of docker images that contain a pre-built Python
-interpreter and common dependencies with thread sanitizer which can be 
-tricky to build. 
+interpreter and common dependencies with thread sanitizer which can be
+tricky to build.
 
 See [the `cpython_sanity`
 repository](https://github.com/nascheme/cpython_sanity) for more information
