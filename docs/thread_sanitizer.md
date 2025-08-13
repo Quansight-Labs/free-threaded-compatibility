@@ -151,7 +151,7 @@ for TSan testing in the CPython CI. You can see the version of this file in the
 the 3.14 branch of CPython
 [here](https://github.com/python/cpython/blob/3.14/Tools/tsan/suppressions_free_threading.txt). This
 file might be a good place to start for your own testing, particularly if you
-see
+see races inside of CPython that are listed in CPython's suppressions file.
 
 In addition to CPython, we are aware of the following projects that run tests in CI with TSan and use suppressions:
 
