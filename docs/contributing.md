@@ -77,8 +77,8 @@ The standard TODOs for adding free-threading support are:
 
 - [ ] Audit Python bindings and declare them free-threading compatible (xref https://py-free-threading.github.io/porting/#updating-extension-modules).
 - [ ] Run the test suite with `pytest-run-parallel` to find potential issues, and fix them.
-- [ ] Run the test suite under ThreadSanitizer. _If possible, depends on how many dependencies there are and if they run under TSan._
-- [ ] Add `cp313t-*` to CI to build free-threading wheels.
+- [ ] Run the test suite under [Thread Sanitizer](thread_sanitizer.md). _If possible, depends on how many dependencies there are and if they run under TSan._
+- [ ] Add `cp313t-*` and `cp314t-*` to CI to build free-threading wheels.
 
 For more details, please see the
 [suggested plan of attack in the py-free-threading guide](https://py-free-threading.github.io/porting/#suggested-plan-of-attack).
