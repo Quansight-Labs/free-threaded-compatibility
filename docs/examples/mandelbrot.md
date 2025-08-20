@@ -19,7 +19,7 @@ a very basic version that calculates whether a given complex number, `z = x + y*
 set and returns the number of iterations executed for points outside the set:
 
 ```python
-def mandelbrot(x, y, max_iterations=200):
+def mandelbrot(x, y, max_iterations=2000):
     z = x + y * 1j
     p = 2
     c = z
@@ -40,9 +40,8 @@ the array and call the mandelbrot function for each pixel. Let's make use of a
 ```python
 import numpy as np
 
-shape = (1000, 1000)
+iteration_array = np.zeros((400, 400))
 
-iteration_array = np.zeros(shape)
 for i, x in enumerate(x_domain):
     for j, y in enumerate(y_domain):
         iteration_array[j, i] = mandelbrot(x, y)
