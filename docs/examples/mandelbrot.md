@@ -19,7 +19,7 @@ a very basic version that calculates whether a given complex number, `z = x + y*
 set and returns the number of iterations executed for points outside the set:
 
 ```python
-def mandelbrot(x, y, max_iterations=500):
+def mandelbrot(x, y, max_iterations=200):
     z = x + y * 1j
     p = 2
     c = z
@@ -55,7 +55,7 @@ simple single-threaded `for` loop above into a multithreaded parallel loop by
 making use of a worker function that processes a chunk of pixels:
 
 ```python
-def worker(j_y):
+def thread_worker(j_y):
     for i, x in enumerate(x_domain):
         for j, y in j_y:
             iteration_array[j, i] = mandelbrot(x, y)
@@ -78,9 +78,13 @@ def run_thread_pool(num_workers):
 ```
 
 In [the notebook accompanying this page](mandelbrot-threads.ipynb) you can see
-how executing `run_thread_pool` scales well as a function of the number of
-worker threads up to 32 threads, the number of CPU cores available on the test
-machine.
+how executing `run_thread_pool` scales better than an equivalent solution using
+`multiprocessing` via the [`joblib`](https://github.com/joblib/joblib) library.
+Note how the multiprocessing worker needs to allocate and return a result
+array. The main thread also needs to combine the results of the worker threads
+using `np.vstack`. In the multithreading example the worker threads can write
+directly to the final result array, making these extra allocations and copies
+unnecessary.
 
 The parallel throughput of a mandelbrot visualization algorithm is limited by
 how much CPU power can be used to compute whether or not a point is in the
