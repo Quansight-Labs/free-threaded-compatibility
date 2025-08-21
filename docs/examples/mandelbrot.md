@@ -14,8 +14,9 @@ or not a point in the complex plane is in the mandelbrot set is a function only
 of the point's coordinates, so visualizing the set is very amenable to parallel
 speedups by breaking up the work into chunks of pixels.
 
-Different algorithms for set visualization range in complexity and sophistication. Here is
-a very basic version that calculates whether a given complex number, `z = x + y*1j`, is in the mandelbrot set. The function returns 0 for points inside the
+Different algorithms for set visualization range in complexity and sophistication. Here
+is a very basic version that calculates whether a given complex number, `z = x + y*1j`,
+is in the mandelbrot set. The function returns 0 for points inside the
 set and returns the number of iterations executed for points outside the set:
 
 ```python
@@ -26,10 +27,8 @@ def mandelbrot(x, y, max_iterations=2000):
     for iteration_number in range(max_iterations):
         if abs(z) >= 2:
             return iteration_number
-        else:
-            z = z**p + c
-    else:
-        return 0
+        z = z**p + c
+    return 0
 ```
 
 We can create an image of the Mandelbrot set by creating an array of pixels and
@@ -40,7 +39,7 @@ the array and call the mandelbrot function for each pixel. Let's make use of a
 ```python
 import numpy as np
 
-iteration_array = np.zeros((400, 400))
+iteration_array = np.zeros((800, 800))
 
 for i, x in enumerate(x_domain):
     for j, y in enumerate(y_domain):
