@@ -88,3 +88,7 @@ FREETHREADED_BUILD = bool(sysconfig.get_config_var("Py_GIL_DISABLED"))
 
 If you spell it this way, `FREETHREADED_BUILD` will be `False` on the
 GIL-enabled build and `True` for free-threaded builds.
+
+## I'm trying to build a library on Windows, but MSVC says "C atomic support is not enabled"
+
+This happens when a C project uses [atomic operations](porting-extensions.md#lock-free-concurrent-programming-with-atomics) that are part of the C standard library in the C11 and C17 standards. MSVC does not yet fully support C standard library atomics, but it does have experimental support. You can enable it by passing `/experimental:c11atomics` to MSVC as a compiler option. Precisely how to do this will depend on the project. For an example in a project that uses setuptools, see [`coveragepy` pull request number 2020](https://github.com/nedbat/coveragepy/pull/2020/files).
