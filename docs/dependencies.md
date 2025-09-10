@@ -1,25 +1,22 @@
 # Handling dependencies that don’t support free-threading
 
-## Build dependencies that don't support free-threading
+## Build dependencies that may need special consideration
 
-### CFFI support for the free-threaded Python build
+### CFFI
 
 CFFI added support for the free-threaded build of Python 3.14 in version
-2.0.0b1. You can install it by passing a version constraint to pip:
+2.0.0. You can ensure it is installed by passing a version constraint to pip:
 
 ```bash
-python -m pip install cffi>=2.0.0b1
+python -m pip install cffi>=2.0.0
 ```
 
-You can also pass `--pre` to pip but that may also bring in other unwanted
-prereleases for projects with big dependency trees.
-
-If you want to force CFFI 2.0.0b1 to be used, you can use the following `pyproject.toml` snippet:
+If you want to force CFFI 2.0.0 to be used as a dependency of a project, you can use the following `pyproject.toml` snippet:
 
 ```toml
 [build-system]
 requires = [
-  "cffi>=2.0.0b1",
+  "cffi>=2.0.0",
 ]
 ```
 
@@ -30,7 +27,7 @@ to specify the constraint is only valid for Python 3.14 and newer:
 ```toml
 [build-system]
 requires = [
-  "cffi>=2.0.0b1; python_version >= '3.14'",
+  "cffi>=2.0.0; python_version >= '3.14'",
   "cffi; python_version < '3.14'",
 ]
 ```
@@ -42,11 +39,16 @@ CFFI does not support the free-threaded build of Python 3.13.
 
 ### mypyc
 
-The mypyc bindings generator [does not yet support the free-threaded
-build](https://github.com/mypyc/mypyc/issues/1038). Usually mypyc is used with
-projects that can be straightforwardly used in a pure-python mode. We suggest
-using that and waiting for upstream support in mypyc to get a compiled extension
-in the future.
+The mypyc bindings generator [has preliminary support for the free-threaded
+build](https://github.com/mypyc/mypyc/issues/1038#issuecomment-3249330800) in
+the `main` branch of mypyc. If you maintain a package that ships binaries using
+mypyc, you should try building wheels using the development branch of mypyc. The
+maintainers of mypyc encourage users to ship wheels this way and report issues
+if they encounter any.
+
+Usually mypyc is used with projects that can be straightforwardly used in a
+pure-python mode. If there is no compiled build available, we suggest using a
+pure-python build instead.
 
 ### Other bindings generators
 
