@@ -678,7 +678,14 @@ of both GCC and LLVM support C17 atomics. MSVC does not officially support C
 atomics yet, but it is possible to enable experimental support for atomics using
 the `/experimental:c11atomics` compiler flag in recent versions.
 
-For a worked example of how to enable this in a real-world project, see [PR
+We also strongly recommend testing code that makes use of atomics under [Thread
+Sanitizer](thread_sanitizer.md) on more than one CPU architecture, particularly
+CPU architectures that support weak ordering, like ARM CPUs. Certain kinds of
+thread safety issues can only happen on ARM CPUs due to slightly different memory
+semantics. Thread Sanitizer also has runtime options that can help determine
+whether a bug is happening due to incorrect use of atomic operations.
+
+For a worked example of how to enable atomics in a real-world project, see [PR
 #2020](https://github.com/nedbat/coveragepy/pull/2020/files) in the
 `coveragepy` project, which enabled a lock-free boolean using atomic operations.
 
