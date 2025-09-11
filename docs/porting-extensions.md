@@ -661,7 +661,7 @@ like Rust.
 The author of this guide recommends ["Rust Atomics and
 Locks"](https://marabos.nl/atomics/) by Mara Bos as an introduction to lock-free
 concurrent programming. While the book does use examples written in Rust, Rust
-also shares the same memory model used in modern revisions of the the C and C++
+also shares the same memory model used in modern revisions of the C and C++
 standard library. Rust also has a convenient API for working with atomics that
 can be obscured by the more tricky APIs the C and C++ standard libraries
 expose. ["C++ Concurrency in
