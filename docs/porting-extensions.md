@@ -644,6 +644,51 @@ A variant for locking two objects at once is also available. For more informatio
 about `Py_BEGIN_CRITICAL_SECTION`, please see the
 [Python C API documentation on critical sections](https://docs.python.org/3.13/c-api/init.html#python-critical-section-api).
 
+## Lock-free concurrent programming with atomics
+
+While a mutex offers a convenient API that ensures safe access, mutexes are also
+blocking operations that might lead to contention if many threads compete to
+acquire the mutex. Modern CPUs, operating systems, and programming languages
+support a [memory
+model](<https://en.wikipedia.org/wiki/Memory_model_(programming)>) that allows
+programmers to reason about multithreaded access to resources at the hardware
+level. Correctly-written programs can ensure sequentially consistent access and
+mutation for data that is simultaneously accessed by many threads. While the
+possibility of doing such a thing is appealing, it is also technically fraught
+and easy to write incorrect code using atomics, even in a memory-safe language
+like Rust.
+
+The author of this guide recommends ["Rust Atomics and
+Locks"](https://marabos.nl/atomics/) by Mara Bos as an introduction to lock-free
+concurrent programming. While the book does use examples written in Rust, Rust
+also shares the same memory model used in modern revisions of the C and C++
+standard library. Rust also has a convenient API for working with atomics that
+can be obscured by the more tricky APIs the C and C++ standard libraries
+expose. ["C++ Concurrency in
+Action"](http://www.cplusplusconcurrencyinaction.com/) may also be a resource
+for those who are more familiar with C or C++ syntax.
+
+The C++ and Rust standard libraries both have widely-supported built-in support for
+atomics. If your extension is written in C++ or Rust we encourage you to use the
+standard library.
+
+If you are updating an existing C library and would like to use atomic
+operations, then we recommend using C standard library atomics. Recent versions
+of both GCC and LLVM support C17 atomics. MSVC does not officially support C
+atomics yet, but it is possible to enable experimental support for atomics using
+the `/experimental:c11atomics` compiler flag in recent versions.
+
+We also strongly recommend testing code that makes use of atomics under [Thread
+Sanitizer](thread_sanitizer.md) on more than one CPU architecture, particularly
+CPU architectures that support weak ordering, like ARM CPUs. Certain kinds of
+thread safety issues can only happen on ARM CPUs due to slightly different memory
+semantics. Thread Sanitizer also has runtime options that can help determine
+whether a bug is happening due to incorrect use of atomic operations.
+
+For a worked example of how to enable atomics in a real-world project, see [PR
+#2020](https://github.com/nedbat/coveragepy/pull/2020/files) in the
+`coveragepy` project, which enabled a lock-free boolean using atomic operations.
+
 ## Cython thread safety
 
 See [the free-threading
