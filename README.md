@@ -15,3 +15,8 @@ on [py-free-threading.github.io](https://py-free-threading.github.io).
 
 You can find contribution instructions in [the
 documentation](https://py-free-threading.github.io/contributing/).
+
+### License
+
+Content in this repository is dual-licensed under the MIT and O-clause
+BSD license.
