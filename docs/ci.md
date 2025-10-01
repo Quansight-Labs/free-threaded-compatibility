@@ -83,9 +83,11 @@ As above, replace the ellipses with a `cibuildwheel` version.
 You will also likely need to manually pass `-Xgil=0` or set `PYTHON_GIL=0` in
 your shell environment while running tests to ensure the GIL is actually
 disabled during tests, at least until you can register that your extension
-modules support disabling the GIL via `Py_mod_gil` and all of your runtime test
-dependencies do the same. See [the porting guide](porting.md) for more
-information about declaring support for free-threaded python in your extension.
+modules support disabling the GIL via
+[`Py_mod_gil`](https://docs.python.org/3/c-api/module.html#c.Py_mod_gil) and all
+of your runtime test dependencies do the same. See [the porting
+guide](porting.md) for more information about declaring support for
+free-threaded python in your extension.
 
 !!! info
 
@@ -100,3 +102,18 @@ information about declaring support for free-threaded python in your extension.
     dependency's `main` branch from source) if the last release of the
     dependency doesn't cleanly build from source or doesn't work under
     free-threading.
+
+## CI Timeouts
+
+With free-threading deadlocks and hangs are more likely.
+GitHub action and other Continuous Integration systems often also supports timeouts:
+[timeout-minutes](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idtimeout-minutes)
+
+```
+jobs:
+  test_freethreading:
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@...
+      ...
+```

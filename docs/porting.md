@@ -37,8 +37,8 @@ on this topic.
 
 Below, we outline a plan of attack for updating a Python project to support the
 free-threaded build. Since the changes required in native extensions are more
-substantial, we have split off the guide for porting extension modules into
-[a subsequent section](porting-extensions.md).
+substantial, we have split off the guide for [porting extension modules into
+a subsequent section](porting-extensions.md).
 
 ### Define and document thread safety guarantees
 
