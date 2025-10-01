@@ -97,5 +97,4 @@ that are part of the C standard library in the C11 and C17 standards. MSVC does
 not yet fully support C standard library atomics, but it does have experimental
 support. You can enable it by passing `/experimental:c11atomics` to MSVC as a
 compiler option. Precisely how to do this will depend on the project. For an
-example in a project that uses setuptools, see [`coveragepy` PR
-#2020](https://github.com/nedbat/coveragepy/pull/2020/files).
+example in a project that uses setuptools, see [`coveragepy` PR #2020](https://github.com/nedbat/coveragepy/pull/2020/files).
