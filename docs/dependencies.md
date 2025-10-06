@@ -62,6 +62,3 @@ with the free-threaded interpreter.
 
 PyYAML 6.0.3+ support free-threading Python starting with Python 3.14t+.
 It is unnecessary to use PyYAML-ft unless you must support Python 3.13t.
-
-
-

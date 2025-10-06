@@ -3,7 +3,6 @@
 While you may extend the following instruction to also setup CI on 3.13t, we
 recommend focusing on 3.14+.
 
-
 ## CI setup via `setup-python`
 
 The easiest way to get a free-threaded Python build on a CI runner is with the

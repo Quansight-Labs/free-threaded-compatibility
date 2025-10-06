@@ -46,7 +46,7 @@ and installing the free-threaded binaries is also possible:
 
     For that reason, we suggest using the `nuget` installer, which provides a
     separate `python-freethreaded` package that does not share an installation
-    with the `python` package. 
+    with the `python` package.
 
     !!! note:
 
