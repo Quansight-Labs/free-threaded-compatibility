@@ -188,7 +188,7 @@ where the library author intends users to see them. These tests inevintably make
 use of the [`warnings`
 module](https://docs.python.org/3/library/warnings.html). As noted in [the
 documentation for
-`warnings.catch_warnings`](https://docs.python.org/3.13/library/warnings.html#available-context-managers)
+`warnings.catch_warnings`](https://docs.python.org/3/library/warnings.html#available-context-managers)
 on older Python versions, the functionality provided by Python to track warnings
 was inherently thread-unsafe.
 
@@ -203,12 +203,12 @@ to skip any checks for warnings if the interpreter is not configured for
 thread-safe warnings.
 
 See the documentation for the new
-[`context_aware_warnings`](https://docs.python.org/3.14/using/cmdline.html#envvar-PYTHON_CONTEXT_AWARE_WARNINGS)
+[`context_aware_warnings`](https://docs.python.org/3/using/cmdline.html#envvar-PYTHON_CONTEXT_AWARE_WARNINGS)
 and
-[`thread_inherit_context`](https://docs.python.org/3.14/using/cmdline.html#envvar-PYTHON_THREAD_INHERIT_CONTEXT)
+[`thread_inherit_context`](https://docs.python.org/3/using/cmdline.html#envvar-PYTHON_THREAD_INHERIT_CONTEXT)
 Python configuration options as well as the discussion in the ["what's new"
 entry for Python
-3.14](https://docs.python.org/3.14/whatsnew/3.14.html#concurrent-safe-warnings-control).
+3.14](https://docs.python.org/3/whatsnew/3.14.html#concurrent-safe-warnings-control).
 
 #### File system thread safety
 

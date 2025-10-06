@@ -58,8 +58,8 @@ installing a Jupyter kernel for the free-threaded build into a Jupyter
 installation that is installed using a GIL-enabled interpreter. See [the
 installation section of this
 guide](installing-cpython.md#installing-a-free-threaded-jupyter-kernel) for
-instructions to create a new python 3.14t kernel for use in any Jupyter
-installation.
+instructions to create a new python 3.13t kernel for use in any Jupyter
+installation. Alternatively use Python 3.14t.
 
 ## What does "Py_LIMITED_API is currently incompatible with Py_GIL_DISABLED" mean?
 
