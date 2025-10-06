@@ -1,5 +1,9 @@
 # Setting up CI
 
+While you may extend the following instruction to also setup CI on 3.13t, we
+recommend focusing on 3.14+.
+
+
 ## CI setup via `setup-python`
 
 The easiest way to get a free-threaded Python build on a CI runner is with the
@@ -13,7 +17,7 @@ jobs:
       - uses: actions/checkout@...
       - uses: actions/setup-python@...
         with:
-          python-version: 3.13t
+          python-version: 3.14t
 ```
 
 ## CI setup via `setup-uv`
@@ -29,7 +33,7 @@ jobs:
       - uses: actions/checkout@...
       - uses: astral-sh/setup-uv@...
         with:
-          python-version: 3.13t
+          python-version: 3.14t
 ```
 
 You should replace the ellipses with versions for the actions.
@@ -75,7 +79,7 @@ specify the following variables in the environment for the cibuildwheel action:
     uses: pypa/cibuildwheel@...
     env:
       CIBW_ENABLE: cpython-freethreading
-      CIBW_BUILD: cp313t-${{ matrix.buildplat }}
+      CIBW_BUILD: cp314t-${{ matrix.buildplat }}
 ```
 
 As above, replace the ellipses with a `cibuildwheel` version.
@@ -90,11 +94,11 @@ information about declaring support for free-threaded python in your extension.
 !!! info
 
     If a dependency of your package does not support free-threading or has not
-    yet done a release which includes `cp313t` wheels, this can be tricky to
+    yet done a release which includes `cp314t` wheels, this can be tricky to
     work around because an environment marker for free-threading does not exist
     (see [this Discourse thread](https://discuss.python.org/t/environment-marker-for-free-threading/60007)).
     Hence it is not possible to special-case free-threading with static metadata
-    in `pyproject.toml`. It's fine to still upload `cp313t` wheels for your
+    in `pyproject.toml`. It's fine to still upload `cp314t` wheels for your
     package to PyPI; the user may then be responsible for getting the
     dependency installed (e.g., from a nightly wheel or building the
     dependency's `main` branch from source) if the last release of the

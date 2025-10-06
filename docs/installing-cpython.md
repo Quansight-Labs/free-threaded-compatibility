@@ -20,11 +20,11 @@ including the python.org installers, Linux distro installers, and multi-platform
 
 !!! note
 
-    When using these options, please check your `pip` version after the install succeeds. To check the version, run `python3.13t -m pip -V`.
+    When using these options, please check your `pip` version after the install succeeds. To check the version, run `python3.14t -m pip -V`.
 
     You should have a recent `pip` version (`>=24.1`). Upgrade it if
     that isn't the case. Older `pip` versions will select incompatible wheels with the
-    `cp313` tag (binary-incompatible) rather than the `cp313t` tag (compatible).
+    `cp313` tag (binary-incompatible) rather than the `cp314t` tag (compatible).
 
 ??? question "As a packager, what should I name the package and interpreter?"
 
@@ -80,7 +80,7 @@ and installing the free-threaded binaries is also possible:
     If you are running this script without administrator privileges,
     a UAC prompt will trigger when you try to run the installer.
     The resulting Python installation will be available afterwards
-    in `AppData\Local\Programs\Python\Python313\python3.13t.exe`.
+    in `AppData\Local\Programs\Python\Python313\python3.14t.exe`.
     See [Installing Without UI](https://docs.python.org/3.13/using/windows.html#installing-without-ui)
     for more information.
 
@@ -161,7 +161,7 @@ and installing the free-threaded binaries is also possible:
     sudo dnf install python3.13-freethreading
     ```
 
-    This will install the interpreter at `/usr/bin/python3.13t`.
+    This will install the interpreter at `/usr/bin/python3.14t`.
 
 === "Nixpkgs"
 
@@ -227,17 +227,17 @@ and installing the free-threaded binaries is also possible:
     brew install python-freethreading
     ```
 
-    This will install the interpreter at `$(brew --prefix)/bin/python3.13t`.
+    This will install the interpreter at `$(brew --prefix)/bin/python3.14t`.
 
     On macOS, the Python framework built with the free-threading ABI can be found at `$(brew --prefix)/Frameworks/PythonT.framework`.
 
 === "uv"
 
     If you have uv installed, you can create a virtual environment using
-    free-threaded Python by specifying "3.13t" as the python version:
+    free-threaded Python by specifying "3.14t" as the python version:
 
     ```bash
-    uv venv --python 3.13t
+    uv venv --python 3.14t
     ```
 
 ## Build from source
@@ -274,7 +274,7 @@ builds. You can use any of the actively supported images:
 
 Replace `...` with your desired architecture, such as `x86_64` or `aarch64`.
 
-These images have `python3.13t` available, along with other commonly used tools
+These images have `python3.14t` available, along with other commonly used tools
 that can target it like the latest `pip`, `pipx`, and `uv`.
 
 ## Installing a free-threaded Jupyter kernel
@@ -288,11 +288,11 @@ Jupyter with a regular build of Python and a free-threaded Jupyter kernel.
 Install the free-threaded Jupyter kernel to a location that is visible to both Python installations:
 
 ```bash
-python3.13t -m ipykernel install --name python3.13t --user
+python3.14t -m ipykernel install --name python3.14t --user
 ```
 
 You should be able to launch new jupyterlab or jupyter notebook
-sessions using the `python3.13t` kernel to experiment with free-threaded Python.
+sessions using the `python3.14t` kernel to experiment with free-threaded Python.
 
 ### Launch using free-threaded Python and free-threaded Jupyter kernel
 

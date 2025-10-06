@@ -70,7 +70,7 @@ That's why we've created a fork of PyYAML with support for free-threading called
 [PyYAML-ft](https://github.com/Quansight-Labs/pyyaml-ft). PyYAML users can
 switch to this fork if they want to test their code with the free-threaded build.
 
-Currently, PyYAML-ft only supports Python 3.13 and 3.13t (i.e. the free-threaded
+Currently, PyYAML-ft only supports Python 3.13+ and 3.13t+ (i.e. the free-threaded
 build of 3.13). To switch to it, you can add the following to your `requirements.txt`:
 
 ```requirements.txt

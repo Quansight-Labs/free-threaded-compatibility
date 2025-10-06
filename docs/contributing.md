@@ -50,8 +50,10 @@ Python Software Foundation Code of Conduct.
 A good place to start is to check the current status of the package. Are there
 docs on free-threading support? Does the issue tracker for the package have an
 issue about adding free-threading support? If not, is there a relevant PR?
-Typically, searching for "free-threading", "free-threaded", "GIL", "3.13t" and
-"cp313t" will allow you to find the relevant issue or PR if it exists.
+Typically, searching for "free-threading", "free-threaded", "GIL", "3.14t" and
+"cp314t" will allow you to find the relevant issue or PR if it exists.
+
+Note that python 3.13t exists, but we recommend focusing on python 3.14t+ and onward.
 
 If there is no issue yet and you want to contribute support, opening an issue
 is usually a good next step (please check the projects contribution guidelines
@@ -78,7 +80,7 @@ The standard TODOs for adding free-threading support are:
 - [ ] Audit Python bindings and declare them free-threading compatible (xref https://py-free-threading.github.io/porting/#updating-extension-modules).
 - [ ] Run the test suite with `pytest-run-parallel` to find potential issues, and fix them.
 - [ ] Run the test suite under [Thread Sanitizer](thread_sanitizer.md). _If possible, depends on how many dependencies there are and if they run under TSan._
-- [ ] Add `cp313t-*` and `cp314t-*` to CI to build free-threading wheels.
+- [ ] Add `cp314t-*` (and `cp313t-*`) to CI to build free-threading wheels.
 
 For more details, please see the
 [suggested plan of attack in the py-free-threading guide](https://py-free-threading.github.io/porting/#suggested-plan-of-attack).
