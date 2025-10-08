@@ -65,7 +65,7 @@ jobs:
 
 ## Building free-threaded wheels with cibuildwheel
 
-[cibuildwheel](https://cibuildwheel.pypa.io/en/stable/) 3.0+ has support
+[cibuildwheel](https://cibuildwheel.pypa.io/en/stable/) 3.1+ has support
 for building free-threaded wheels on all platforms. If your project releases
 nightly wheels, we suggest configuring `cibuildwheel` to build nightly
 free-threaded wheels.
