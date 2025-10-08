@@ -136,7 +136,7 @@ please open an issue on [this issue tracker](https://github.com/Quansight-Labs/f
 | xxhash               |     [:simple-github:](https://github.com/ifduyue/python-xxhash/issues/101)     | :material-check-bold: |                            |                            |                                                            |                                                                                              |
 | yappi                |         [:simple-github:](https://github.com/sumerc/yappi/issues/179)          |                       |                            |                            |                                                            |                                                                                              |
 | yarl                 |        [:simple-github:](https://github.com/aio-libs/yarl/issues/1455)         | :material-check-bold: |   :material-check-bold:    |           1.20.0           |                                                            |                                                                                              |
-| zstandard            |   [:simple-github:](https://github.com/indygreg/python-zstandard/issues/231)   | :material-check-bold: |                            |           0.25.0           |                                                            |                                                                                              |
+| zstandard[^4]        |   [:simple-github:](https://github.com/indygreg/python-zstandard/issues/231)   | :material-check-bold: |                            |           0.25.0           |                                                            |                                                                                              |
 
 [^1]: Release available in the [Bazel Central Registry](https://registry.bazel.build)
 
@@ -145,3 +145,9 @@ please open an issue on [this issue tracker](https://github.com/Quansight-Labs/f
 [^3]: PyYAML-ft is a fork of [PyYAML](https://github.com/yaml/pyyaml) for Python 3.13t.
     For more details on how to use it, see our [PyYAML-specific section
     on dependencies that don't support free-threading](dependencies.md#depending-on-pyyaml).
+
+[^4]: Python 3.14 includes the new [`compression.zstd`
+    module](https://docs.python.org/3.14/library/compression.zstd.html#module-compression.zstd),
+    backports are available under
+    [backport.zstd](https://pypi.org/project/backports.zstd/) for Python
+    3.9-3.13
