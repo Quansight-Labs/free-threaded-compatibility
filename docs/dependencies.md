@@ -62,3 +62,13 @@ with the free-threaded interpreter.
 
 PyYAML 6.0.3+ support free-threading Python starting with Python 3.14t+.
 It is unnecessary to use PyYAML-ft unless you **must** support Python 3.13t.
+
+### Other Runtime Dependencies
+
+#### Zstandard
+
+Python 3.14 includes the new [`compression.zstd`
+module](https://docs.python.org/3.14/library/compression.zstd.html#module-compression.zstd), backports are available
+under [backport.zstd](https://pypi.org/project/backports.zstd/) for Python 3.9-3.11 and can replace the
+[zstandard](https://pypi.org/project/zstandard/) package.
+>>>>>>> faedd53 (Mention backport.zstd)
