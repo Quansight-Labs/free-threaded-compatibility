@@ -69,5 +69,5 @@ It is unnecessary to use PyYAML-ft unless you **must** support Python 3.13t.
 
 Python 3.14 includes the new [`compression.zstd`
 module](https://docs.python.org/3.14/library/compression.zstd.html#module-compression.zstd), backports are available
-under [backport.zstd](https://pypi.org/project/backports.zstd/) for Python 3.9-3.13 and can replace the
+under [backports.zstd](https://pypi.org/project/backports.zstd/) for Python 3.9-3.13 and can replace the
 [zstandard](https://pypi.org/project/zstandard/) package.
