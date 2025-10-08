@@ -256,7 +256,7 @@ build CPython using [pyenv](https://github.com/pyenv/pyenv). In order to
 do that, you can use the following:
 
 ```bash
-pyenv install --debug --keep 3.14.0
+pyenv install --debug --keep 3.14
 ```
 
 ## Use containers
