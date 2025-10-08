@@ -150,4 +150,4 @@ please open an issue on [this issue tracker](https://github.com/Quansight-Labs/f
     module](https://docs.python.org/3.14/library/compression.zstd.html#module-compression.zstd),
     backports are available under
     [backport.zstd](https://pypi.org/project/backports.zstd/) for Python
-    3.9-3.11
+    3.9-3.13
