@@ -18,14 +18,6 @@ source.
 There are a growing number of options to install a free-threaded interpreter,
 including the python.org installers, Linux distro installers, and multi-platform package managers, like conda.
 
-!!! note
-
-    When using these options, please check your `pip` version after the install succeeds. To check the version, run `python3.13t -m pip -V`.
-
-    You should have a recent `pip` version (`>=24.1`). Upgrade it if
-    that isn't the case. Older `pip` versions will select incompatible wheels with the
-    `cp313` tag (binary-incompatible) rather than the `cp313t` tag (compatible).
-
 ??? question "As a packager, what should I name the package and interpreter?"
 
     Please see [this guidance from the Python Steering Council](https://github.com/python/steering-council/issues/221#issuecomment-1841593283)
@@ -38,8 +30,8 @@ provides macOS and Windows installers that have experimental support.
 Currently, you must customize the install - e.g., for Windows there is a
 _Download free-threaded binaries_ checkbox under "Advanced Options". See also
 the [Using Python on
-Windows](https://docs.python.org/3.13/using/windows.html#installing-free-threaded-binaries)
-section of the Python 3.13 docs.
+Windows](https://docs.python.org/3/using/windows.html#installing-free-threaded-binaries)
+section of the Python 3.13+ docs.
 
 Automating the process of downloading the official installers
 and installing the free-threaded binaries is also possible:
@@ -48,7 +40,7 @@ and installing the free-threaded binaries is also possible:
 
     Due to limitations of the Windows Python.org installer, using free-threaded Python
     installed from the Python.org installer may lead to trouble. In particular, if you
-    install both a free-threaded and gil-enabled build of Python 3.13 using the Python.org
+    install both a free-threaded and gil-enabled build of Python 3.13+ using the Python.org
     installer, both installs will share a `site-packages` folder. This can very quickly
     lead to broken environments if packages for both versions are simultaneously installed.
 
@@ -56,9 +48,14 @@ and installing the free-threaded binaries is also possible:
     separate `python-freethreaded` package that does not share an installation
     with the `python` package.
 
+    !!! note:
+
+        Update the various places in below script to reflect your desired
+        python version.
+
     ```powershell
-    $url = 'https://www.nuget.org/api/v2/package/python-freethreaded/3.13.1'
-    Invoke-WebRequest -Uri $url -OutFile 'python-freethreaded.3.13.1.nupkg'
+    $url = 'https://www.nuget.org/api/v2/package/python-freethreaded/3.14.0'
+    Invoke-WebRequest -Uri $url -OutFile 'python-freethreaded.3.14.0.nupkg'
     Install-Package python-freethreaded -Scope CurrentUser -Source $pwd
     $python_dir = (Get-Item((Get-Package -Name python-freethreaded).Source)).DirectoryName
     $env:path = $python_dir + "\tools;" + $python_dir + "\tools\Scripts;" + $env:Path
@@ -72,23 +69,23 @@ and installing the free-threaded binaries is also possible:
     described above, you can install it like so:
 
     ```powershell
-    $url = 'https://www.python.org/ftp/python/3.13.1/python-3.13.1-amd64.exe'
-    Invoke-WebRequest -Uri $url -OutFile 'python-3.13.1-amd64.exe'
-    .\python-3.13.1-amd64.exe /quiet Include_freethreaded=1
+    $url = 'https://www.python.org/ftp/python/3.14.0/python-3.14.0-amd64.exe'
+    Invoke-WebRequest -Uri $url -OutFile 'python-3.14.0-amd64.exe'
+    .\python-3.14.0-amd64.exe /quiet Include_freethreaded=1
     ```
 
     If you are running this script without administrator privileges,
     a UAC prompt will trigger when you try to run the installer.
     The resulting Python installation will be available afterwards
-    in `AppData\Local\Programs\Python\Python313\python3.13t.exe`.
-    See [Installing Without UI](https://docs.python.org/3.13/using/windows.html#installing-without-ui)
+    in `AppData\Local\Programs\Python\Python314\python3.14t.exe`.
+    See [Installing Without UI](https://docs.python.org/3/using/windows.html#installing-without-ui)
     for more information.
 
 === "macOS"
 
     **Install on a macOS laptop or desktop**
 
-    The official Python documentation's section on [installing free-threaded binaries](https://docs.python.org/3.13/using/mac.html#installing-free-threaded-binaries)
+    The official Python documentation's section on [installing free-threaded binaries](https://docs.python.org/3/using/mac.html#installing-free-threaded-binaries)
     explains installation as well as any limitations of the free-threaded version.
     For convenience, we summarize the installation steps here:
 
@@ -102,18 +99,18 @@ and installing the free-threaded binaries is also possible:
 
     **Advanced installation (CI)**
 
-    This process installs the free-threaded version of Python 3.13.3 using the command line for more complex cases, such as running CI.
+    This process installs the free-threaded version of Python 3.14.0 using the command line for more complex cases, such as running CI.
     It follows a similar process described in the CPython documentation for [installing a binary using the command line](https://docs.python.org/3/using/mac.html#installing-using-the-command-line).
 
-    While this process installs the free-threaded version of Python 3.13.3, you can install other versions by substituting the version number in the following steps.
+    While this process installs the free-threaded version of Python 3.14.0, you can install other versions by substituting the version number in the following steps.
 
     1. Download the installer package from python.org.
 
         ```bash
-        curl -O https://www.python.org/ftp/python/3.13.3/python-3.13.3-macos11.pkg
+        curl -O https://www.python.org/ftp/python/3.14.0/python-3.14.0-macos11.pkg
         ```
 
-    1. Create a `choicechanges.plist` file to customize the install to enable the PythonTFramework-3.13 package and accept the other defaults (install all other packages).
+    1. Create a `choicechanges.plist` file to customize the install to enable the PythonTFramework-3.14 package and accept the other defaults (install all other packages).
 
         ```bash
         cat > ./choicechanges.plist <<EOF
@@ -127,7 +124,7 @@ and installing the free-threaded binaries is also possible:
                         <key>choiceAttribute</key>
                         <string>selected</string>
                         <key>choiceIdentifier</key>
-                        <string>org.python.Python.PythonTFramework-3.13</string>
+                        <string>org.python.Python.PythonTFramework-3.14</string>
                 </dict>
         </array>
         </plist>
@@ -137,7 +134,7 @@ and installing the free-threaded binaries is also possible:
     1. Run the installer.
 
         ```bash
-        sudo installer -pkg ./python-3.13.3-macos11.pkg \
+        sudo installer -pkg ./python-3.14.0-macos11.pkg \
             -applyChoiceChangesXML ./choicechanges.plist \
             -target /
         ```
@@ -145,7 +142,7 @@ and installing the free-threaded binaries is also possible:
     1. Remove the package installer.
 
         ```bash
-        rm -f python-3.13.3-macos11.pkg
+        rm -f python-3.14.0-macos11.pkg
         ```
 
     See also [this Github issue](https://github.com/python/cpython/issues/120098)
@@ -158,38 +155,38 @@ and installing the free-threaded binaries is also possible:
     Fedora ships a packaged version, which you can install with:
 
     ```bash
-    sudo dnf install python3.13-freethreading
+    sudo dnf install python3.14-freethreading
     ```
 
-    This will install the interpreter at `/usr/bin/python3.13t`.
+    This will install the interpreter at `/usr/bin/python3.14t`.
 
 === "Nixpkgs"
 
-    Nixpkgs provides cached builds under the [`python313FreeThreading`](https://search.nixos.org/packages?channel=unstable&show=python313FreeThreading&type=packages)
+    Nixpkgs provides cached builds under the [`python314FreeThreading`](https://search.nixos.org/packages?channel=unstable&show=python314FreeThreading&type=packages)
     attribute from NixOS 24.05 and newer.
 
     With `flakes` enabled the following command will drop you in an ephemeral shell:
 
     ```bash
-    nix shell nixpkgs#python313FreeThreading
+    nix shell nixpkgs#python314FreeThreading
     ```
 
     Without `flakes`, make sure to update your nixpkgs channel first:
 
     ```bash
     sudo nix-channel --update
-    nix-shell -p python313FreeThreading
+    nix-shell -p python314FreeThreading
     ```
 
 === "Ubuntu"
 
     For Ubuntu you can use the [deadsnakes PPA](https://launchpad.net/%7Edeadsnakes/+archive/ubuntu/ppa/+packages)
-    by adding it to your repositories and then installing `python3.13-nogil`:
+    by adding it to your repositories and then installing `python3.14-nogil`:
 
     ```bash
     sudo add-apt-repository ppa:deadsnakes
     sudo apt-get update
-    sudo apt-get install python3.13-nogil
+    sudo apt-get install python3.14-nogil
     ```
 
 ### Multi-platform Package Managers
@@ -214,10 +211,11 @@ and installing the free-threaded binaries is also possible:
     conda-forge:
 
     ```bash
-    conda create -n nogil --override-channels -c ad-testing/label/py313 -c https://repo.anaconda.com/pkgs/main python-freethreading
+    conda create -n nogil --override-channels -c ad-testing/label/py314 -c https://repo.anaconda.com/pkgs/main python-freethreading
     ```
 
-    [Full list of Anaconda test packages built with free-threading ABI.](https://anaconda.org/ad-testing/repo?label=py313_nogil&type=any)
+    \[Full list of Anaconda test packages built with [python 3.13 free-threading ABI](https://anaconda.org/ad-testing/repo?label=py313_nogil&type=any),
+    [with python 3.14 free-threading ABI (empty as of Oct 8th 2025).](https://anaconda.org/ad-testing/repo?label=py314_nogil&type=any)
 
 === "Homebrew"
 
@@ -227,17 +225,17 @@ and installing the free-threaded binaries is also possible:
     brew install python-freethreading
     ```
 
-    This will install the interpreter at `$(brew --prefix)/bin/python3.13t`.
+    This will install the interpreter at `$(brew --prefix)/bin/python3.14t`.
 
     On macOS, the Python framework built with the free-threading ABI can be found at `$(brew --prefix)/Frameworks/PythonT.framework`.
 
 === "uv"
 
     If you have uv installed, you can create a virtual environment using
-    free-threaded Python by specifying "3.13t" as the python version:
+    free-threaded Python by specifying "3.14t" as the python version:
 
     ```bash
-    uv venv --python 3.13t
+    uv venv --python 3.14t
     ```
 
 ## Build from source
@@ -259,7 +257,7 @@ build CPython using [pyenv](https://github.com/pyenv/pyenv). In order to
 do that, you can use the following:
 
 ```bash
-pyenv install --debug --keep 3.13.1
+pyenv install --debug --keep 3.14
 ```
 
 ## Use containers
@@ -274,7 +272,7 @@ builds. You can use any of the actively supported images:
 
 Replace `...` with your desired architecture, such as `x86_64` or `aarch64`.
 
-These images have `python3.13t` available, along with other commonly used tools
+These images have `python3.14t` available, along with other commonly used tools
 that can target it like the latest `pip`, `pipx`, and `uv`.
 
 ## Installing a free-threaded Jupyter kernel
@@ -288,11 +286,11 @@ Jupyter with a regular build of Python and a free-threaded Jupyter kernel.
 Install the free-threaded Jupyter kernel to a location that is visible to both Python installations:
 
 ```bash
-python3.13t -m ipykernel install --name python3.13t --user
+python3.14t -m ipykernel install --name python3.14t --user
 ```
 
 You should be able to launch new jupyterlab or jupyter notebook
-sessions using the `python3.13t` kernel to experiment with free-threaded Python.
+sessions using the `python3.14t` kernel to experiment with free-threaded Python.
 
 ### Launch using free-threaded Python and free-threaded Jupyter kernel
 

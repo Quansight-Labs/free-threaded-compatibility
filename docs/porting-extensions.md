@@ -17,7 +17,7 @@ after importing a module that does not support the GIL.
 === "C API"
 
     C or C++ extension modules using multi-phase initialization can specify the
-    [`Py_mod_gil`](https://docs.python.org/3.13/c-api/module.html#c.Py_mod_gil)
+    [`Py_mod_gil`](https://docs.python.org/3/c-api/module.html#c.Py_mod_gil)
     module slot like this:
 
     ```c
@@ -33,7 +33,7 @@ after importing a module that does not support the GIL.
     The `Py_mod_gil` slot has no effect in the non-free-threaded build.
 
     Extensions that use single-phase initialization need to call
-    [`PyUnstable_Module_SetGIL()`](https://docs.python.org/3.13/c-api/module.html#c.PyUnstable_Module_SetGIL)
+    [`PyUnstable_Module_SetGIL()`](https://docs.python.org/3/c-api/module.html#c.PyUnstable_Module_SetGIL)
     in the module's initialization function:
 
     ```c
@@ -355,7 +355,7 @@ build.
 ### `PyMutex`
 
 For C code or C-like C++ code, the CPython 3.13 C API exposes
-[`PyMutex`](https://docs.python.org/3.13/c-api/init.html#c.PyMutex), a
+[`PyMutex`](https://docs.python.org/3/c-api/init.html#c.PyMutex), a
 high-performance locking primitive that supports static allocation. As of
 CPython 3.13, the mutex requires only one byte for storage, but future versions
 of CPython may change that, so you should not rely on the size of `PyMutex` in
@@ -642,7 +642,7 @@ int do_modification(MyObject *obj) {
 
 A variant for locking two objects at once is also available. For more information
 about `Py_BEGIN_CRITICAL_SECTION`, please see the
-[Python C API documentation on critical sections](https://docs.python.org/3.13/c-api/init.html#python-critical-section-api).
+[Python C API documentation on critical sections](https://docs.python.org/3/c-api/init.html#python-critical-section-api).
 
 ## Lock-free concurrent programming with atomics
 
@@ -761,7 +761,7 @@ unsafe, and maintaining a borrowed reference to an objects that could be exposed
 to another thread is unsafe.
 
 A good starting place to find instances of this would be to look for usages of the
-[unsafe borrowed reference APIs mentioned in the free-threading compatibility docs](https://docs.python.org/3.14/howto/free-threading-extensions.html#borrowed-references).
+[unsafe borrowed reference APIs mentioned in the free-threading compatibility docs](https://docs.python.org/3/howto/free-threading-extensions.html#borrowed-references).
 
 ### Adopt `pythoncapi-compat` to use new C API functions
 

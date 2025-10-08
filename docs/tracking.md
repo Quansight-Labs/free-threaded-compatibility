@@ -104,7 +104,7 @@ please open an issue on [this issue tracker](https://github.com/Quansight-Labs/f
 | PyTorch              |      [:simple-github:](https://github.com/pytorch/pytorch/issues/130249)       | :material-check-bold: |   :material-check-bold:    |           2.6.0            | :simple-linux: :simple-apple: :material-microsoft-windows: |          [:simple-pytorch:](https://pytorch.org/get-started/locally/#start-locally)          |
 | PyWavelets           |                                                                                | :material-check-bold: |   :material-check-bold:    |           1.7.0            | :simple-linux: :simple-apple: :material-microsoft-windows: |    [:simple-anaconda:](https://anaconda.org/scientific-python-nightly-wheels/pywavelets/)    |
 | pywinpty             |        [:simple-github:](https://github.com/andfoy/pywinpty/issues/491)        | :material-check-bold: |   :material-check-bold:    |           2.0.15           |                                                            |                                                                                              |
-| PyYAML               |          [:simple-github:](https://github.com/yaml/pyyaml/issues/856)          |                       |                            |                            |                                                            |                                                                                              |
+| PyYAML               |          [:simple-github:](https://github.com/yaml/pyyaml/issues/856)          |                       |                            |           6.0.3            | :simple-linux: :simple-apple: :material-microsoft-windows: |                                                                                              |
 | PyYAML-ft [^3]       |                                                                                | :material-check-bold: |   :material-check-bold:    |           7.0.0            | :simple-linux: :simple-apple: :material-microsoft-windows: |                                                                                              |
 | PyZMQ                |         [:simple-github:](https://github.com/zeromq/pyzmq/issues/2067)         | :material-check-bold: |   :material-check-bold:    |           27.0.0           |                                                            |                                                                                              |
 | RapidFuzz            |      [:simple-github:](https://github.com/rapidfuzz/RapidFuzz/issues/399)      |                       |                            |                            |                                                            |                                                                                              |
@@ -142,6 +142,6 @@ please open an issue on [this issue tracker](https://github.com/Quansight-Labs/f
 
 [^2]: Rust library released on [crates.io](https://crates.io/crates/pyo3)
 
-[^3]: PyYAML-ft is a fork of [PyYAML](https://github.com/yaml/pyyaml).
+[^3]: PyYAML-ft is a fork of [PyYAML](https://github.com/yaml/pyyaml) for Python 3.13t.
     For more details on how to use it, see our [PyYAML-specific section
-    on dependencies that don't support free-threading](dependencies.md#depending-on-pyyaml-use-pyyaml-ft).
+    on dependencies that don't support free-threading](dependencies.md#depending-on-pyyaml).
