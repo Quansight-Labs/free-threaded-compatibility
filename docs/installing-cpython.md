@@ -214,7 +214,8 @@ and installing the free-threaded binaries is also possible:
     conda create -n nogil --override-channels -c ad-testing/label/py314 -c https://repo.anaconda.com/pkgs/main python-freethreading
     ```
 
-    [Full list of Anaconda test packages built with free-threading ABI.](https://anaconda.org/ad-testing/repo?label=py314_nogil&type=any)
+    [Full list of Anaconda test packages built with [python 3.13 free-threading ABI](https://anaconda.org/ad-testing/repo?label=py313_nogil&type=any),
+    [with python 3.14 free-threading ABI (empty as of Oct 8th 2025).](https://anaconda.org/ad-testing/repo?label=py314_nogil&type=any)
 
 === "Homebrew"
 

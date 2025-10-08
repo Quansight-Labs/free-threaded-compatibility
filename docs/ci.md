@@ -65,7 +65,7 @@ jobs:
 
 ## Building free-threaded wheels with cibuildwheel
 
-[cibuildwheel](https://cibuildwheel.pypa.io/en/stable/) has support
+[cibuildwheel](https://cibuildwheel.pypa.io/en/stable/) 3.0+ has support
 for building free-threaded wheels on all platforms. If your project releases
 nightly wheels, we suggest configuring `cibuildwheel` to build nightly
 free-threaded wheels.
@@ -77,7 +77,8 @@ specify the following variables in the environment for the cibuildwheel action:
   - name: Build wheels
     uses: pypa/cibuildwheel@...
     env:
-      CIBW_ENABLE: cpython-freethreading
+      # enable cpython-freethreading necessary only for 3.13t
+      # CIBW_ENABLE: cpython-freethreading
       CIBW_BUILD: cp314t-${{ matrix.buildplat }}
 ```
 
