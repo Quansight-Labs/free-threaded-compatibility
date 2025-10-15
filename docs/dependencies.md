@@ -60,7 +60,7 @@ with the free-threaded interpreter.
 
 ### Depending on PyYAML
 
-PyYAML 6.0.3+ support free-threading Python starting with Python 3.14t+. If you
+PyYAML 6.0.3+ supports free-threaded Python starting with Python 3.14t+. If you
 **must** support Python 3.13t, you can depend on the [PyYAML-ft fork of
 PyYAML](https://pypi.org/project/PyYAML-ft/).
 
