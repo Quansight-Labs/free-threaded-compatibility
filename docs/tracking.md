@@ -107,7 +107,6 @@ please open an issue on [this issue tracker](https://github.com/Quansight-Labs/f
 | PyWavelets           |                                                                                | :material-check-bold: |   :material-check-bold:    |           1.7.0            | :simple-linux: :simple-apple: :material-microsoft-windows: |    [:simple-anaconda:](https://anaconda.org/scientific-python-nightly-wheels/pywavelets/)    |
 | pywinpty             |        [:simple-github:](https://github.com/andfoy/pywinpty/issues/491)        | :material-check-bold: |   :material-check-bold:    |           2.0.15           |                                                            |                                                                                              |
 | PyYAML               |          [:simple-github:](https://github.com/yaml/pyyaml/issues/856)          |                       |                            |           6.0.3            | :simple-linux: :simple-apple: :material-microsoft-windows: |                                                                                              |
-| PyYAML-ft [^4]       |                                                                                | :material-check-bold: |   :material-check-bold:    |           7.0.0            | :simple-linux: :simple-apple: :material-microsoft-windows: |                                                                                              |
 | PyZMQ                |         [:simple-github:](https://github.com/zeromq/pyzmq/issues/2067)         | :material-check-bold: |   :material-check-bold:    |           27.0.0           |                                                            |                                                                                              |
 | RapidFuzz            |      [:simple-github:](https://github.com/rapidfuzz/RapidFuzz/issues/399)      |                       |                            |                            |                                                            |                                                                                              |
 | rpds-py              |         [:simple-github:](https://github.com/crate-py/rpds/issues/101)         | :material-check-bold: |   :material-check-bold:    |           0.22.3           |                                                            |                                                                                              |
@@ -138,7 +137,7 @@ please open an issue on [this issue tracker](https://github.com/Quansight-Labs/f
 | xxhash               |     [:simple-github:](https://github.com/ifduyue/python-xxhash/issues/101)     | :material-check-bold: |   :material-check-bold:    |           3.6.0            |                                                            |                                                                                              |
 | yappi                |         [:simple-github:](https://github.com/sumerc/yappi/issues/179)          |                       |                            |                            |                                                            |                                                                                              |
 | yarl                 |        [:simple-github:](https://github.com/aio-libs/yarl/issues/1455)         | :material-check-bold: |   :material-check-bold:    |           1.20.0           |                                                            |                                                                                              |
-| zstandard[^5]        |   [:simple-github:](https://github.com/indygreg/python-zstandard/issues/231)   | :material-check-bold: |                            |           0.25.0           |                                                            |                                                                                              |
+| zstandard[^4]        |   [:simple-github:](https://github.com/indygreg/python-zstandard/issues/231)   | :material-check-bold: |                            |           0.25.0           |                                                            |                                                                                              |
 
 [^1]: Release available in the [Bazel Central Registry](https://registry.bazel.build)
 
@@ -146,11 +145,7 @@ please open an issue on [this issue tracker](https://github.com/Quansight-Labs/f
 
 [^3]: Rust library released on [crates.io](https://crates.io/crates/pyo3)
 
-[^4]: PyYAML-ft is a fork of [PyYAML](https://github.com/yaml/pyyaml) for Python 3.13t.
-    For more details on how to use it, see our [PyYAML-specific section
-    on dependencies that don't support free-threading](dependencies.md#depending-on-pyyaml).
-
-[^5]: Python 3.14 includes the new [`compression.zstd`
+[^4]: Python 3.14 includes the new [`compression.zstd`
     module](https://docs.python.org/3.14/library/compression.zstd.html#module-compression.zstd),
     backports are available under
     [backport.zstd](https://pypi.org/project/backports.zstd/) for Python
