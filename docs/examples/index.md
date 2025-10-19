@@ -10,7 +10,8 @@ scale well due to lock contention.
 
 External examples:
 
-- [Improved Data Loading with Threads](https://developer.nvidia.com/blog/improved-data-loading-with-threads/)
+- [Benchmarking a web service on the free-threaded build](https://blog.baro.dev/p/the-future-of-python-web-services-looks-gil-free)
+- [Improved Data Loading on GPUs with Threads](https://developer.nvidia.com/blog/improved-data-loading-with-threads/)
 - [Using `AtomicDict.reduce()` for Multithreaded Aggregation](https://dpdani.github.io/cereggii/examples/AtomicDict/reduce/)
 
 We'd love to have more examples! See [the contribution guide](../contributing.md)
