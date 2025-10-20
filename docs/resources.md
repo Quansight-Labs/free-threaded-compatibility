@@ -24,6 +24,10 @@ try to keep an up-to-date list here:
 
 ## Conference talks
 
+### EuroPython 2025
+
+- ["Parallel programming and Cython" by David Woods](https://youtu.be/7azKz3YP7eA)
+
 ### PyCon 2025
 
 - ["Unraveling Community Support for Free-Threaded Python" by Lysandros Nikoloau and Nathan Goldbaum](https://youtu.be/EuU3ksI1l04)
