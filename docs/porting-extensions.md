@@ -703,6 +703,10 @@ Cython does not automatically ensure any significant level of thread safety, so
 it is up to the author of a Cython extension to add locking or make use of
 critical sections as needed to ensure thread safety.
 
+David Woods gave [a talk](https://youtu.be/7azKz3YP7eA) at EuroPython 2025 about
+parallelism and thread safety in Cython. He gives an excellent overview of how
+to think about thread safety and parallelism in Cython code.
+
 It is normal for an extension to build without modification using Cython 3.1.0
 or newer, but keep in mind that building or running without crashing does not
 imply that code will also be thread-safe and deterministic when used in a
