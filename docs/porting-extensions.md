@@ -685,8 +685,8 @@ thread safety issues can only happen on ARM CPUs due to slightly different memor
 semantics. Thread Sanitizer also has runtime options that can help determine
 whether a bug is happening due to incorrect use of atomic operations.
 
-For a worked example of how to enable atomics in a real-world project, see [PR
-#2020](https://github.com/nedbat/coveragepy/pull/2020/files) in the
+For a worked example of how to enable atomics in a real-world project, see
+[PR 2020](https://github.com/nedbat/coveragepy/pull/2020/files) in the
 `coveragepy` project, which enabled a lock-free boolean using atomic operations.
 
 ## Cython thread safety
