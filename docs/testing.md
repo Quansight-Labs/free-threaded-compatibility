@@ -63,21 +63,6 @@ These plugins are useful for discovering issues related to use of global state,
 but cannot discover issues from multithreaded use of data structures defined by
 your library.
 
-With free-threading and pytest-run-parallel deadlocks and hangs are more likely.
-You can make use of [pytest-timeout](https://pypi.org/project/pytest-timeout/)
-until pytest [supports it
-natively](https://github.com/pytest-dev/pytest/pull/13679). GitHub action and other Continuous Integration systems often also supports timeouts:
-[timeout-minutes](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idtimeout-minutes)
-
-```
-jobs:
-  test_freethreading:
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@...
-      ...
-```
-
 If you would like to create your own testing utilities, the
 [`concurrent.futures.ThreadPoolExecutor`](https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ThreadPoolExecutor)
 class is a lightweight way to create multithreaded tests where many threads
@@ -159,6 +144,44 @@ should be to maximize the chances of triggering a thread safety issue. You could
 pass `outer_iterations` to `run_threaded` to multiply the number of chances a
 thread triggers a thread safety issue in a single test.
 
+## Configure timeouts to avoid hanging tests
+
+With free-threading and pytest-run-parallel deadlocks and hangs are more likely.
+You can make use of [pytest-timeout](https://pypi.org/project/pytest-timeout/)
+to set a timeout in your test job. If the plugin is installed, you can pass
+`--timeout <number of seconds>` as an argument to the `pytest` CLI, causing
+`pytest` to exit after a configurable timeout.
+
+You can also use the built-in
+[`faulthandler_timeout`](https://docs.pytest.org/en/latest/reference/reference.html#confval-faulthandler_timeout)
+and
+[`faulthandler_exit_on_timeout`](https://docs.pytest.org/en/latest/reference/reference.html#confval-faulthandler_exit_on_timeout)
+pytest options. An example pytest `pyproject.toml` configuration might look like:
+
+```toml
+[pytest]
+faulthandler_timeout = 600
+faulthandler_exit_on_timeout = true
+```
+
+This will cause faulthandler to exit the interpreter and dump stack traces for
+all threads if any test lasts longer 10 minutes. Note that
+`faulthandler_exit_on_timeout` is a newly added feature in Pytest 8.5.0, which
+is not yet available on PyPI at time of writing in late 2025.
+
+GitHub actions and other Continuous Integration systems often also [support
+timeouts](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idtimeout-minutes). Here
+is an example using GitHub actions:
+
+```
+jobs:
+  test_freethreading:
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@...
+      ...
+```
+
 ## Fixing thread-unsafe tests
 
 Many existing tests are written using global state. This is not a problem if the
@@ -171,7 +194,7 @@ failures associated with these tests are also inherently flakey. If you see
 tests failing intermittently, you should not discount that you are using global
 state in a test, or even inadvertently using global state in `pytest` itself.
 
-#### `pytest` is not thread-safe
+### `pytest` is not thread-safe
 
 See [the `pytest`
 docs](https://docs.pytest.org/en/stable/explanation/flaky.html#thread-safety)
@@ -196,7 +219,7 @@ Note that the `pytest` maintainers have explicitly ruled out making `pytest`
 thread-safe, please do not open issues asking to fix thread safety issues in
 `pytest` itself.
 
-#### The `warnings` module is not thread-safe before Python 3.14
+### The `warnings` module is not thread-safe before Python 3.14
 
 Many tests carefully ensure that warnings will be seen by the user in cases
 where the library author intends users to see them. These tests inevintably make
@@ -225,7 +248,7 @@ Python configuration options as well as the discussion in the ["what's new"
 entry for Python
 3.14](https://docs.python.org/3/whatsnew/3.14.html#concurrent-safe-warnings-control).
 
-#### File system thread safety
+### File system thread safety
 
 Many tests make use of the file system, either via a temporary file, or by
 simply directly writing to the folder running the test. If the filename used by
