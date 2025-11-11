@@ -70,7 +70,7 @@ frames show up in yellow.
 ## Python stack frames on MacOS (Python 3.15+)
 
 MacOS stack frames requires you to use Python 3.15+, which as of this writing you
-will need to compile yourself. See the documentation of the [dev version of
+will need to [compile yourself](installing-cpython.md/#build-from-source). See the documentation of the [dev version of
 CPython on how to enable perf events on
 MacOX](https://docs.python.org/3.15/howto/perf_profiling.html).
 
