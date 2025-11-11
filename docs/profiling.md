@@ -74,7 +74,6 @@ will need to compile yourself. See the documentation of the [dev version of
 CPython on how to enable perf events on
 MacOX](https://docs.python.org/3.15/howto/perf_profiling.html).
 
-
 ## Uploading profiler data to profiler.firefox.com
 
 The neat thing about using the Firefox profiler as the UI for samply is it means
