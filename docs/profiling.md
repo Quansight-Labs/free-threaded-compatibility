@@ -11,7 +11,7 @@ command-line. For example, to record a trace of the execution of a Python
 script, you could do:
 
 ```bash
-samply record python test.py
+samply record python -X perf test.py
 ```
 
 Note that the `python` here must resolve to a real Python executable.
@@ -66,6 +66,13 @@ samply record python -X perf test.py
 The resulting profile will include annotations with information about the Python
 frames. In the profile browser, Python frames show up in light blue and native
 frames show up in yellow.
+
+## Python stack frames on MacOS (Python 3.15+)
+
+MacOS stack frames requires you to use Python 3.15+, which as of this writing you
+will need to [compile yourself](installing-cpython.md/#build-from-source). See the documentation of the [dev version of
+CPython on how to enable perf events on
+MacOX](https://docs.python.org/3.15/howto/perf_profiling.html).
 
 ## Uploading profiler data to profiler.firefox.com
 
