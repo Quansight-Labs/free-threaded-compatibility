@@ -155,7 +155,7 @@ to set a timeout in your test job. If the plugin is installed, you can pass
 You can also use the built-in
 [`faulthandler_timeout`](https://docs.pytest.org/en/latest/reference/reference.html#confval-faulthandler_timeout)
 and
-[`faulthandler_exit_on_timeout`](https://docs.pytest.org/en/latest/reference/reference.html#confval-faulthandler_exit_on_timeout)
+[`faulthandler_exit_on_timeout`](https://docs.pytest.org/en/stable/reference/reference.html#confval-faulthandler_exit_on_timeout)
 pytest options. An example pytest `pyproject.toml` configuration might look like:
 
 ```toml
@@ -166,8 +166,7 @@ faulthandler_exit_on_timeout = true
 
 This will cause faulthandler to exit the interpreter and dump stack traces for
 all threads if any test lasts longer 10 minutes. Note that
-`faulthandler_exit_on_timeout` is a newly added feature in Pytest 8.5.0, which
-is not yet available on PyPI at time of writing in late 2025.
+`faulthandler_exit_on_timeout` is a newly added feature in Pytest 9.0.0.
 
 GitHub actions and other Continuous Integration systems often also [support
 timeouts](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idtimeout-minutes). Here
