@@ -46,6 +46,7 @@ nav:
   - 'faq.md'
   - 'resources.md'
   - 'contributing.md'
+  - 'docs-meeting.md'
 
 # mkdocs-jupyter doesn't support putting notebooks in nav sections
 # so exclude until that is fixed.
