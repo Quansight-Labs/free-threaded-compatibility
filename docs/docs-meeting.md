@@ -6,7 +6,7 @@ efforts.
 
 ## Meeting Details
 
-**When**: Second Monday of every month at 5:00 PM UTC (1 hour)
+**When**: Second Monday of every month at 4:00 PM UTC (1 hour)
 
 **Where**: [Google Meet](https://meet.google.com/dqw-qkeg-jnh)
 
