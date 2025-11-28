@@ -21,7 +21,7 @@ Everyone is welcome to join! The meeting provides an opportunity to:
 
 Click the button below to add the monthly meeting to your Google Calendar:
 
-<a target="_blank" href="https://calendar.google.com/calendar/event?action=TEMPLATE&amp;tmeid=NzZhcmY5cXF0YnBzcnBjaTFuajg2aGN1c2ZfMjAyNTEyMDhUMTcwMDAwWiBjX2FlN2EzMmJjNDc5YWJjYmJjYmM0ZTkyYjRlZmE1ZDgwZmMwZWQ1NjY3Zjg2NjljMmQ4NDU3ZWIyYjgzYTE0ZjVAZw&amp;tmsrc=c_ae7a32bc479abcbbcbc4e92b4efa5d80fc0ed5667f8669c2d8457eb2b83a14f5%40group.calendar.google.com&amp;scp=ALL"><img border="0" src="https://calendar.google.com/calendar/images/ext/gc_button1_en.gif" alt="Google Calendar"></a>
+<a target="_blank" href="https://calendar.google.com/calendar/event?action=TEMPLATE&amp;tmeid=NzZhcmY5cXF0YnBzcnBjaTFuajg2aGN1c2ZfMjAyNTEyMDhUMTYwMDAwWiBjX2FlN2EzMmJjNDc5YWJjYmJjYmM0ZTkyYjRlZmE1ZDgwZmMwZWQ1NjY3Zjg2NjljMmQ4NDU3ZWIyYjgzYTE0ZjVAZw&amp;tmsrc=c_ae7a32bc479abcbbcbc4e92b4efa5d80fc0ed5667f8669c2d8457eb2b83a14f5%40group.calendar.google.com&amp;scp=ALL"><img border="0" src="https://calendar.google.com/calendar/images/ext/gc_button1_en.gif" alt="Google Calendar"></a>
 
 ## Questions?
 
