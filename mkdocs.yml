@@ -43,6 +43,7 @@ nav:
       - 'debugging.md'
       - 'thread_sanitizer.md'
       - 'profiling.md'
+  - 'documentation-principles.md'
   - 'faq.md'
   - 'resources.md'
   - 'contributing.md'
