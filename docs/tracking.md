@@ -12,6 +12,9 @@ updated tracker](https://hugovk.github.io/free-threaded-wheels/) that pulls in
 information for a wider range of packages, but only tracks whether or not they
 have wheels on PyPI.
 
+If you are using conda-forge, you can track the packages still waiting to be migrated [on the conda forge
+website](https://conda-forge.org/status/migration/?name=python314t).
+
 If there's a bug related to free-threading in a library you use, please open
 an issue on the corresponding issue tracker or post a comment on the
 corresponding free-threading support tracking issue (see table below). If
