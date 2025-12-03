@@ -48,7 +48,7 @@ and installing the free-threaded binaries is also possible:
     separate `python-freethreaded` package that does not share an installation
     with the `python` package.
 
-    !!! note:
+    !!! note
 
         Update the various places in below script to reflect your desired
         python version.
