@@ -15,8 +15,10 @@ Only document features, behaviors, and guarantees that are actually implemented 
 tested. Documentation should reflect the current state, not planned features.
 
 - Don't document future aspirations as parts of the current feature set or design
-- Don't document incomplete work unless it causes crashes or data corruption
-- If partially implemented, clearly state what works and what doesn't
+- Don't document incomplete work unless it causes crashes or data corruption. If
+    something is partially implemented and *needs* to be documented, clearly state
+    what works and what doesn't.
+- Don't document bugs, that's what issue trackers are for.
 - Use issue trackers and PEPs for planned features, not user-facing docs
 
 Good: "Individual operations on `x` are atomic. Sequences of operations require
@@ -67,11 +69,12 @@ to be fully thread-safe; clear distinctions help users understand guarantees.
 
 - Use consistent terminology (see [Terminology](#free-threading-terminology))
 - Document known limitations explicitly
-- Use trove classifiers for package-level support declarations
+- Use [trove classifiers](porting.md#define-and-document-thread-safety-guarantees) for
+    package-level support declarations
 
-Good: "Individual `x` operations are atomic and will not cause crashes. Sequences
+Good: "Individual operations on `x` are atomic and will not cause crashes. Sequences
 of operations may observe inconsistent state without external synchronization.
-Iteration while another thread modifies the `x` may raise RuntimeError."
+Iteration while another thread modifies `x` may raise `RuntimeError`."
 
 Bad: "Thread-safe." (no indication of what this means or limitations)
 
@@ -119,6 +122,10 @@ use safely)
 ## Anti-Patterns to Avoid
 
 ### Vague Statements
+
+Avoid using the term "thread-safe" by itself, because it's vague and does not provide enough
+information for users to understand an API's guarantees. Only use "Thread safety" in section or
+page headers that need to be easily searchable.
 
 Bad: "Most operations are thread-safe."
 
@@ -204,12 +211,12 @@ This section provides definitions of key terms for describing the thread-safety 
 of Python library APIs. Library maintainers should use these terms when documenting how
 their APIs can be used from multiple threads.
 
-### Thread-Safety Guarantee Levels
+### Common thread-safety levels
 
 When documenting your library's APIs, use these numbered levels to describe their
 concurrent access guarantees:
 
-#### 1. Immutable
+#### Immutable
 
 An object whose state cannot be modified after creation. Immutable objects can be safely
 shared across threads without synchronization.
@@ -219,17 +226,17 @@ When to use: For objects that provide no mutating operations.
 Example: "Configuration objects are immutable once created and can be safely shared
 across all threads."
 
-#### 2. Isolated / Thread-Local
+#### Thread-Local
 
 An API where each thread has its own independent instance or state. No cross-thread
 sharing occurs.
 
 When to use: When your library maintains per-thread state.
 
-Example: "Each thread gets its own random number generator state. Operations are
-isolated and require no synchronization."
+Example: "Each thread gets its own random number generator state. State is thread-local
+and operations don't require synchronization."
 
-#### 3. Atomic
+#### Atomic
 
 An operation that completes as a single, indivisible unit from the perspective of other
 threads. No other thread can observe a partial state.
@@ -243,7 +250,7 @@ or new value, never a partial update."
 Note: Atomic operations may still have race conditions when combined with other
 operations. Atomicity only guarantees the operation itself is indivisible.
 
-#### 4. Internally Synchronized
+#### Internally Synchronized
 
 An API that uses internal locking or synchronization mechanisms. Multiple threads can
 call the API concurrently without external coordination.
@@ -253,7 +260,7 @@ When to use: When your library handles all necessary locking internally.
 Example: "The connection pool is internally synchronized. Multiple threads can safely
 call `acquire()` and `release()` concurrently."
 
-#### 5. Linearizable
+#### Linearizable
 
 Operations that appear to execute atomically at some point between their start and
 completion, with results consistent with some sequential order.
@@ -263,7 +270,7 @@ When to use: For operations that provide strong consistency guarantees.
 Example: "Queue operations are linearizable - `get()` returns items in the order
 they were `put()`, even across threads."
 
-#### 6. Externally Synchronized
+#### Externally Synchronized
 
 An API that requires callers to provide their own synchronization (e.g., locks) when
 used from multiple threads concurrently.
@@ -273,7 +280,7 @@ When to use: When thread-safety is the caller's responsibility.
 Example: "The parser requires external synchronization. Protect calls with a lock
 when sharing a parser instance across threads."
 
-#### 7. Reentrant
+#### Reentrant
 
 An API that can safely be called again before a previous invocation has completed,
 including from signal handlers.
