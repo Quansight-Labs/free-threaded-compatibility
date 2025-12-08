@@ -27,8 +27,8 @@ try to keep an up-to-date list here:
 ### PyData Seattle 2025
 
 - ["Unlocking Parallel PyTorch Inference (and More!) with Python Free-Threading" by Trent Nelson](https://www.youtube.com/watch?v=9PFcG9MZ3s8)
-  - Direct link to [deck](https://trent.me/decks/pytorch-and-python-free-threading/#/title-slide)
-  - Based on the article [PyTorch and Python Free-Threading](https://trent.me/articles/pytorch-and-python-free-threading/)
+    - Direct link to [deck](https://trent.me/decks/pytorch-and-python-free-threading/#/title-slide)
+    - Based on the article [PyTorch and Python Free-Threading](https://trent.me/articles/pytorch-and-python-free-threading/)
 
 ### EuroPython 2025
 
