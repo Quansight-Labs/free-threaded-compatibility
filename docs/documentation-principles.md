@@ -34,7 +34,6 @@ comprehensive, and easier to maintain.
 
 - Create dedicated pages for thread safety guarantees (by type, by module)
 - Link to centralized docs from specific API entries when needed
-- Use module-level notes for most Python APIs, not per-function notes
 - For C APIs, use hybrid approach: centralized overview plus inline notes for
     critical APIs
 
@@ -49,7 +48,8 @@ Provide enough detail for users to write correct code without overwhelming them
 with implementation details.
 
 - Focus on guarantees needed to write correct code
-- Link to PEPs and other resources for implementation details
+- Avoid documenting implementation details. If they're needed, separate them
+    from high-level user docs.
 - Use examples to illustrate complex concepts
 - Python APIs: module-level summaries, not per-API notes
 - C APIs: more detail since extension authors need lower-level understanding
@@ -90,17 +90,16 @@ documentation. Consistency helps users build accurate mental models.
 
 Good: All docs for different types follow same structure.
 
-### 6. Document Critical Issues
+### 6. Document Common Pitfalls
 
-Even if something is a bug or incomplete work, document it if it's likely to cause
-serious problems. Users need to know about critical issues to avoid crashes, data
-corruption, or security problems.
+Document scenarios that are likely to cause serious problems. Users need to know about
+critical issues to avoid crashes, data corruption, or security problems.
 
 - Document known issues that cause crashes or data corruption
 - Warn about common pitfalls leading to subtle bugs
 - Provide workarounds when available
 - Link to issue tracker for status
-- Remove or update warnings once resolved
+- Remove or update warnings once/if resolved
 
 ### 7. Provide Actionable Guidance
 
@@ -211,10 +210,10 @@ This section provides definitions of key terms for describing the thread-safety 
 of Python library APIs. Library maintainers should use these terms when documenting how
 their APIs can be used from multiple threads.
 
-### Common thread-safety levels
+### Common data consistency patterns
 
-When documenting your library's APIs, use these numbered levels to describe their
-concurrent access guarantees:
+When documenting your library's APIs, use these data consistency patterns and locking semantics
+to describe their concurrent access guarantees:
 
 #### Immutable
 
@@ -259,16 +258,6 @@ When to use: When your library handles all necessary locking internally.
 
 Example: "The connection pool is internally synchronized. Multiple threads can safely
 call `acquire()` and `release()` concurrently."
-
-#### Linearizable
-
-Operations that appear to execute atomically at some point between their start and
-completion, with results consistent with some sequential order.
-
-When to use: For operations that provide strong consistency guarantees.
-
-Example: "Queue operations are linearizable - `get()` returns items in the order
-they were `put()`, even across threads."
 
 #### Externally Synchronized
 
