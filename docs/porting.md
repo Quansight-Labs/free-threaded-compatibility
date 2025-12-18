@@ -10,7 +10,7 @@ Many packages already support free-threaded Python. Check the [tracking table](t
 
 Free-threaded Python can exploit the many cores present in modern CPUs in pure Python code. In all previous Python releases before the free-threaded build and in the current default build, only one thread at a time could execute Python code because of the [global interpreter lock](https://docs.python.org/3/glossary.html#term-global-interpreter-lock) (the GIL).
 
-Attempting to parallelize many workflows using the Python [threading](https://docs.python.org/3/library/threading.html) module will not produce any speedups on the GIL-enabled build.  This means many codebases have threading bugs that up-until-now have only been theoretical or present in niche use cases. With free-threading, many more users will want to use Python threads.
+Attempting to parallelize many workflows using the Python [threading](https://docs.python.org/3/library/threading.html) module will not produce any speedups on the GIL-enabled build. This means many codebases have threading bugs that up-until-now have only been theoretical or present in niche use cases. With free-threading, many more users will want to use Python threads.
 
 Python codebases to identify supported and unsupported multithreaded workflows and make changes to fix thread safety issues. Extra care must be taken to address this need, particularly when using low-level C, C++, Cython, and Rust code exposed to Python. That said, even pure-Python codebases can exhibit non-determinism and races in the free-threaded build that are either very unlikely or impossible in the default configuration of the GIL-enabled build.
 
@@ -102,7 +102,7 @@ if sysconfig.get_config_var("Py_GIL_DISABLED"):
 
 Here's an example of this approach. If adding a lock to a global cache would harm multithreaded scaling, and turning off the cache implies a small performance hit, consider doing the simpler thing and disabling the cache in the free-threaded build.
 
-Single-threaded performance can always be improved later, once you've established free-threaded support and hopefully improved test 
+Single-threaded performance can always be improved later, once you've established free-threaded support and hopefully improved test
 coverage for multithreaded workflows.
 
 NumPy, for example, decided *not* to add explicit locking to the ndarray object
@@ -220,8 +220,8 @@ races filling a cache.
 Consider a library which generates n'th Fibonacci number. The library caches previously computed Fibonacci numbers.
 
 ```python
-
 cache = [0, 1]
+
 
 def fib(nth: int) -> int:
     global cache
@@ -232,7 +232,7 @@ def fib(nth: int) -> int:
         return cache[nth - 1]
 
     # Create a new copy of the cache
-    new_cache = cache.copy() # list.copy is atomic
+    new_cache = cache.copy()  # list.copy is atomic
     for i in range(len(new_cache), nth + 1):
         new_cache.append(new_cache[i - 1] + new_cache[i - 2])
 
