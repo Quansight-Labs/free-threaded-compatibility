@@ -1,3 +1,7 @@
+---
+ref: porting-c-extensions
+---
+
 # Updating Extension Modules
 
 Here we are going to re-hash some of the same topics covered in the [previous

@@ -1,3 +1,7 @@
+---
+ref: testing-thread-safety
+---
+
 # Validating thread safety with testing
 
 Put priority on thread safety issues surfaced by real-world testing. Run the

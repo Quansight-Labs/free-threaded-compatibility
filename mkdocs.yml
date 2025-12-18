@@ -60,6 +60,9 @@ plugins:
   - git-revision-date-localized:
       enable_creation_date: true
   - mkdocs-jupyter
+  - intersphinx:
+      enabled: true
+      verbose: false
 
 markdown_extensions:
   - admonition
