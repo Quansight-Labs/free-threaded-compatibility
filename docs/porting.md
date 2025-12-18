@@ -38,6 +38,7 @@ documentation](https://github.com/facebookincubator/ft_utils/blob/main/docs/ft_w
 on this topic.
 
 <!-- ref:plan-of-attack -->
+
 ## Suggested Plan of Attack
 
 Below, we outline a plan of attack for updating a Python project to support the
@@ -130,6 +131,7 @@ initial porting effort should be to enable further refinement and
 experimentation by fixing issues that prevent using the library at all.
 
 <!-- ref:multithreaded-python-programming -->
+
 ## Multithreaded Python Programming
 
 The Python standard library offers a rich API for multithreaded
@@ -156,6 +158,7 @@ only appear to be thread-safe in the GIL-enabled build because of details of how
 CPython releases the GIL in a round-robin fashion to allow threads to run.
 
 <!-- ref:mutable-global-state -->
+
 ### Dealing with mutable global state
 
 The most common source of thread safety issues in Python packages is use of
@@ -186,6 +189,7 @@ but depending on the nature of the cache, this could lead to unnecessary network
 access, resource leaks, or wasted unnecessary compute cost.
 
 <!-- ref:thread-local-state -->
+
 ### Converting global state to thread-local state
 
 One way of dealing with issues like this is to convert a shared global cache

@@ -16,14 +16,16 @@ on [py-free-threading.github.io](https://py-free-threading.github.io).
 This documentation generates a Sphinx-compatible `objects.inv` file for cross-referencing from other projects.
 
 **From Sphinx projects:**
+
 ```python
 # conf.py
 intersphinx_mapping = {
-    'py-free-threading': ('https://py-free-threading.github.io/', None),
+    "py-free-threading": ("https://py-free-threading.github.io/", None),
 }
 ```
 
 Or use [intersphinx_registry](https://pypi.org/project/intersphinx-registry/):
+
 ```python
 # conf.py
 from intersphinx_registry import get_intersphinx_mapping
@@ -32,6 +34,7 @@ intersphinx_mapping = get_intersphinx_mapping(packages={"py-free-threading"})
 ```
 
 **From MkDocs with mkdocstrings:**
+
 ```yaml
 # mkdocs.yml
 plugins:
@@ -45,6 +48,7 @@ plugins:
 **Add intersphinx references to pages:**
 
 For page-level references, use YAML frontmatter:
+
 ```markdown
 ---
 ref: my-page-name
@@ -54,12 +58,14 @@ ref: my-page-name
 ```
 
 For header-level references, use HTML comments:
+
 ```markdown
 <!-- ref:my-section -->
 ## My Section Title
 ```
 
 **Reference from other projects:**
+
 ```rst
 :doc:`py-free-threading:porting-guide`
 :ref:`py-free-threading:thread-safety-levels`

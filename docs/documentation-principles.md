@@ -209,6 +209,7 @@ with lock:
 ````
 
 <!-- ref:free-threading-terminology -->
+
 ## Free-Threading Terminology
 
 This section provides definitions of key terms for describing the thread-safety guarantees
@@ -221,6 +222,7 @@ When documenting your library's APIs, use these data consistency patterns and lo
 to describe their concurrent access guarantees:
 
 <!-- ref:term-immutable -->
+
 #### Immutable
 
 An object whose state cannot be modified after creation. Immutable objects can be safely
@@ -232,6 +234,7 @@ Example: "Configuration objects are immutable once created and can be safely sha
 across all threads."
 
 <!-- ref:term-thread-local -->
+
 #### Thread-Local
 
 An API where each thread has its own independent instance or state. No cross-thread
@@ -243,6 +246,7 @@ Example: "Each thread gets its own random number generator state. State is threa
 and operations don't require synchronization."
 
 <!-- ref:term-atomic -->
+
 #### Atomic
 
 An operation that completes as a single, indivisible unit from the perspective of other
@@ -258,6 +262,7 @@ Note: Atomic operations may still have race conditions when combined with other
 operations. Atomicity only guarantees the operation itself is indivisible.
 
 <!-- ref:term-internally-synchronized -->
+
 #### Internally Synchronized
 
 An API that uses internal locking or synchronization mechanisms. Multiple threads can
@@ -269,6 +274,7 @@ Example: "The connection pool is internally synchronized. Multiple threads can s
 call `acquire()` and `release()` concurrently."
 
 <!-- ref:term-externally-synchronized -->
+
 #### Externally Synchronized
 
 An API that requires callers to provide their own synchronization (e.g., locks) when
@@ -280,6 +286,7 @@ Example: "The parser requires external synchronization. Protect calls with a loc
 when sharing a parser instance across threads."
 
 <!-- ref:term-reentrant -->
+
 #### Reentrant
 
 An API that can safely be called again before a previous invocation has completed,
