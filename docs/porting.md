@@ -213,7 +213,41 @@ This wouldn't help a case where each thread having a copy of the cache would be
 prohibitive, but it does fix possible issues with resource leaks issues due to
 races filling a cache.
 
-### Making mutable global caches thread-safe with locking
+### Read-copy-update
+
+[Read-Copy-Update (RCU)](https://en.wikipedia.org/wiki/Read-copy-update) is a thread safe pattern to implement lock-free data structures. It is useful when reads are much more frequent than writes. It is commonly used for caching, where reads are frequent and writes are infrequent.
+
+Consider a library which generates n'th Fibonacci number. The library caches previously computed Fibonacci numbers.
+
+```python
+
+cache = [0, 1]
+
+def fib(nth: int) -> int:
+    global cache
+    if nth < 1:
+        raise ValueError("nth must be a positive integer")
+    # Read from the existing cache
+    if nth <= len(cache):
+        return cache[nth - 1]
+
+    # Create a new copy of the cache
+    new_cache = cache.copy() # list.copy is atomic
+    for i in range(len(new_cache), nth + 1):
+        new_cache.append(new_cache[i - 1] + new_cache[i - 2])
+
+    # Update the reference to point to the new cache
+    cache = new_cache
+    return cache[nth - 1]
+```
+
+This code is thread-safe because the cache is never modified in-place. Instead, a new copy of the cache is created and updated, and then the reference to the cache is updated atomically. This ensures that readexrs
+always see a consistent view of the cache, even if a writer is updating
+it concurrently.
+
+Keep in mind that with this approach, readers may not necessarily see the most recent version of a cache. For memoization and other caching this is often fine but may be problematic for some use-cases.
+
+### Locking
 
 If a thread-local cache doesn't make sense, then you can serialize access to the
 cache with a lock. A
@@ -266,10 +300,11 @@ held cannot lead to recursive calls or lead to a situation where a thread owning
 the lock is blocked on acquiring a different mutex. You do not need to worry
 about deadlocking with the GIL in pure Python code, the interpreter will handle
 that for you.
+
 There is also
 [threading.RLock](https://docs.python.org/3/library/threading.html#rlock-objects),
 which provides a reentrant lock allowing threads to recursively acquire the same
-lock.
+lock, but is not quite as performant as a `threading.Lock` in single-threaded use.
 
 Finally, note how the above code will ensure that only a single call to
 `_do_expensive_calculation` will run at any given time, regardless of `arg`.
