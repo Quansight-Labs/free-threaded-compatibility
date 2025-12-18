@@ -85,16 +85,24 @@ Many projects assume the GIL serializes access to state shared between threads,
 introducing the possibility of data races in native extensions and race
 conditions that are impossible when the GIL is enabled.
 
-We suggest focusing on safety and multithreaded scaling before single-threaded
-performance.
+Ideally it should be possible to add safety without adding any performance cost. This may be impossible in the real world but is the ideal goal. You should benchmark to check that single-threaded performance is not seriously impacted by work to improve thread safety. It may be possible to set things up so that single-threaded users of your library can find ways to avoid paying the cost of synchronization.
 
-Here's an example of this approach. If adding a lock to a global cache would harm
-multithreaded scaling, and turning off the cache implies a small performance
-hit, consider doing the simpler thing and disabling the cache in the
-free-threaded build.
+If there is no way to add zero-cost thread-safety but the GIL is sufficient to prevent races on the GIL-enabled build, consider adding logic that only triggers if the GIL is disabled at runtime:
 
-Single-threaded performance can always be improved later,
-once you've established free-threaded support and hopefully improved test
+```python
+import sys
+import sysconfig
+
+if not getattr(sys, '_is_gil_enabled', lambda: True)():
+    # logic that only happens if the GIL is disabled
+
+if sysconfig.get_config_var("Py_GIL_DISABLED"):
+    # logic that only happens on the free-threaded build
+```
+
+Here's an example of this approach. If adding a lock to a global cache would harm multithreaded scaling, and turning off the cache implies a small performance hit, consider doing the simpler thing and disabling the cache in the free-threaded build.
+
+Single-threaded performance can always be improved later, once you've established free-threaded support and hopefully improved test 
 coverage for multithreaded workflows.
 
 NumPy, for example, decided *not* to add explicit locking to the ndarray object
