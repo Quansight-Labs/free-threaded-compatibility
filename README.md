@@ -29,7 +29,6 @@ You can find the names either by inspecting the html of the page, a comment will
 be present just before each header; by looking at the markdown source; or running
 the urls through [`intersphinx_registry reverse-lookup`](https://pypi.org/project/intersphinx-registry/), or
 
-
 ### Configure intersphinx for your website
 
 For intersphinx to work, you will need to configure it to see this website;
