@@ -188,8 +188,6 @@ cached key and call `_do_expensive_calculation`. In some cases this is harmless,
 but depending on the nature of the cache, this could lead to unnecessary network
 access, resource leaks, or wasted unnecessary compute cost.
 
-<!-- ref:thread-local-state -->
-
 ### Converting global state to thread-local state
 
 One way of dealing with issues like this is to convert a shared global cache
