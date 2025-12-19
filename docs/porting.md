@@ -114,9 +114,16 @@ Many projects assume the GIL serializes access to state shared between threads,
 introducing the possibility of data races in native extensions and race
 conditions that are impossible when the GIL is enabled.
 
-Ideally it should be possible to add safety without adding any performance cost. This may be impossible in the real world but is the ideal goal. You should benchmark to check that single-threaded performance is not seriously impacted by work to improve thread safety. It may be possible to set things up so that single-threaded users of your library can find ways to avoid paying the cost of synchronization.
+Ideally it should be possible to add safety without adding any performance
+cost. This may be impossible in the real world but is the ideal goal. You should
+benchmark to check that single-threaded performance is not seriously impacted by
+work to improve thread safety. It may be possible to set things up so that
+single-threaded users of your library can find ways to avoid paying the cost of
+synchronization.
 
-If there is no way to add zero-cost thread-safety but the GIL is sufficient to prevent races on the GIL-enabled build, consider adding logic that only triggers if the GIL is disabled at runtime:
+If there is no way to add zero-cost thread-safety but the GIL is sufficient to
+prevent races on the GIL-enabled build, consider adding logic that only triggers
+if the GIL is disabled at runtime or only triggers on the free-threaded build:
 
 ```python
 import sys
@@ -129,10 +136,14 @@ if sysconfig.get_config_var("Py_GIL_DISABLED"):
     # logic that only happens on the free-threaded build
 ```
 
-Here's an example of this approach. If adding a lock to a global cache would harm multithreaded scaling, and turning off the cache implies a small performance hit, consider doing the simpler thing and disabling the cache in the free-threaded build.
+Here's an example of this approach. If adding a lock to a global cache would
+harm multithreaded scaling, and turning off the cache implies a small
+performance hit, consider doing the simpler thing and disabling the cache in the
+free-threaded build.
 
-Single-threaded performance can always be improved later, once you've established free-threaded support and hopefully improved test
-coverage for multithreaded workflows.
+Single-threaded performance can always be improved later, once you've
+established free-threaded support and hopefully improved test coverage for
+multithreaded workflows.
 
 NumPy, for example, decided *not* to add explicit locking to the ndarray object
 and [does not support mutating shared
