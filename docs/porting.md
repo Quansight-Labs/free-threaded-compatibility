@@ -241,9 +241,7 @@ def fib(nth: int) -> int:
     return new_cache[nth - 1]
 ```
 
-This code is thread-safe because the cache is never modified in-place. Instead, a new copy of the cache is created and updated, and then the reference to the cache is updated atomically. This ensures that readexrs
-always see a consistent view of the cache, even if a writer is updating
-it concurrently.
+This code is thread-safe because the cache is never modified in-place. Instead, a new copy of the cache is created and updated, and then the reference to the cache is updated atomically. This ensures that readers always see a consistent view of the cache, even if a writer is updating it concurrently.
 
 Keep in mind that with this approach, readers may not necessarily see the most recent version of a cache. For memoization and other caching this is often fine but may be problematic for some use-cases.
 
