@@ -215,9 +215,9 @@ races filling a cache.
 
 ### Read-copy-update
 
-[Read-Copy-Update (RCU)](https://en.wikipedia.org/wiki/Read-copy-update) is a thread safe pattern to implement lock-free data structures. It is useful when reads are much more frequent than writes. It is commonly used for caching, where reads are frequent and writes are infrequent.
+[Read-Copy-Update (RCU)](https://en.wikipedia.org/wiki/Read-copy-update) is a thread-safe pattern to implement lock-free data structures. It is useful when reads are much more frequent than writes. It is commonly used for caching, where reads are frequent and writes are infrequent.
 
-Consider a library which generates n'th Fibonacci number. The library caches previously computed Fibonacci numbers.
+Consider a library which generates the nth Fibonacci number. The library caches previously computed Fibonacci numbers.
 
 ```python
 cache = [0, 1]
@@ -228,22 +228,28 @@ def fib(nth: int) -> int:
     if nth < 1:
         raise ValueError("nth must be a positive integer")
     # Read from the existing cache
-    if nth <= len(cache):
+    try:
         return cache[nth - 1]
+    except IndexError:
+        # cache miss
+        pass
 
-    # Create a new copy of the cache
-    new_cache = cache.copy()  # list.copy is atomic
-    for i in range(len(new_cache), nth + 1):
-        new_cache.append(new_cache[i - 1] + new_cache[i - 2])
+    # Create a new local cache
+    new_cache = cache.copy()  # list.copy() is atomic
+    len_cache = len(new_cache)
+    # Pre-allocate in-case nth is much bigger than len(new_cache)
+    new_cache = new_cache + [None] * (nth + 1 - len_cache)
+    for i in range(len_cache, nth + 1):
+        new_cache[i] = new_cache[i-1] + new_cache[i-2]
 
-    # Update the reference to point to the new cache
-    cache = new_cache
-    return new_cache[nth - 1]
+    # Update the global cache to point to the new cache
+    cache = new_cache  # setting a global is atomic
+    return new_cache[nth]
 ```
 
 This code is thread-safe because the cache is never modified in-place. Instead, a new copy of the cache is created and updated, and then the reference to the cache is updated atomically. This ensures that readers always see a consistent view of the cache, even if a writer is updating it concurrently.
 
-Keep in mind that with this approach, readers may not necessarily see the most recent version of a cache. For memoization and other caching this is often fine but may be problematic for some use-cases.
+Keep in mind that, with this approach, readers may not necessarily see the most up-to-date version of the cache. The CPU cost to calculate some entries will be wasted if there are races to create a new cache. For memoization and other caching this is often fine but may be problematic for some use-cases.
 
 ### Locking
 
