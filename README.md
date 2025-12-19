@@ -11,11 +11,28 @@ that project's issue tracker.
 You can find documentation for various free-threading topics
 on [py-free-threading.github.io](https://py-free-threading.github.io).
 
-#### Using Intersphinx References
+## Using Intersphinx References
 
 This documentation generates a Sphinx-compatible `objects.inv` file for cross-referencing from other projects.
 
-**From Sphinx projects:**
+### Reference from other project/docstrings
+
+As for any other sphinx-based project using intersphinx you can reference
+this documentation using typical rst cross linking syntax:
+
+```rst
+:doc:`porting-guide`
+:ref:`thread-safety-levels`
+```
+
+You can find the names either by inspecting the html of the page, a comment will
+be present just before each header; by looking at the markdown source; or running
+the urls through [`intersphinx_registry reverse-lookup`](https://pypi.org/project/intersphinx-registry/).
+
+### Configure intersphinx for your website
+
+For intersphinx to work, you will need to configure it to see this website;
+manually:
 
 ```python
 # conf.py
@@ -62,13 +79,6 @@ For header-level references, use HTML comments:
 ```markdown
 <!-- ref:my-section -->
 ## My Section Title
-```
-
-**Reference from other projects:**
-
-```rst
-:doc:`py-free-threading:porting-guide`
-:ref:`py-free-threading:thread-safety-levels`
 ```
 
 ### Contributing
