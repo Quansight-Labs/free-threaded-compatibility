@@ -238,7 +238,7 @@ def fib(nth: int) -> int:
 
     # Update the reference to point to the new cache
     cache = new_cache
-    return cache[nth - 1]
+    return new_cache[nth - 1]
 ```
 
 This code is thread-safe because the cache is never modified in-place. Instead, a new copy of the cache is created and updated, and then the reference to the cache is updated atomically. This ensures that readexrs
