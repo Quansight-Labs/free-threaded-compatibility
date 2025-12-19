@@ -4,22 +4,51 @@ ref: porting-guide
 
 # Porting Python Packages to Support Free-Threading
 
-Many packages already support free-threaded Python. Check the [tracking table](tracking.md) in this guide, the [free-threaded wheels tracker](https://hugovk.github.io/free-threaded-wheels/), and the documentation and PyPI release pages for packages your project depends on to evaluate whether your project can run on the free-threaded build. In addition, you may need to update your code to support the free-threaded build.
+Many packages already support free-threaded Python. Check the [tracking
+table](tracking.md) in this guide, the [free-threaded wheels
+tracker](https://hugovk.github.io/free-threaded-wheels/), and the documentation
+and PyPI release pages for packages your project depends on to evaluate whether
+your project can run on the free-threaded build. In addition, you may need to
+update your code to support the free-threaded build.
 
 ## Why do projects need updates?
 
-Free-threaded Python can exploit the many cores present in modern CPUs in pure Python code. In all previous Python releases before the free-threaded build and in the current default build, only one thread at a time could execute Python code because of the [global interpreter lock](https://docs.python.org/3/glossary.html#term-global-interpreter-lock) (the GIL).
+Free-threaded Python can exploit the many cores present in modern CPUs in pure
+Python code. In all previous Python releases before the free-threaded build and
+in the current default build, only one thread at a time could execute Python
+code because of the [global interpreter
+lock](https://docs.python.org/3/glossary.html#term-global-interpreter-lock) (the
+GIL).
 
-Attempting to parallelize many workflows using the Python [threading](https://docs.python.org/3/library/threading.html) module will not produce any speedups on the GIL-enabled build. This means many codebases have threading bugs that up-until-now have only been theoretical or present in niche use cases. With free-threading, many more users will want to use Python threads.
+Attempting to parallelize many workflows using the Python
+[threading](https://docs.python.org/3/library/threading.html) module will not
+produce any speedups on the GIL-enabled build. This means many codebases have
+threading bugs that up-until-now have only been theoretical or present in niche
+use cases. With free-threading, many more users will want to use Python threads.
 
-Python codebases to identify supported and unsupported multithreaded workflows and make changes to fix thread safety issues. Extra care must be taken to address this need, particularly when using low-level C, C++, Cython, and Rust code exposed to Python. That said, even pure-Python codebases can exhibit non-determinism and races in the free-threaded build that are either very unlikely or impossible in the default configuration of the GIL-enabled build.
+Python codebases to identify supported and unsupported multithreaded workflows
+and make changes to fix thread safety issues. Extra care must be taken to
+address this need, particularly when using low-level C, C++, Cython, and Rust
+code exposed to Python. That said, even pure-Python codebases can exhibit
+non-determinism and races in the free-threaded build that are either very
+unlikely or impossible in the default configuration of the GIL-enabled build.
 
-Some Python packages, particularly packages relying on C extension modules, do not consider multithreaded use or make strong assumptions about the GIL providing sequential consistency in multithreaded contexts. These packages will:
+Some Python packages, particularly packages relying on C extension modules, do
+not consider multithreaded use or make strong assumptions about the GIL
+providing sequential consistency in multithreaded contexts. These packages will:
 
-- fail to produce deterministic results on the free-threaded build and may not be deterministic *with* the GIL either.
-- may, if there are C extensions involved, crash the interpreter in multithreaded use in ways that are impossible on the GIL-enabled build. Some extensions may crash the interpreter under multithreaded use even with the GIL.
+- fail to produce deterministic results on the free-threaded build and may not be
+  deterministic *with* the GIL either.
+- may, if there are C extensions involved, crash the interpreter in multithreaded
+  use in ways that are impossible on the GIL-enabled build. Some extensions may
+  crash the interpreter under multithreaded use even with the GIL.
 
-For a more in-depth look at the differences between the GIL-enabled and free-threaded build, we suggest reading [the `ft_utils` documentation](https://github.com/facebookincubator/ft_utils/blob/main/docs/ft_worked_examples.md) on this topic. Also see the [section of this porting guide](porting-extensions.md) on extensions to understand why compiled code needs special updates to support the free threaded build.
+For a more in-depth look at the differences between the GIL-enabled and
+free-threaded build, we suggest reading [the `ft_utils`
+documentation](https://github.com/facebookincubator/ft_utils/blob/main/docs/ft_worked_examples.md)
+on this topic. Also see the [section of this porting
+guide](porting-extensions.md) on extensions to understand why compiled code
+needs special updates to support the free threaded build.
 
 <!-- ref:plan-of-attack -->
 
@@ -215,9 +244,13 @@ races filling a cache.
 
 ### Read-copy-update
 
-[Read-Copy-Update (RCU)](https://en.wikipedia.org/wiki/Read-copy-update) is a thread-safe pattern to implement lock-free data structures. It is useful when reads are much more frequent than writes. It is commonly used for caching, where reads are frequent and writes are infrequent.
+[Read-Copy-Update (RCU)](https://en.wikipedia.org/wiki/Read-copy-update) is a
+thread-safe pattern to implement lock-free data structures. It is useful when
+reads are much more frequent than writes. It is commonly used for caching,
+where reads are frequent and writes are infrequent.
 
-Consider a library which generates the nth Fibonacci number. The library caches previously computed Fibonacci numbers.
+Consider a library which generates the nth Fibonacci number. The library caches
+previously computed Fibonacci numbers.
 
 ```python
 cache = [0, 1]
@@ -247,9 +280,15 @@ def fib(nth: int) -> int:
     return new_cache[nth]
 ```
 
-This code is thread-safe because the cache is never modified in-place. Instead, a new copy of the cache is created and updated, and then the reference to the cache is updated atomically. This ensures that readers always see a consistent view of the cache, even if a writer is updating it concurrently.
+This code is thread-safe because the cache is never modified in-place. Instead,
+a new copy of the cache is created and updated, and then the reference to the
+cache is updated atomically. This ensures that readers always see a consistent
+view of the cache, even if a writer is updating it concurrently.
 
-Keep in mind that, with this approach, readers may not necessarily see the most up-to-date version of the cache. The CPU cost to calculate some entries will be wasted if there are races to create a new cache. For memoization and other caching this is often fine but may be problematic for some use-cases.
+Keep in mind that, with this approach, readers may not necessarily see the most
+up-to-date version of the cache. The CPU cost to calculate some entries will be
+wasted if there are races to create a new cache. For memoization and other
+caching this is often fine but may be problematic for some use-cases.
 
 ### Locking
 
