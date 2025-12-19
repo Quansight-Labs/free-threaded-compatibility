@@ -38,10 +38,10 @@ not consider multithreaded use or make strong assumptions about the GIL
 providing sequential consistency in multithreaded contexts. These packages will:
 
 - fail to produce deterministic results on the free-threaded build and may not be
-  deterministic *with* the GIL either.
+    deterministic *with* the GIL either.
 - may, if there are C extensions involved, crash the interpreter in multithreaded
-  use in ways that are impossible on the GIL-enabled build. Some extensions may
-  crash the interpreter under multithreaded use even with the GIL.
+    use in ways that are impossible on the GIL-enabled build. Some extensions may
+    crash the interpreter under multithreaded use even with the GIL.
 
 For a more in-depth look at the differences between the GIL-enabled and
 free-threaded build, we suggest reading [the `ft_utils`
@@ -273,7 +273,7 @@ def fib(nth: int) -> int:
     # Pre-allocate in-case nth is much bigger than len(new_cache)
     new_cache = new_cache + [None] * (nth + 1 - len_cache)
     for i in range(len_cache, nth + 1):
-        new_cache[i] = new_cache[i-1] + new_cache[i-2]
+        new_cache[i] = new_cache[i - 1] + new_cache[i - 2]
 
     # Update the global cache to point to the new cache
     cache = new_cache  # setting a global is atomic
