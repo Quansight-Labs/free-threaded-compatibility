@@ -253,12 +253,12 @@ This wouldn't help a case where each thread having a copy of the cache would be
 prohibitive, but it does fix possible issues with resource leaks issues due to
 races filling a cache.
 
-### Read-copy-update
+### Copy-on-Write
 
-[Read-Copy-Update (RCU)](https://en.wikipedia.org/wiki/Read-copy-update) is a
-thread-safe pattern to implement lock-free data structures. It is useful when
-reads are much more frequent than writes. It is commonly used for caching,
-where reads are frequent and writes are infrequent.
+[Copy-on-Write (CoW)](https://en.wikipedia.org/wiki/Copy-on-write) is a
+thread-safe pattern to implement lock-free sharing of data structures. It is
+useful when reads are much more frequent than writes. It is commonly used for
+caching, where reads are frequent and writes are infrequent.
 
 Consider a library which generates the nth Fibonacci number. The library caches
 previously computed Fibonacci numbers.
@@ -271,30 +271,40 @@ def fib(nth: int) -> int:
     global cache
     if nth < 1:
         raise ValueError("nth must be a positive integer")
-    # Read from the existing cache
-    try:
-        return cache[nth - 1]
-    except IndexError:
-        # cache miss
-        pass
 
-    # Create a new local cache
-    new_cache = cache.copy()  # list.copy() is atomic
-    len_cache = len(new_cache)
-    # Pre-allocate in-case nth is much bigger than len(new_cache)
-    new_cache = new_cache + [None] * (nth + 1 - len_cache)
-    for i in range(len_cache, nth + 1):
-        new_cache[i] = new_cache[i - 1] + new_cache[i - 2]
+    # Atomically read shared reference to global cache
+    local_cache = cache
+    len_cache = len(local_cache)
 
-    # Update the global cache to point to the new cache
-    cache = new_cache  # setting a global is atomic
-    return new_cache[nth]
+    if nth > len_cache - 1:
+        # Pre-fill a new list in case nth is much bigger then len_cache
+        local_cache = local_cache.copy() + [None] * (nth + 1 - len_cache)
+        for i in range(len_cache, nth + 1):
+            local_cache[i] = local_cache[i - 1] + local_cache[i - 2]
+
+        # Atomically update global shared reference to point to the new list
+        cache = local_cache
+
+    return local_cache[nth]
 ```
 
-This code is thread-safe because the cache is never modified in-place. Instead,
-a new copy of the cache is created and updated, and then the reference to the
-cache is updated atomically. This ensures that readers always see a consistent
-view of the cache, even if a writer is updating it concurrently.
+This code is thread-safe because the shared global cache is never modified
+in-place.  Instead, a new copy of the cache is created and updated, and then the
+reference to the cache is updated atomically. This ensures that readers always
+see a consistent view of the cache, even if a writer is updating it
+concurrently.
+
+Note that this does not rely on the thread-safety of the underlying
+list. Instead, it relies on the fact that shared references can be read from and
+modified atomically.
+
+Note also that for this to work correctly, readers should *never* access items
+in the shared object via a shared reference. Instead, they should create a local
+reference and then use that to access items in the cache. Because writers might
+update a shared reference, readers accessing data via shared references might
+see an inconsistent view. However, if readers first create a shared reference
+they are guaranteed to see the same consistent view throughout the lifetime of
+the local reference.
 
 Keep in mind that, with this approach, readers may not necessarily see the most
 up-to-date version of the cache. The CPU cost to calculate some entries will be
