@@ -1,3 +1,7 @@
+---
+ref: porting-guide
+---
+
 # Porting Python Packages to Support Free-Threading
 
 This document discusses porting an existing Python package to support free-threading Python.
@@ -32,6 +36,8 @@ For a more in-depth look at the differences between the GIL-enabled and
 free-threaded build, we suggest reading [the `ft_utils`
 documentation](https://github.com/facebookincubator/ft_utils/blob/main/docs/ft_worked_examples.md)
 on this topic.
+
+<!-- ref:plan-of-attack -->
 
 ## Suggested Plan of Attack
 
@@ -124,6 +130,8 @@ dealt with later once the free-threaded build is used more. The goal for your
 initial porting effort should be to enable further refinement and
 experimentation by fixing issues that prevent using the library at all.
 
+<!-- ref:multithreaded-python-programming -->
+
 ## Multithreaded Python Programming
 
 The Python standard library offers a rich API for multithreaded
@@ -148,6 +156,8 @@ programs](https://github.com/facebookincubator/ft_utils/blob/main/docs/ft_worked
 pure Python operations are not atomic and are susceptible to race conditions, or
 only appear to be thread-safe in the GIL-enabled build because of details of how
 CPython releases the GIL in a round-robin fashion to allow threads to run.
+
+<!-- ref:mutable-global-state -->
 
 ### Dealing with mutable global state
 

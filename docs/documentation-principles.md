@@ -1,3 +1,7 @@
+---
+ref: documentation-principles
+---
+
 # Documentation Principles
 
 This document outlines principles and guidelines for documenting free-threading in
@@ -204,6 +208,8 @@ with lock:
 
 ````
 
+<!-- ref:free-threading-terminology -->
+
 ## Free-Threading Terminology
 
 This section provides definitions of key terms for describing the thread-safety guarantees
@@ -215,6 +221,8 @@ their APIs can be used from multiple threads.
 When documenting your library's APIs, use these data consistency patterns and locking semantics
 to describe their concurrent access guarantees:
 
+<!-- ref:term-immutable -->
+
 #### Immutable
 
 An object whose state cannot be modified after creation. Immutable objects can be safely
@@ -225,6 +233,8 @@ When to use: For objects that provide no mutating operations.
 Example: "Configuration objects are immutable once created and can be safely shared
 across all threads."
 
+<!-- ref:term-thread-local -->
+
 #### Thread-Local
 
 An API where each thread has its own independent instance or state. No cross-thread
@@ -234,6 +244,8 @@ When to use: When your library maintains per-thread state.
 
 Example: "Each thread gets its own random number generator state. State is thread-local
 and operations don't require synchronization."
+
+<!-- ref:term-atomic -->
 
 #### Atomic
 
@@ -249,6 +261,8 @@ or new value, never a partial update."
 Note: Atomic operations may still have race conditions when combined with other
 operations. Atomicity only guarantees the operation itself is indivisible.
 
+<!-- ref:term-internally-synchronized -->
+
 #### Internally Synchronized
 
 An API that uses internal locking or synchronization mechanisms. Multiple threads can
@@ -259,6 +273,8 @@ When to use: When your library handles all necessary locking internally.
 Example: "The connection pool is internally synchronized. Multiple threads can safely
 call `acquire()` and `release()` concurrently."
 
+<!-- ref:term-externally-synchronized -->
+
 #### Externally Synchronized
 
 An API that requires callers to provide their own synchronization (e.g., locks) when
@@ -268,6 +284,8 @@ When to use: When thread-safety is the caller's responsibility.
 
 Example: "The parser requires external synchronization. Protect calls with a lock
 when sharing a parser instance across threads."
+
+<!-- ref:term-reentrant -->
 
 #### Reentrant
 
