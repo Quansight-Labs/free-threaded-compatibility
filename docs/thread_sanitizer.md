@@ -164,7 +164,7 @@ projects, please add them here.
 ### Reporting TSan issues in your dependencies
 
 It is possible, or even likely in cases where TSan testing has not been used
-before, that you will see races coming code in your dependencies. If you've
+before, that you will see races coming from code in your dependencies. If you've
 found a race in a project that already does TSan testing, then just go ahead and
 make a bug report including the TSan race report and steps to reproduce the race.
 
@@ -250,4 +250,25 @@ Altogether, a pytest invocation using TSan might look like:
 
 ```
 $ TSAN_OPTIONS='allocator_may_return_null=1 halt_on_error=1' pytest -s
+```
+
+# Common Issues
+
+If you are using Linux, either bare metal or in a docer coontainer, you may need
+to adjust some settings.  To avoid ASLR interfering with the TSAN checking, the
+following config change on the docker host system may be required:
+
+```
+sudo sysctl vm.mmap_rnd_bits=28
+```
+
+Since this change reduces security, you likely want to revert to the default
+number of bits after running tests.
+
+If ASLR is not disabled, you might see an error similar to the following:
+
+```
+root@b60155750c89:/work# python
+ThreadSanitizer: CHECK failed: tsan_platform_linux.cpp:290 "((personality(old_personality | ADDR_NO_RANDOMIZE))) != ((-1))" (0xffffffffffffffff, 0xffffffffffffffff) (tid=13)
+Segmentation fault (core dumped)
 ```
