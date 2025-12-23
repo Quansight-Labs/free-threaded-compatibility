@@ -288,7 +288,7 @@ def fib(nth: int) -> int:
 ```
 
 This code is thread-safe because the shared global cache is never modified
-in-place.  Instead, a new copy of the cache is created and updated, and then the
+in-place. Instead, a new copy of the cache is created and updated, and then the
 reference to the cache is updated atomically. This ensures that readers always
 see a consistent view of the cache, even if a writer is updating it
 concurrently.
