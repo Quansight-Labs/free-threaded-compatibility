@@ -293,22 +293,37 @@ reference to the cache is updated atomically. This ensures that readers always
 see a consistent view of the cache, even if a writer is updating it
 concurrently.
 
-Note that this does not rely on the thread-safety of the underlying
-list. Instead, it relies on the fact that shared references can be read from and
-modified atomically.
+This does not rely on the thread-safety of the underlying list. Instead, it
+relies on the fact that shared references can be read from and modified
+atomically. This means you can use this technique to allow lock-free access to a
+shared global cache implemented using a thread-unsafe data structure.
 
-Note also that for this to work correctly, readers should *never* access items
-in the shared object via a shared reference. Instead, they should create a local
-reference and then use that to access items in the cache. Because writers might
-update a shared reference, readers accessing data via shared references might
-see an inconsistent view. However, if readers first create a shared reference
-they are guaranteed to see the same consistent view throughout the lifetime of
-the local reference.
+Note that for this to work correctly, readers must *not* assume that the shared
+reference (the global `cache` variable) will be unchanged from one access to the
+next. For example, this is not thread-safe:
 
-Keep in mind that, with this approach, readers may not necessarily see the most
-up-to-date version of the cache. The CPU cost to calculate some entries will be
-wasted if there are races to create a new cache. For memoization and other
-caching this is often fine but may be problematic for some use-cases.
+```python
+if nth < len(cache):
+    # Another thread may replace cache with a shorter list
+    # after len(cache) but before cache[nth] so that this fails:
+    return cache[nth]
+```
+
+Instead, readers should atomically copy the shared reference to a local
+variable and then only access the local variable:
+
+```python
+    local_cache = cache
+    if nth < len(local_cache):
+        # No other thread will reassign the local_cache variable
+        # or mutate the object that it points to.
+        return local_cache[nth]
+```
+
+Also keep in mind that readers may not necessarily see the most up-to-date
+version of the cache. The CPU cost to calculate some entries will be wasted if
+there are races to create a new cache. For memoization and other caching this is
+often fine but may be problematic for some use-cases.
 
 ### Locking
 
