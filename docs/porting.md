@@ -24,22 +24,17 @@ Attempting to parallelize many workflows using the Python
 [threading](https://docs.python.org/3/library/threading.html) module will not
 produce any speedups on the GIL-enabled build. This means many codebases have
 threading bugs that up-until-now have only been theoretical or present in niche
-use cases. With free-threading, many more users will want to use Python threads.
+use cases. With free-threading, many more users will want to use Python threads,
+making fixing existing thread safety issues more important. Additionally,
+free-threading makes new kinds of concurrent use possible, so situations were
+the GIL *was* providing safety will need new analysis to ensure they are safe
+under free-threaded Python.
 
-Python codebases to identify supported and unsupported multithreaded workflows
-and make changes to fix thread safety issues. Extra care must be taken to
-address this need, particularly when using low-level C, C++, Cython, and Rust
-code exposed to Python. That said, even pure-Python codebases can exhibit
-non-determinism and races in the free-threaded build that are either very
-unlikely or impossible in the default configuration of the GIL-enabled build.
+Packages that have not yet been updated may exhibit behaviors such as:
 
-Some Python packages, particularly packages relying on C extension modules, do
-not consider multithreaded use or make strong assumptions about the GIL
-providing sequential consistency in multithreaded contexts. These packages will:
-
-- fail to produce deterministic results on the free-threaded build and may not be
+- Fail to produce deterministic results on the free-threaded build and may not be
     deterministic *with* the GIL either.
-- may, if there are C extensions involved, crash the interpreter in multithreaded
+- May, if there are C extensions involved, crash the interpreter in multithreaded
     use in ways that are impossible on the GIL-enabled build. Some extensions may
     crash the interpreter under multithreaded use even with the GIL.
 
@@ -274,17 +269,21 @@ def fib(nth: int) -> int:
 
     # Atomically read shared reference to global cache
     local_cache = cache
-    len_cache = len(local_cache)
 
-    if nth > len_cache - 1:
-        # Pre-fill a new list in case nth is much bigger then len_cache
-        local_cache = local_cache.copy() + [None] * (nth + 1 - len_cache)
-        for i in range(len_cache, nth + 1):
-            local_cache[i] = local_cache[i - 1] + local_cache[i - 2]
+    if nth > len(local_cache) + 1:
+        # Make a new un-shared list
+        local_cache = local_cache.copy()
+
+        # Mutating here is safe because the list local_cache refers
+        # to is private to this thread
+        while nth >= len(local_cache):
+            local_cache.append(local_cache[-1] + local_cache[-2])
 
         # Atomically update global shared reference to point to the new list
         cache = local_cache
 
+    # Must use a reference to the local_cache because another thread
+    # may have updated the global reference
     return local_cache[nth]
 ```
 
