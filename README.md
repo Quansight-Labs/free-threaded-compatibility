@@ -78,6 +78,7 @@ For header-level references, use HTML comments:
 
 ```markdown
 <!-- ref:my-section -->
+
 ## My Section Title
 ```
 
