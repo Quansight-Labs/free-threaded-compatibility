@@ -254,7 +254,7 @@ $ TSAN_OPTIONS='allocator_may_return_null=1 halt_on_error=1' pytest -s
 
 # Common Issues
 
-If you are using Linux, either bare metal or in a docer coontainer, you may need
+If you are using Linux, either bare metal or in a docker coontainer, you may need
 to adjust some settings. To avoid ASLR interfering with the TSAN checking, the
 following config change on the docker host system may be required:
 
