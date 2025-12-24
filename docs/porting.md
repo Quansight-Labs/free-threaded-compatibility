@@ -4,38 +4,46 @@ ref: porting-guide
 
 # Porting Python Packages to Support Free-Threading
 
-This document discusses porting an existing Python package to support free-threading Python.
+Many packages already support free-threaded Python. Check the [tracking
+table](tracking.md) in this guide, the [free-threaded wheels
+tracker](https://hugovk.github.io/free-threaded-wheels/), and the documentation
+and PyPI release pages for packages your project depends on to evaluate whether
+your project can run on the free-threaded build. In addition, you may need to
+update your code to support the free-threaded build.
 
-## Current status (as of early 2025)
+## Why do projects need updates?
 
-Many Python packages, particularly packages relying on C
-extension modules, do not consider multithreaded use or make strong
-assumptions about the GIL providing sequential consistency in multithreaded
-contexts. These packages will:
-
-- fail to produce deterministic results on the free-threaded build
-- may, if there are C extensions involved, crash the interpreter in multithreaded use in ways that are impossible on the
-    GIL-enabled build
+Free-threaded Python can exploit the many cores present in modern CPUs in pure
+Python code. In all previous Python releases before the free-threaded build and
+in the current default build, only one thread at a time could execute Python
+code because of the [global interpreter
+lock](https://docs.python.org/3/glossary.html#term-global-interpreter-lock) (the
+GIL).
 
 Attempting to parallelize many workflows using the Python
 [threading](https://docs.python.org/3/library/threading.html) module will not
-produce any speedups on the GIL-enabled build, so thread safety issues that are possible even with the
-GIL are not hit often since users do not make use of threading as much as other
-parallelization strategies. This means many codebases have threading bugs that
-up-until-now have only been theoretical or present in niche use cases. With
-free-threading, many more users will want to use Python threads.
+produce any speedups on the GIL-enabled build. This means many codebases have
+threading bugs that up-until-now have only been theoretical or present in niche
+use cases. With free-threading, many more users will want to use Python threads,
+making fixing existing thread safety issues more important. Additionally,
+free-threading makes new kinds of concurrent use possible, so situations were
+the GIL *was* providing safety will need new analysis to ensure they are safe
+under free-threaded Python.
 
-This means we must analyze Python codebases to identify supported and
-unsupported multithreaded workflows and make changes to fix thread safety
-issues. Extra care must be taken to address this need, particularly when using low-level C, C++, Cython, and Rust
-code exposed to Python. Even pure Python codebases can exhibit
-non-determinism and races in the free-threaded build that are either very
-unlikely or impossible in the default configuration of the GIL-enabled build.
+Packages that have not yet been updated may exhibit behaviors such as:
+
+- Fail to produce deterministic results on the free-threaded build and may not be
+    deterministic *with* the GIL either.
+- May, if there are C extensions involved, crash the interpreter in multithreaded
+    use in ways that are impossible on the GIL-enabled build. Some extensions may
+    crash the interpreter under multithreaded use even with the GIL.
 
 For a more in-depth look at the differences between the GIL-enabled and
 free-threaded build, we suggest reading [the `ft_utils`
 documentation](https://github.com/facebookincubator/ft_utils/blob/main/docs/ft_worked_examples.md)
-on this topic.
+on this topic. Also see the [section of this porting
+guide](porting-extensions.md) on extensions to understand why compiled code
+needs special updates to support the free threaded build.
 
 <!-- ref:plan-of-attack -->
 
@@ -101,17 +109,36 @@ Many projects assume the GIL serializes access to state shared between threads,
 introducing the possibility of data races in native extensions and race
 conditions that are impossible when the GIL is enabled.
 
-We suggest focusing on safety and multithreaded scaling before single-threaded
-performance.
+Ideally it should be possible to add safety without adding any performance
+cost. This may be impossible in the real world but is the ideal goal. You should
+benchmark to check that single-threaded performance is not seriously impacted by
+work to improve thread safety. It may be possible to set things up so that
+single-threaded users of your library can find ways to avoid paying the cost of
+synchronization.
 
-Here's an example of this approach. If adding a lock to a global cache would harm
-multithreaded scaling, and turning off the cache implies a small performance
-hit, consider doing the simpler thing and disabling the cache in the
+If there is no way to add zero-cost thread-safety but the GIL is sufficient to
+prevent races on the GIL-enabled build, consider adding logic that only triggers
+if the GIL is disabled at runtime or only triggers on the free-threaded build:
+
+```python
+import sys
+import sysconfig
+
+if not getattr(sys, '_is_gil_enabled', lambda: True)():
+    # logic that only happens if the GIL is disabled
+
+if sysconfig.get_config_var("Py_GIL_DISABLED"):
+    # logic that only happens on the free-threaded build
+```
+
+Here's an example of this approach. If adding a lock to a global cache would
+harm multithreaded scaling, and turning off the cache implies a small
+performance hit, consider doing the simpler thing and disabling the cache in the
 free-threaded build.
 
-Single-threaded performance can always be improved later,
-once you've established free-threaded support and hopefully improved test
-coverage for multithreaded workflows.
+Single-threaded performance can always be improved later, once you've
+established free-threaded support and hopefully improved test coverage for
+multithreaded workflows.
 
 NumPy, for example, decided *not* to add explicit locking to the ndarray object
 and [does not support mutating shared
@@ -221,7 +248,86 @@ This wouldn't help a case where each thread having a copy of the cache would be
 prohibitive, but it does fix possible issues with resource leaks issues due to
 races filling a cache.
 
-### Making mutable global caches thread-safe with locking
+<!-- ref:copy-on-write -->
+
+### Copy-on-Write
+
+[Copy-on-Write (CoW)](https://en.wikipedia.org/wiki/Copy-on-write) is a
+thread-safe pattern to implement lock-free sharing of data structures. It is
+useful when reads are much more frequent than writes. It is commonly used for
+caching, where reads are frequent and writes are infrequent.
+
+Consider a library which generates the nth Fibonacci number. The library caches
+previously computed Fibonacci numbers.
+
+```python
+cache = [0, 1]
+
+
+def fib(nth: int) -> int:
+    global cache
+    if nth < 1:
+        raise ValueError("nth must be a positive integer")
+
+    # Atomically read shared reference to global cache
+    local_cache = cache
+
+    if nth > len(local_cache) + 1:
+        # Make a new un-shared list
+        local_cache = local_cache.copy()
+
+        # Mutating here is safe because the list local_cache refers
+        # to is private to this thread
+        while nth >= len(local_cache):
+            local_cache.append(local_cache[-1] + local_cache[-2])
+
+        # Atomically update global shared reference to point to the new list
+        cache = local_cache
+
+    # Must use a reference to the local_cache because another thread
+    # may have updated the global reference
+    return local_cache[nth]
+```
+
+This code is thread-safe because the shared global cache is never modified
+in-place. Instead, a new copy of the cache is created and updated, and then the
+reference to the cache is updated atomically. This ensures that readers always
+see a consistent view of the cache, even if a writer is updating it
+concurrently.
+
+This does not rely on the thread-safety of the underlying list. Instead, it
+relies on the fact that shared references can be read from and modified
+atomically. This means you can use this technique to allow lock-free access to a
+shared global cache implemented using a thread-unsafe data structure.
+
+Note that for this to work correctly, readers must *not* assume that the shared
+reference (the global `cache` variable) will be unchanged from one access to the
+next. For example, this is not thread-safe:
+
+```python
+if nth < len(cache):
+    # Another thread may replace cache with a shorter list
+    # after len(cache) but before cache[nth] so that this fails:
+    return cache[nth]
+```
+
+Instead, readers should atomically copy the shared reference to a local
+variable and then only access the local variable:
+
+```python
+    local_cache = cache
+    if nth < len(local_cache):
+        # No other thread will reassign the local_cache variable
+        # or mutate the object that it points to.
+        return local_cache[nth]
+```
+
+Also keep in mind that readers may not necessarily see the most up-to-date
+version of the cache. The CPU cost to calculate some entries will be wasted if
+there are races to create a new cache. For memoization and other caching this is
+often fine but may be problematic for some use-cases.
+
+### Locking
 
 If a thread-local cache doesn't make sense, then you can serialize access to the
 cache with a lock. A
@@ -274,10 +380,11 @@ held cannot lead to recursive calls or lead to a situation where a thread owning
 the lock is blocked on acquiring a different mutex. You do not need to worry
 about deadlocking with the GIL in pure Python code, the interpreter will handle
 that for you.
+
 There is also
 [threading.RLock](https://docs.python.org/3/library/threading.html#rlock-objects),
 which provides a reentrant lock allowing threads to recursively acquire the same
-lock.
+lock, but is not quite as performant as a `threading.Lock` in single-threaded use.
 
 Finally, note how the above code will ensure that only a single call to
 `_do_expensive_calculation` will run at any given time, regardless of `arg`.
