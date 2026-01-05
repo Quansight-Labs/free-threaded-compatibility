@@ -209,11 +209,9 @@ Some authors of this guide have observed hangs running pytest with
 TSAN_OPTIONS.
 
 The [pytest-xdist](https://github.com/pytest-dev/pytest-xdist) plugin can also
-sometimes be problematic if a test runner happens to crash during
-execution. While `pytest-xdist` does have some support for detecting a crashed
-worker, it is not foolproof and the authors of this guide have observed hangs on
-CI due to pytest-xdist not properly handling a worker failing due to a TSan
-error.
+be useful, but be sure to [configure
+pytest](testing.md/#configure-timeouts-to-avoid-hanging-tests) to use
+faulthandler and exit on timeout to avoid having hangs in CI workers.
 
 The `pytest-xdist` plugin also [makes it impossible to obtain stdout from
 a test runner](https://github.com/pytest-dev/pytest-xdist/issues/82), so there
