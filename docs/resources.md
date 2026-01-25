@@ -21,6 +21,7 @@ try to keep an up-to-date list here:
 
 - [`ft_utils` documentation](https://facebookincubator.github.io/ft_utils/)
 - [`cereggii`](https://github.com/dpdani/cereggii)
+- [`free-threading`](https://github.com/iskandergaba/free-threading)
 
 ## Conference talks
 
