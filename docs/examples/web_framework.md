@@ -63,6 +63,7 @@ from concurrent.futures import ThreadPoolExecutor
 import socket
 import selectors
 
+
 class Server:
     def __init__(self, handler, host, port, workers):
         self.handler = handler
@@ -116,9 +117,9 @@ uv run python benchmarks/run_benchmark.py 1000 20
 ## Observations
 
 1. **I/O-bound workloads**: 2-3x faster due to simpler threading model and lower overhead than async task scheduling
-2. **CPU-bound workloads**: 5x faster because threads can utilize multiple cores
-3. **Scaling**: Linear scaling with thread count up to core count
-4. **Latency**: Lower p99 latency under load (no async scheduling jitter)
+1. **CPU-bound workloads**: 5x faster because threads can utilize multiple cores
+1. **Scaling**: Linear scaling with thread count up to core count
+1. **Latency**: Lower p99 latency under load (no async scheduling jitter)
 
 ## Limitations
 
