@@ -7,6 +7,7 @@ scale well due to lock contention.
 - [Mandelbrot Set Visualization](mandelbrot.md)
 - [Monte Carlo Simulation](monte-carlo.md)
 - [Web Scraping with asyncio](asyncio.md)
+- [Web Framework Benchmark](web_framework.md)
 
 External examples:
 

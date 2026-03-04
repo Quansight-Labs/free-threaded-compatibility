@@ -33,6 +33,7 @@ nav:
     - 'examples/mandelbrot.md'
     - 'examples/monte-carlo.md'
     - 'examples/asyncio.md'
+    - 'examples/web_framework.md'
   - Porting Guide:
     - 'porting.md'
     - 'porting-extensions.md'
