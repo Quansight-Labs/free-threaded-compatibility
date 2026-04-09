@@ -71,7 +71,7 @@ wheels for Python 3.14 and newer in its default configuration. If your project
 releases nightly wheels, we suggest configuring `cibuildwheel` to build nightly
 free-threaded wheels.
 
-As of April 2026, We suggest not enabling builds for Free-threaded Python 3.13 going
+As of April 2026, we suggest not enabling builds for Free-threaded Python 3.13 going
 forward. The 3.13t release was considered experimental, is approximately 30%
 slower in single-threaded performance than 3.14t, and does not include a number
 of safety fixes for builtins and the standard library that were included in
