@@ -65,24 +65,17 @@ jobs:
 
 ## Building free-threaded wheels with cibuildwheel
 
-[cibuildwheel](https://cibuildwheel.pypa.io/en/stable/) 3.1+ has support
-for building free-threaded wheels on all platforms. If your project releases
-nightly wheels, we suggest configuring `cibuildwheel` to build nightly
+[cibuildwheel](https://cibuildwheel.pypa.io/en/stable/) 3.1+ has support for
+building free-threaded wheels on all platforms and will build free-threaded
+wheels for Python 3.14 and newer in its default configuration. If your project
+releases nightly wheels, we suggest configuring `cibuildwheel` to build nightly
 free-threaded wheels.
 
-To ensure wheels are built correctly under cibuildwheel, you will need to
-specify the following variables in the environment for the cibuildwheel action:
-
-```yaml
-  - name: Build wheels
-    uses: pypa/cibuildwheel@...
-    env:
-      # enable cpython-freethreading necessary only for 3.13t
-      # CIBW_ENABLE: cpython-freethreading
-      CIBW_BUILD: cp314t-${{ matrix.buildplat }}
-```
-
-As above, replace the ellipses with a `cibuildwheel` version.
+As of April 2026, we suggest not enabling builds for Free-threaded Python 3.13 going
+forward. The 3.13t release was considered experimental, is approximately 30%
+slower in single-threaded performance than 3.14t, and does not include a number
+of safety fixes for builtins and the standard library that were included in
+3.14t. Free-threaded 3.14 also has better ecosystem compatibility than 3.13.
 
 You will also likely need to manually pass `-Xgil=0` or set `PYTHON_GIL=0` in
 your shell environment while running tests to ensure the GIL is actually
