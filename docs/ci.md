@@ -1,6 +1,6 @@
 # Setting up CI
 
-While you may extend the following instruction to also setup CI on 3.13t, we
+While you may extend the following instructions to also set up CI on 3.13t, we
 recommend focusing on 3.14+.
 
 ## CI setup via `setup-python`
@@ -91,7 +91,7 @@ modules support disabling the GIL via
 [`Py_mod_gil`](https://docs.python.org/3/c-api/module.html#c.Py_mod_gil) and all
 of your runtime test dependencies do the same. See [the porting
 guide](porting.md) for more information about declaring support for
-free-threaded python in your extension.
+free-threaded Python in your extension.
 
 !!! info
 
@@ -109,8 +109,8 @@ free-threaded python in your extension.
 
 ## CI Timeouts
 
-With free-threading deadlocks and hangs are more likely.
-GitHub action and other Continuous Integration systems often also supports timeouts:
+With free-threading, deadlocks and hangs are more likely.
+GitHub Actions and other Continuous Integration systems often support timeouts:
 [timeout-minutes](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idtimeout-minutes)
 
 ```

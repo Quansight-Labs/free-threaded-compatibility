@@ -49,7 +49,7 @@ sys._is_gil_enabled()
 
 This command will return `True` on the free-threaded build when the GIL is re-enabled at
 runtime, and should return `False` before importing any packages. Note that
-`sys._is_gil_enabled()` is only available on Python 3.13 and newer, you will
+`sys._is_gil_enabled()` is only available on Python 3.13 and newer; you will
 see an `AttributeError` on older Python versions.
 
 ## Force the GIL to be disabled

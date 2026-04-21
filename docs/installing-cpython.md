@@ -7,16 +7,16 @@ To install a free-threaded CPython interpreter, you can choose from the followin
 - use a container image
 - install a Jupyter kernel
 
-To get started quickly, use a pre-built binary with python.org installers (nuget for Windows), linux distribution installers, or multi-platform package managers.
+To get started quickly, use a pre-built binary via python.org installers (nuget for Windows), Linux distribution installers, or multi-platform package managers.
 
 Building from source is straightforward too. If you
-hit a bug that may involve CPython itself then you may want to build from
+hit a bug that may involve CPython itself, you may want to build from
 source.
 
 ## Use a pre-built binary
 
 There are a growing number of options to install a free-threaded interpreter,
-including the python.org installers, Linux distro installers, and multi-platform package managers, like conda.
+including the python.org installers, Linux distro installers, and multi-platform package managers like conda.
 
 ??? question "As a packager, what should I name the package and interpreter?"
 
@@ -50,8 +50,8 @@ and installing the free-threaded binaries is also possible:
 
     !!! note
 
-        Update the various places in below script to reflect your desired
-        python version.
+        Update the various places in the script below to reflect your desired
+        Python version.
 
     ```powershell
     $url = 'https://www.nuget.org/api/v2/package/python-freethreaded/3.14.0'
@@ -95,12 +95,12 @@ and installing the free-threaded binaries is also possible:
 
     1. On the Installation Type screen ("Standard Installation on Macintosh HD"), click the "Customize" button.
 
-    1. On the "Customize Install on Macintosh HD" screen, check the " Free-threaded Python [experimental]" option, and click "install".
+    1. On the "Customize Install on Macintosh HD" screen, check the "Free-threaded Python [experimental]" option, and click "install".
 
     **Advanced installation (CI)**
 
     This process installs the free-threaded version of Python 3.14.0 using the command line for more complex cases, such as running CI.
-    It follows a similar process described in the CPython documentation for [installing a binary using the command line](https://docs.python.org/3/using/mac.html#installing-using-the-command-line).
+    It follows the process described in the CPython documentation for [installing a binary using the command line](https://docs.python.org/3/using/mac.html#installing-using-the-command-line).
 
     While this process installs the free-threaded version of Python 3.14.0, you can install other versions by substituting the version number in the following steps.
 
@@ -145,7 +145,7 @@ and installing the free-threaded binaries is also possible:
         rm -f python-3.14.0-macos11.pkg
         ```
 
-    See also [this Github issue](https://github.com/python/cpython/issues/120098)
+    See also [this GitHub issue](https://github.com/python/cpython/issues/120098)
     for more information.
 
 ### Linux distribution installers

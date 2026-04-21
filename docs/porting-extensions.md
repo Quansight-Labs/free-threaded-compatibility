@@ -8,7 +8,7 @@ Here we are going to re-hash some of the same topics covered in the [previous
 section](porting.md) but with a focus on advice for updating native extension
 modules, particularly modules relying directly on the CPython C API. The general
 advice remains the same: identify supported multithreaded workflows, add
-testing, and fix and identified thread safety issues. We will also describe how
+testing, and fix any identified thread safety issues. We will also describe how
 to handle some common thread-unsafe patterns we have found in many extension
 modules across the open source ecosystem.
 
@@ -248,7 +248,7 @@ that has native extensions.
 ![GIL execution diagram](assets/images/GIL_diagram.png){ width="600" }
 
 /// caption
-A diagramatic snapshot of the state of a multithreaded Python
+A diagrammatic snapshot of the state of a multithreaded Python
 application running on the GIL-enabled interpreter
 ///
 
@@ -278,7 +278,7 @@ The state of a running free-threaded application is illustrated in the diagram b
 ![free-threaded execution diagram](assets/images/free_threaded_diagram.png){ width="600" }
 
 /// caption
-A diagramatic snapshot of the state of a multithreaded Python
+A diagrammatic snapshot of the state of a multithreaded Python
 application running on the free-threaded-enabled interpreter
 ///
 
@@ -311,9 +311,9 @@ code as in the GIL-enabled build
 As illustrated above, attaching and detaching from the runtime uses exactly the
 same code in the free-threaded build as is used in the GIL-enabled build to
 acquire and release the GIL. It is an unfortunate naming issue that
-`PyGILState_Ensure` and `PyGILState_Release` has "`GIL`" in the name of the
+`PyGILState_Ensure` and `PyGILState_Release` have "`GIL`" in the name of the
 function, despite the lack of a GIL on the free-threaded build. It's likely that
-the C API in future Python version will fix this naming issue.
+the C API in a future Python version will fix this naming issue.
 
 Hopefully you now have a better mental model for how native code interacts with
 the CPython interpreter runtime in the free-threaded build and how it is similar
@@ -584,18 +584,18 @@ typedef struct lib_state_struct {
 int call_library_function(lib_state_struct *lib_state) {
     PyMutex_Lock(&lib_state->lock);
     library_function(lib_state->state);
-    PyMutex_Unlock(&lib_state->lock)
+    PyMutex_Unlock(&lib_state->lock);
 }
 
 int call_another_library_function(lib_state_struct *lib_state) {
     PyMutex_Lock(&lib_state->lock);
     another_library_function(lib_state->state);
-    PyMutex_Unlock(&lib_state->lock)
+    PyMutex_Unlock(&lib_state->lock);
 }
 ```
 
 With this setup, if two threads call `library_function` and
-`another_library_functions` simultaneously, one thread will block until the
+`another_library_function` simultaneously, one thread will block until the
 other thread finishes, preventing concurrent access to `lib_state->state`.
 
 Non-reentrant libraries provide an even weaker guarantee: threads cannot
@@ -761,11 +761,11 @@ where a borrowed reference is returned to a shared, mutable data structure, and
 replace uses of APIs like `PyList_GetItem` with APIs exposed by the CPython C
 API returning strong references like `PyList_GetItemRef`. Not all usages are
 problematic (see above) and we do not currently suggest converting all usages of
-possibly unsafe APIs returning borrowed references to return new reference. This
+possibly unsafe APIs returning borrowed references to return new references. This
 would introduce unnecessary reference count churn in situations that are
 thread-safe by construction and also likely introduce new reference counting
 bugs in C or C++ code using the C API directly. However, many usages *are*
-unsafe, and maintaining a borrowed reference to an objects that could be exposed
+unsafe, and maintaining a borrowed reference to an object that could be exposed
 to another thread is unsafe.
 
 A good starting place to find instances of this would be to look for usages of the
@@ -800,7 +800,7 @@ API constructs outside the limited API if you would like to do that, although
 these uses will need to be removed once the free-threaded build gains support
 for compiling with the limited API.
 
-# Dependencies that don't support free-threading
+## Dependencies that don't support free-threading
 
 See [our guidance for handling dependencies that don't support
 free-threading](dependencies.md).

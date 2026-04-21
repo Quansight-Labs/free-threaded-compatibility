@@ -22,7 +22,7 @@ tested. Documentation should reflect the current state, not planned features.
 - Don't document incomplete work unless it causes crashes or data corruption. If
     something is partially implemented and *needs* to be documented, clearly state
     what works and what doesn't.
-- Don't document bugs, that's what issue trackers are for.
+- Don't document bugs; that's what issue trackers are for.
 - Use issue trackers and PEPs for planned features, not user-facing docs
 
 Good: "Individual operations on `x` are atomic. Sequences of operations require
@@ -38,7 +38,7 @@ comprehensive, and easier to maintain.
 
 - Create dedicated pages for thread safety guarantees (by type, by module)
 - Link to centralized docs from specific API entries when needed
-- For C APIs, use hybrid approach: centralized overview plus inline notes for
+- For C APIs, use a hybrid approach: centralized overview plus inline notes for
     critical APIs
 
 Good: Centralized "Thread Safety of Built-in Types" page with per-type guarantees,
