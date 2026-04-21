@@ -21,7 +21,7 @@ for more details about porting Cython code to work under free-threading.
 
 ## What does `RuntimeWarning: The global interpreter lock (GIL) has been enabled` mean?
 
-This happens when python imports a module defined in a native extension that
+This happens when Python imports a module defined in a native extension that
 does not explicitly declare support for running without the GIL. By default,
 native extensions do not support running without the GIL because of the long
 history of extensions assuming the GIL locks concurrent access to extension
@@ -34,7 +34,7 @@ update the extension to support the free-threaded build. See [the guide
 section](porting-extensions.md) on that topic. If you do not control the
 extension or simply want to test running with the GIL disabled despite the
 extension not explicitly supporting it, then you can set either the `PYTHON_GIL`
-environment variable or the `-X gil` command-like flag for the python
+environment variable or the `-X gil` command-line flag for the Python
 interpreter to `0` (i.e. the GIL is disabled). This skips the runtime check for
 whether extensions support running with the GIL disabled. See the [section on
 running free-threaded Python](running-gil-disabled.md) for more details.

@@ -15,7 +15,7 @@ by setting the thread switch interval to a very small value (e.g. a microsecond
 or shorter). You can call
 [`sys.setswitchinterval`](https://docs.python.org/3/library/sys.html#sys.setswitchinterval)
 before running multithreaded tests to force Python to release the GIL more often
-that the default configuration. This can expose thread safety issues that the
+than the default configuration. This can expose thread safety issues that the
 GIL is masking.
 
 Unless your tests make heavy use of the `threading` module, you will likely not
@@ -40,10 +40,10 @@ what level it is supported to share mutable state between threads. It is a valid
 choice to leave it up to users to add synchronization, with the proviso that
 thread-unsafe data structures should be clearly documented as such.
 
-Generally global mutable state is not safe in the free-threaded build without
+Generally, global mutable state is not safe in the free-threaded build without
 some form of locking. Many projects use global mutable state (e.g. module-level
 or class-level state) for convenience with the assumption that the GIL provides
-locking on the state. That will most likely not be valid without some form of
+locking on the state. That assumption will most likely not be valid without some form of
 explicit locking on the free-threaded build. It is also likely that there are
 latent thread-safety issues related to use of global state even in the GIL-enabled
 build.
@@ -169,7 +169,7 @@ faulthandler_exit_on_timeout = true
 ```
 
 This will cause faulthandler to exit the interpreter and dump stack traces for
-all threads if any test lasts longer 10 minutes. Note that
+all threads if any test lasts longer than 10 minutes. Note that
 `faulthandler_exit_on_timeout` is a newly added feature in Pytest 9.0.0.
 
 GitHub actions and other Continuous Integration systems often also [support
@@ -192,8 +192,8 @@ test only runs once, but if you would like to use your tests to check for
 possible thread safety issues by running existing tests on many threads, you
 will likely need to update the tests to eliminate use of global state.
 
-Since tests using global state are inherently racey, this means that test
-failures associated with these tests are also inherently flakey. If you see
+Since tests using global state are inherently racy, this means that test
+failures associated with these tests are also inherently flaky. If you see
 tests failing intermittently, you should not discount that you are using global
 state in a test, or even inadvertently using global state in `pytest` itself.
 
@@ -225,7 +225,7 @@ thread-safe, please do not open issues asking to fix thread safety issues in
 ### The `warnings` module is not thread-safe before Python 3.14
 
 Many tests carefully ensure that warnings will be seen by the user in cases
-where the library author intends users to see them. These tests inevintably make
+where the library author intends users to see them. These tests inevitably make
 use of the [`warnings`
 module](https://docs.python.org/3/library/warnings.html). As noted in [the
 documentation for
@@ -236,8 +236,8 @@ was inherently thread-unsafe.
 If you are running tests under `pytest-run-parallel`, it will automatically mark
 tests that use warnings as thread-unsafe when running on Python 3.13 and older
 or on 3.14 when the interpreter is not configured to use thread-safe
-warnings. Free-threaded Python 3.14 enabled thread-safe warnings by default, but
-it is not yet the default on the GIL-enabled interpreter.
+warnings. Free-threaded Python 3.14 enables thread-safe warnings by default, but
+this is not yet the default on the GIL-enabled interpreter.
 
 If you are using another mechanism to execute multithreaded tests, you will need
 to skip any checks for warnings if the interpreter is not configured for

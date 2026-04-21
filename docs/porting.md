@@ -23,20 +23,20 @@ GIL).
 Attempting to parallelize many workflows using the Python
 [threading](https://docs.python.org/3/library/threading.html) module will not
 produce any speedups on the GIL-enabled build. This means many codebases have
-threading bugs that up-until-now have only been theoretical or present in niche
+threading bugs that up until now have only been theoretical or present in niche
 use cases. With free-threading, many more users will want to use Python threads,
-making fixing existing thread safety issues more important. Additionally,
-free-threading makes new kinds of concurrent use possible, so situations were
+making it more important to fix existing thread safety issues. Additionally,
+free-threading makes new kinds of concurrent use possible, so situations where
 the GIL *was* providing safety will need new analysis to ensure they are safe
 under free-threaded Python.
 
 Packages that have not yet been updated may exhibit behaviors such as:
 
-- Fail to produce deterministic results on the free-threaded build and may not be
-    deterministic *with* the GIL either.
-- May, if there are C extensions involved, crash the interpreter in multithreaded
-    use in ways that are impossible on the GIL-enabled build. Some extensions may
-    crash the interpreter under multithreaded use even with the GIL.
+- Failing to produce deterministic results on the free-threaded build, and possibly
+    not being deterministic *with* the GIL either.
+- Crashing the interpreter in multithreaded use if C extensions are involved, in ways
+    that are impossible on the GIL-enabled build. Some extensions may even crash the
+    interpreter under multithreaded use with the GIL enabled.
 
 For a more in-depth look at the differences between the GIL-enabled and
 free-threaded build, we suggest reading [the `ft_utils`
@@ -74,14 +74,14 @@ your package. The currently supported trove classifiers for this purpose are:
 - `Programming Language :: Python :: Free Threading :: 3 - Stable`
 - `Programming Language :: Python :: Free Threading :: 4 - Resilient`
 
-The numeric level of support in the classifier corresponds to the level of support. To give some guidance as to what that means:
+To give some guidance as to what each level means:
 
 1. For experimentation and feedback only.
 1. Free threaded usage is supported, but documentation of constraints and limitations may be incomplete.
 1. Supported for production use, multithreaded use is tested, and thread safety issues are clearly documented.
 1. Fully supported and fully thread safe.
 
-You can see how supporting the free-threaded build is not all all-or-nothing
+You can see how supporting the free-threaded build is not an all-or-nothing
 thing. It is a perfectly valid choice to, for example, only support running on
 the free-threaded build in effectively single-threaded contexts and not support
 shared use of objects. It is then up to the users of your library to add locking
@@ -144,7 +144,7 @@ NumPy, for example, decided *not* to add explicit locking to the ndarray object
 and [does not support mutating shared
 ndarrays](https://numpy.org/devdocs/reference/thread_safety.html#thread-safety). This
 was a pragmatic choice given existing heavy multithreaded use of NumPy in the
-GIL-enabled build and a desire to not introducing scaling bottlenecks in
+GIL-enabled build and a desire to not introduce scaling bottlenecks in
 existing workflows.
 
 Eventually NumPy may need to offer explicitly thread-safe data structures, but
@@ -245,7 +245,7 @@ def do_calculation(arg):
 ```
 
 This wouldn't help a case where each thread having a copy of the cache would be
-prohibitive, but it does fix possible issues with resource leaks issues due to
+prohibitive, but it does fix possible resource leak issues due to
 races filling a cache.
 
 <!-- ref:copy-on-write -->
@@ -388,11 +388,11 @@ lock, but is not quite as performant as a `threading.Lock` in single-threaded us
 
 Finally, note how the above code will ensure that only a single call to
 `_do_expensive_calculation` will run at any given time, regardless of `arg`.
-This may not be desirable; one could want to allow calling the function in
+This may not be desirable; one might want to allow calling the function in
 parallel for different arguments. This however would require a substantially more
 complex locking pattern.
 
-### Raising errors under shared concurrent use.
+### Raising errors under shared concurrent use
 
 Sometimes it's a programming error to share an object between threads. An
 example might be a wrapper for a low-level C compression library that does not
@@ -418,7 +418,7 @@ class CompressionContext:
 ```
 
 This does require paying the cost of acquiring and releasing a mutex, but
-because no thread ever blocks on acquiring the lock, this thread cannot
+because no thread ever blocks on acquiring the lock, this approach cannot
 introduce hidden multithreaded scaling issues.
 
 ## Dealing with thread-unsafe objects
@@ -451,12 +451,12 @@ class RaceyCounter:
         self.value = current_value + 1
 ```
 
-Here we're simulating doing an in-place addition on an expensive function. A
+Here we're simulating an in-place addition using an expensive function. A
 real example might have a method that looks something like this:
 
 ```python
 def increment(self):
-    self.value = do_some_expensive_calulation(self.value)
+    self.value = do_some_expensive_calculation(self.value)
 ```
 
 If we run this example in a thread pool, you'll see that the answer you get will
@@ -517,6 +517,6 @@ standard library primitives.
 
 ## Dependencies that don't support free-threading
 
-If one of your package's dependencies do not support free-threading, you might
+If one of your package's dependencies does not support free-threading, you might
 be able to switch to a fork that does. Find more details in
 [our guidance for handling dependencies that don't support free-threading](dependencies.md).

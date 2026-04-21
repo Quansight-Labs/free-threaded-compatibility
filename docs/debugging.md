@@ -6,30 +6,30 @@ ref: debugging-thread-safety
 
 Until now, the GIL has allowed developers to ignore C
 safety issues when writing parallel programs, since the GIL ensured that
-all thread execution was serialized, allowing for simultaneous access
+all thread execution was serialized, preventing simultaneous access
 to Python objects and state defined in the interpreter.
 
 The new free-threaded model ensures that Python code access originating from
-other Python code frames is safe and is guaranteed to not produce any major
+other Python code frames is safe and is guaranteed not to produce any major
 interpreter crash, as opposed to unrestricted C code access, which can
 present any of the common C thread-safety issues.
 
 Usually, concurrency issues arise when two or more threads try to modify the
 same value in memory. In Python, this commonly occurs when a class or function
-defines native shared state, either via an attribute or a variable that can be
-modified from native code in each thread execution scope.
+defines shared native state, either via an attribute or a variable that can be
+modified from native code in each thread's execution scope.
 
-The most common issues related to concurrency in the context of free-threaded
-CPython extensions are either dirty reads/writes to global/shared C state,
+The most common concurrency issues in the context of free-threaded
+CPython extensions are dirty reads/writes to global or shared C state,
 unexpected behavior due to simultaneous access to C calls that are not
-thread-safe, and finally, major runtime crashes due to memory allocation
+thread-safe, and major runtime crashes due to memory allocation
 issues and forbidden pointer lookups. While the first case depends on the
-actual implementation of the algorithm/routine and may produce unintended
+actual implementation of the algorithm or routine and may produce unintended
 results, it would not cause a fatal crash of the interpreter, as opposed
 to the last two cases.
 
-In order to discover, handle and debug concurrency issues at large, there are
-several strategies, which we will summarize next.
+To discover, handle, and debug concurrency issues at large, there are
+several strategies, which we summarize next.
 
 ## pytest plugins to discover concurrency issues
 
@@ -60,7 +60,7 @@ which enables the `--count` flag in the `pytest` command:
 PYTHON_GIL=0 pytest -x -v --count=100 test_concurrent.py
 ```
 
-We advise to set `count` to `100` (or even larger if needed), in order to
+We advise setting `count` to `100` (or even larger if needed) to
 ensure at least one concurrent clash event.
 
 ## Writing explicitly concurrent test cases
@@ -165,7 +165,7 @@ If your code has native dependencies, either via C/C++ or Cython, `gdb`
 
 ```bash
 # Setting PYTHON_GIL=0 ensures that the GIL is effectively disabled.
-PYTHON_GIL=0 gdb --args python my_program.py --args ...
+PYTHON_GIL=0 gdb --args python my_program.py ...
 
 # To test under pytest
 PYTHON_GIL=0 gdb --args python -m pytest -x -v "test_here.py::TestClass::test_method"
@@ -178,9 +178,9 @@ PYTHON_GIL=0 lldb -- $(pyenv which python) $(pyenv which pytest) -x -v "test_her
 ```
 
 When Python is run under `gdb`, several Python integration commands will be
-available, such commands start with the `py-` prefix. For instance, the `py-bt`
-allows to obtain a Python interpreter backtrace whenever the debugger hits a native
-frame, this allows to improve the tracking of execution between Python and native
+available; such commands start with the `py-` prefix. For instance, `py-bt`
+lets you obtain a Python interpreter backtrace whenever the debugger hits a native
+frame, which helps track execution between Python and native
 frames[^1].
 
 For more information about `gdb` and `lldb` commands, we encourage reading
@@ -227,13 +227,13 @@ is via `pyenv`:
 pyenv install --debug --keep 3.13.1
 ```
 
-This command will not only install a debug distribution of CPython, but also
-will ensure that the source files are kept as well, such files will be loaded
+This command will not only install a debug distribution of CPython, but will
+also ensure that the source files are kept as well; these files will be loaded
 by `gdb`/`lldb` at the moment of debugging. For more information regarding
 CPython installation sources, please visit the
 [Installing a free-threaded Python](installing-cpython.md) page.
 
-### Using Thread Sanitizer to detect thread safety issues.
+### Using Thread Sanitizer to detect thread safety issues
 
 Once you have your code running on the free-threaded build and have written some
 multithreaded tests, it may make sense to build your project with TSan

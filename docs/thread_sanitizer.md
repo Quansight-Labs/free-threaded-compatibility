@@ -7,9 +7,9 @@ code with additional runtime checks for common sources of [undefined
 behavior](https://en.wikipedia.org/wiki/Undefined_behavior).
 
 Thread Sanitizer specializes in finding data races, a form of undefined behavior
-that are possible in low-level multithreaded code. While Rust has compile-time
+that is possible in low-level multithreaded code. While Rust has compile-time
 guarantees to prevent most data races, C and C++ do not prevent data races from
-occurring and in practice many C and C++ extensions exhibit data races while
+occurring, and in practice many C and C++ extensions exhibit data races while
 adding support for the free-threaded build.
 
 ## Compiling CPython and foundational packages with Thread Sanitizer
@@ -40,7 +40,7 @@ compute time per CI run.
 git clone https://github.com/python/cpython.git -b 3.14
 ```
 
-- Configure and build the interpreter. Below instructions are for Linux
+- Configure and build the interpreter. The instructions below are for Linux
     (Windows and macOS may require some changes). We skip the instructions on how
     to install the Clang compiler.
 
@@ -80,10 +80,10 @@ And then activate the build with e.g. `pyenv local 3.14t-dev`.
     python(7027,0x1f6dfc240) malloc: nano zone abandoned due to inability to reserve vm space.
     ```
 
-    This message is being emitted by the MacOS malloc implementation. As
+    This message is emitted by the macOS malloc implementation. As
     [explained
     here](https://stackoverflow.com/questions/64126942/malloc-nano-zone-abandoned-due-to-inability-to-preallocate-reserved-vm-space),
-    this happens for any program compiled with TSan on MacOS and can
+    this happens for any program compiled with TSan on macOS and can
     be safely ignored by setting the `MallocNanoZone` environment variable to
     0\. You should only set this in the session you are running TSan
     under, as this setting will slow down other programs that allocate memory.
@@ -128,7 +128,7 @@ race:partial_vectorcall_fallback
 race:dnnl_sgemm
 ```
 
-This suppressions file tells TSan to not any races it detects in the functions
+This suppressions file tells TSan to not report any races it detects in the functions
 `llvm::RuntimeDyldELF::registerEHFrames`, `partial_vectorcall_fallback`, and
 `dnnl_sgemm`.
 
@@ -139,7 +139,7 @@ You can tell TSan to use your suppressions file by setting `suppressions` in
 TSAN_OPTIONS="suppressions=$PWD/tsan-suppressions" python my_test.py
 ```
 
-This would use a suppressions file name `tsan-suppressions` located in the
+This would use a suppressions file named `tsan-suppressions` located in the
 current directory.
 
 ### Using suppressions files from other projects
@@ -148,7 +148,7 @@ Depending on what you are doing, you may see races coming from code outside of y
 
 There are known races in CPython that are tracked in a suppressions file used
 for TSan testing in the CPython CI. You can see the version of this file in the
-the 3.14 branch of CPython
+3.14 branch of CPython
 [here](https://github.com/python/cpython/blob/3.14/Tools/tsan/suppressions_free_threading.txt). This
 file might be a good place to start for your own testing, particularly if you
 see races inside of CPython that are listed in CPython's suppressions file.
@@ -201,7 +201,7 @@ To ensure that pytest doesn't capture any output from TSan, you can
 pass `-s` (short for `--show-capture`) to your pytest invocation.
 
 You can also set `log_path=/path/to/log_file` in TSAN_OPTIONS, and logs
-fill be written to `/path/to/log_file.pid`, where `pid` is the process ID
+will be written to `/path/to/log_file.pid`, where `pid` is the process ID,
 instead of being directed to stderr, which is the default.
 
 Some authors of this guide have observed hangs running pytest with
@@ -252,7 +252,7 @@ $ TSAN_OPTIONS='allocator_may_return_null=1 halt_on_error=1' pytest -s
 
 # Common Issues
 
-If you are using Linux, either bare metal or in a docker coontainer, you may need
+If you are using Linux, either bare metal or in a docker container, you may need
 to adjust some settings. To avoid ASLR interfering with the TSAN checking, the
 following config change on the docker host system may be required:
 

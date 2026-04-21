@@ -2,7 +2,7 @@
 
 This page tracks the status of packages for which we're aware of active work on
 free-threaded support. It contains packages with extension modules, as well
-as build tools and packages that needed code specifically to support
+as build tools and packages that needed code changes specifically to support
 free-threading. Note that pure Python code works without changes by design,
 hence this page does not aim to track pure Python packages.
 
@@ -12,7 +12,7 @@ updated tracker](https://hugovk.github.io/free-threaded-wheels/) that pulls in
 information for a wider range of packages, but only tracks whether or not they
 have wheels on PyPI.
 
-If you are using conda-forge, you can track the packages still waiting to be migrated [on the conda forge
+If you are using conda-forge, you can track the packages still waiting to be migrated [on the conda-forge
 website](https://conda-forge.org/status/migration/?name=python314t).
 
 If there's a bug related to free-threading in a library you use, please open

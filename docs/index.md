@@ -71,7 +71,7 @@ that best describes you:
 
     If your dependencies advertise free-threaded support, good news! If you do
     not use the `threading` module and do not plan to, then you're done and you
-    can feel safe declaring support for running your project on the
+    can safely declare support for running your project on the
     free-threaded build.
 
     If you would like to use the `threading` module to improve the performance of
@@ -95,15 +95,15 @@ that best describes you:
 
     If your dependencies advertise free-threaded support, good news! If you do
     not use the `threading` module and do not plan to, then you're done and you
-    can feel safe declaring support for running your project on the
+    can safely declare support for running your project on the
     free-threaded build.
 
     If you make use of the `threading` module internally and already have
-    multithreaded tests, consider experimenting with your existing tests with a
+    multithreaded tests, consider running your existing tests with a
     very short [thread switch
     interval](https://docs.python.org/3/library/sys.html#sys.getswitchinterval). This
     can elicit thread safety issues on the GIL-enabled build. If you do not use
-    `threading` or thread pools internally your tool or app should behave
+    `threading` or thread pools internally, your tool or app should behave
     identically under free-threading.
 
     If you would like to use the `threading` module to improve the performance of
@@ -151,7 +151,7 @@ that best describes you:
     we hope that this guide will provide you with a toolkit to get things
     working.
 
-    We suggest reading through the the full porting guide, including the final
+    We suggest reading through the full porting guide, including the final
     section that focuses on considerations for native code.
 
     - [Porting Python Packages to Support Free-Threading](porting.md)

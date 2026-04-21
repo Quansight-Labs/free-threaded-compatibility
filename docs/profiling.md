@@ -32,14 +32,14 @@ Ctrl-C - samply will print out a report and open a web browser pointing at the
 profile browser.
 
 Briefly, the interface is broken up into two pieces: a timeline in which
-the CPU utilization appears as a graph and a set of panels that allow diving
-into the callstack at individual instants in the timeline or aggregated over
+the CPU utilization appears as a graph, and a set of panels that allow diving
+into the call stack at individual instants in the timeline or aggregated over
 selections in the timeline. It's particularly useful to look at the [flame
 graph](https://profiler.firefox.com/docs/#/./guide-ui-tour-panels?id=the-flame-graph)
 and [stack
 chart](https://profiler.firefox.com/docs/#/./guide-ui-tour-panels?id=the-stack-chart)
-panels. The former allows identifying calls that are particularly expensive
-while the latter allows visualization of how the call stack changes with time.
+panels. The former helps identify calls that are particularly expensive,
+while the latter visualizes how the call stack changes over time.
 
 See [the Firefox profiler documentation](https://profiler.firefox.com/docs/#/) for more details
 about how to use the interface.
@@ -67,22 +67,22 @@ The resulting profile will include annotations with information about the Python
 frames. In the profile browser, Python frames show up in light blue and native
 frames show up in yellow.
 
-## Python stack frames on MacOS (Python 3.15+)
+## Python stack frames on macOS (Python 3.15+)
 
-MacOS stack frames requires you to use Python 3.15+, which as of this writing you
+macOS stack frames require you to use Python 3.15+, which as of this writing you
 will need to [compile yourself](installing-cpython.md/#build-from-source). See the documentation of the [dev version of
 CPython on how to enable perf events on
-MacOX](https://docs.python.org/3.15/howto/perf_profiling.html).
+macOS](https://docs.python.org/3.15/howto/perf_profiling.html).
 
 ## Uploading profiler data to profiler.firefox.com
 
-The neat thing about using the Firefox profiler as the UI for samply is it means
+The neat thing about using the Firefox profiler as the UI for samply is that
 sharing profiling information over the internet is as easy as clicking a button
 in the UI.
 
-By default, samply runs the firefox profiler locally and does not share data it
+By default, samply runs the Firefox profiler locally and does not share the data it
 collects. You can optionally click the upload button in the top-right corner of
 the profiler interface to upload the profile data and generate a permalink. This
-uploads the data to profiler.firefox.com and others can view the exact same
-profiler interface as the one you see locally. This can be a powerful tool to
-get help if you don't understand what you are looking at.
+uploads the data to profiler.firefox.com, and others can then view the exact same
+profiler interface as the one you see locally. This can be a powerful tool for
+getting help if you don't understand what you are looking at.

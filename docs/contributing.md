@@ -9,14 +9,14 @@ and be mindful of the community rules while working on the project.
 
 ## Contributing to this site
 
-Contributions can be made through issues on and pull requests to the
+Contributions can be made through issues and pull requests on the
 [free-threaded-compatibility](https://github.com/Quansight-Labs/free-threaded-compatibility)
 repository. Ways to contribute include:
 
 - Improvements to the documentation, from new content to copy-editing for clarity.
 - Updates to the [status tracker](https://py-free-threading.github.io/tracking/).
-- Add links to relevant examples, blog posts and other content.
-- Create example use cases or benchmarks and add them to the [listing of examples](examples/index.md).
+- Adding links to relevant examples, blog posts, and other content.
+- Creating example use cases or benchmarks and adding them to the [listing of examples](examples/index.md).
 
 ## Contributing to the adoption of free-threading
 
@@ -26,9 +26,10 @@ the Python 2 to Python 3 transition. It's going to take the community multiple
 years to complete the transition to free-threaded CPython, and your help will
 be valuable. Here are some ways to contribute today:
 
-1. Start experimenting! If the packages you rely on for some task or application,
-    try running it with a free-threaded interpreter. And consider whether it can
-    benefit performance or functionality-wise from Python-level threading.
+1. Start experimenting! If the packages you rely on for some task or application
+    already support free-threading, try running it with a free-threaded
+    interpreter. And consider whether it can benefit from Python-level threading,
+    either in performance or functionality.
 1. Implement support for free-threading in packages that are still lacking
     support. We'll try to provide an outline of how to approach that in an open
     source package below.
@@ -53,10 +54,10 @@ issue about adding free-threading support? If not, is there a relevant PR?
 Typically, searching for "free-threading", "free-threaded", "GIL", "3.14t" and
 "cp314t" will allow you to find the relevant issue or PR if it exists.
 
-Note that python 3.13t exists, but we recommend focusing on python 3.14t+ and onward.
+Note that Python 3.13t exists, but we recommend focusing on Python 3.14t and onward.
 
 If there is no issue yet and you want to contribute support, opening an issue
-is usually a good next step (please check the projects contribution guidelines
+is usually a good next step (please check the project's contribution guidelines
 for details on how the maintainers want you to suggest a new feature). Here
 is example content for such an issue:
 

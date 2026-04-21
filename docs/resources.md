@@ -1,6 +1,6 @@
 # More Resources
 
-Apart from this website, there's a wide list of resources on the
+Apart from this website, there's a wide range of resources on the
 free-threaded build and free-threading topics in general, including
 documentation, blog posts, conference talks, and others. We'll
 try to keep an up-to-date list here:
@@ -36,7 +36,7 @@ try to keep an up-to-date list here:
 
 ### PyCon 2025
 
-- ["Unraveling Community Support for Free-Threaded Python" by Lysandros Nikoloau and Nathan Goldbaum](https://youtu.be/EuU3ksI1l04)
+- ["Unraveling Community Support for Free-Threaded Python" by Lysandros Nikolaou and Nathan Goldbaum](https://youtu.be/EuU3ksI1l04)
 - ["High-Performance Python: Faster Type Checking and Free Threaded Execution" by Sam Gross and Neil Mitchell](https://youtu.be/ZTSZ1OCUaeQ)
 - ["Using Rust in Free-Threaded vs Regular Python 3.13" by David Hewitt](https://youtu.be/J7phN_M4GLM)
 - ["Building a NoGIL Load Balancer in 30 minutes" by Alvaro Duran](https://youtu.be/AYSlsCz8gKM)
@@ -55,7 +55,7 @@ try to keep an up-to-date list here:
 
 ## CPython internals
 
-There's also a lot of useful resources on CPython internals, that are not
+There are also many useful resources on CPython internals that are not
 specific to the free-threaded build:
 
 - [CPython internal docs](https://github.com/python/cpython/tree/main/InternalDocs)
