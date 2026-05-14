@@ -6,8 +6,8 @@ ref: testing-thread-safety
 
 Put priority on thread safety issues surfaced by real-world testing. Run the
 test suite for your project and fix any failures that occur only with the GIL
-disabled. Some issues may be due to changes in Python 3.13 that are not
-specific to the free-threaded build.
+disabled. Some issues may be due to changes in Python 3.13, 3.14, or 3.15 that
+are not specific to the free-threaded build.
 
 If you are unable to run your package with the GIL disabled because of problems
 in extension modules or in dependencies, you can still test with the GIL enabled
