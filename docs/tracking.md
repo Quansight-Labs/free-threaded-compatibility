@@ -57,8 +57,8 @@ please open an issue on [this issue tracker](https://github.com/Quansight-Labs/f
 | hypothesis           |  [:simple-github:](https://github.com/HypothesisWorks/hypothesis/issues/4451)  | :material-check-bold: |   :material-check-bold:    |          6.135.32          |                                                            |                                                                                              |
 | JAX                  |         [:simple-github:](https://github.com/jax-ml/jax/issues/23073)          | :material-check-bold: |   :material-check-bold:    |           0.5.1            |                       :simple-linux:                       | [:simple-google:](https://docs.jax.dev/en/latest/installation.html#jax-nightly-installation) |
 | joblib               |        [:simple-github:](https://github.com/joblib/joblib/issues/1592)         | :material-check-bold: |   :material-check-bold:    |           1.4.2            |                                                            |                                                                                              |
-| jupyter_client       |    [:simple-github:](https://github.com/jupyter/jupyter_client/issues/1077)    | :material-check-bold: |                            |                            |                                                            |                                                                                              |
-| jupyterlab           |    [:simple-github:](https://github.com/jupyterlab/jupyterlab/issues/16915)    |                       |                            |                            |                                                            |                                                                                              |
+| jupyter_client       |    [:simple-github:](https://github.com/jupyter/jupyter_client/issues/1077)    |         [^6]          |                            |                            |                                                            |                                                                                              |
+| jupyterlab           |    [:simple-github:](https://github.com/jupyterlab/jupyterlab/issues/16915)    |         [^7]          |                            |                            |                                                            |                                                                                              |
 | kiwisolver           |          [:simple-github:](https://github.com/nucleic/kiwi/pull/190)           | :material-check-bold: |   :material-check-bold:    |           1.4.8            |                                                            |                                                                                              |
 | kornia-rs            |       [:simple-github:](https://github.com/kornia/kornia-rs/issues/226)        | :material-check-bold: |   :material-check-bold:    |           0.1.9            |                                                            |                                                                                              |
 | LibCST               |       [:simple-github:](https://github.com/Instagram/LibCST/issues/1242)       | :material-check-bold: |   :material-check-bold:    |           1.8.0            | :simple-linux: :simple-apple: :material-microsoft-windows: |                   [:simple-python:](https://test.pypi.org/project/libcst)                    |
@@ -170,6 +170,10 @@ please open an issue on [this issue tracker](https://github.com/Quansight-Labs/f
 | zstandard[^5]        |   [:simple-github:](https://github.com/indygreg/python-zstandard/issues/231)   | :material-check-bold: |   :material-check-bold:    |           0.25.0           |                                                            |                                                                                              |
 
 [^1]: Release available in the [Bazel Central Registry](https://registry.bazel.build)
+
+[^6]: Functional, CI flaky test and disabled: blocked on msgpack
+
+[^7]: Functional, CI flaky test and disabled: blocked on jupyter_client & msgpack
 
 [^2]: Wheels are available but work to add support is still ongoing.
 
