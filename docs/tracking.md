@@ -180,8 +180,6 @@ please open an issue on [this issue tracker](https://github.com/Quansight-Labs/f
 
 [^4]: Functional, CI flaky test and disabled: blocked on jupyter_client & msgpack
 
-[^5]: Wheels are available but work to add support is still ongoing.
-
 [^6]: Rust library released on [crates.io](https://crates.io/crates/pyo3)
 
 [^7]: Release available on the [SWIG website](https://www.swig.org/download.html), or use the git tag on [its GitHub repository](https://github.com/swig/swig/tags)
