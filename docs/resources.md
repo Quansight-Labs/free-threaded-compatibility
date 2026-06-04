@@ -16,6 +16,7 @@ try to keep an up-to-date list here:
 - [PEP 703 initial discussion thread](https://discuss.python.org/t/22606), as
     well as the [follow-up discussion thread](https://discuss.python.org/t/26503)
 - [PEP 703 acceptance announcement](https://discuss.python.org/t/37075)
+- ["Free Threading internals: reference counting" by Victor Stinner](https://vstinner.github.io/free-threading-reference-counting.html)
 
 ## Community-maintained packages
 
