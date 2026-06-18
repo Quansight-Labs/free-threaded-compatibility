@@ -53,7 +53,7 @@ please open an issue on [this issue tracker](https://github.com/Quansight-Labs/f
 | datafusion            |   [:simple-github:](https://github.com/apache/datafusion-python/issues/1324)   |                       |                            |                            |                                                            |                                                                                              |
 | fastrlock             |        [:simple-github:](https://github.com/scoder/fastrlock/issues/19)        |                       |                            |                            |                                                            |                                                                                              |
 | frozenlist            |       [:simple-github:](https://github.com/aio-libs/frozenlist/pull/618)       | :material-check-bold: |   :material-check-bold:    |           1.6.0            |                                                            |                                                                                              |
-| greenlet[^8]          |      [:simple-github:](https://github.com/python-greenlet/greenlet/pull/511)      | :material-check-bold: |   :material-check-bold:    |           3.5.2            |                                                            |                                                                                              |
+| greenlet[^8]          |    [:simple-github:](https://github.com/python-greenlet/greenlet/pull/511)     | :material-check-bold: |   :material-check-bold:    |           3.5.2            |                                                            |                                                                                              |
 | grpcio                |          [:simple-github:](https://github.com/grpc/grpc/issues/38762)          |                       |                            |                            |                                                            |                                                                                              |
 | hatch                 |          [:simple-github:](https://github.com/pypa/hatch/issues/2082)          | :material-check-bold: |   :material-check-bold:    |           1.16.3           |                                                            |                                                                                              |
 | h5py                  |          [:simple-github:](https://github.com/h5py/h5py/issues/2475)           | :material-check-bold: |   :material-check-bold:    |           3.16.0           |                                                            |                                                                                              |
@@ -179,6 +179,8 @@ please open an issue on [this issue tracker](https://github.com/Quansight-Labs/f
 
 [^2]: Support is provided through the `nvidia-cutlass-dsl-libs-base` and `nvidia-cutlass-dsl-libs-cu13` packages.
 
+[^8]: It is fully supported on Python 3.15t and above, on 3.14t it may crash at runtime exit.
+
 [^3]: Functional, CI flaky test and disabled: blocked on msgpack
 
 [^4]: Functional, CI flaky test and disabled: blocked on jupyter_client & msgpack
@@ -192,5 +194,3 @@ please open an issue on [this issue tracker](https://github.com/Quansight-Labs/f
     backports are available under
     [backport.zstd](https://pypi.org/project/backports.zstd/) for Python
     3.9-3.13
-
-[^8]: It is fully supported on Python 3.15t and above, on 3.14t it may crash at runtime exit.
