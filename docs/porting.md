@@ -239,7 +239,7 @@ correct. For example, to track how deeply nested the current operation is:
 from contextlib import contextmanager
 from contextvars import ContextVar
 
-# Each thread and each asyncio task sees its own value, starting from the default.
+# Each thread and each asyncio task gets its own independent value.
 depth = ContextVar("depth", default=0)
 
 
