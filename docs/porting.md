@@ -261,6 +261,14 @@ shared as intended. On Python 3.14 and newer, the [token returned by
 is itself a context manager that resets the variable on exit, so you can drop the
 explicit `try`/`finally` and write `with depth.set(depth.get() + 1):` instead.
 
+What a thread or task starts from depends on context inheritance. An `asyncio`
+task copies the context active when it is created, so it continues from the
+values set by the code that spawned it. A newly spawned thread inherits a copy of
+the spawning thread's context on the free-threaded build, where
+[`PYTHON_THREAD_INHERIT_CONTEXT`](https://docs.python.org/3/using/cmdline.html#envvar-PYTHON_THREAD_INHERIT_CONTEXT)
+is enabled by default, but starts from each variable's default on the GIL-enabled
+build, where it is disabled by default.
+
 Another way of dealing with issues like this is to convert a shared global cache
 into a thread-local cache. In this approach, each thread will see its own private
 copy of the cache, making races between threads impossible. This approach makes
