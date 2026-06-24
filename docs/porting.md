@@ -215,9 +215,53 @@ cached key and call `_do_expensive_calculation`. In some cases this is harmless,
 but depending on the nature of the cache, this could lead to unnecessary network
 access, resource leaks, or wasted unnecessary compute cost.
 
-### Converting global state to thread-local state
+### Converting global state to context-local or thread-local state
 
-One way of dealing with issues like this is to convert a shared global cache
+One way to remove a race on mutable global state is to stop sharing it and give
+each unit of execution its own copy. For a state that tracks the current operation
+and that should be set and restored around a block using the `with` statement,
+such as a configuration option or a nesting counter, prefer
+[`contextvars.ContextVar`](https://docs.python.org/3/library/contextvars.html#contextvars.ContextVar);
+it is isolated per thread and per `asyncio` task, so it is both thread-safe and
+async-safe, and it is usually the right choice in pure Python. For a state that is
+initialized once per thread and reused for the lifetime of the thread, such as a
+per-thread cache, use
+[`threading.local`](https://docs.python.org/3/library/threading.html#thread-local-data).
+Unlike a `ContextVar`, it is not aware of `asyncio` tasks, so state mutated across
+an `await` can leak between coroutines running on the same thread.
+
+`ContextVar.set` returns a token and `ContextVar.reset` restores the value the
+variable had before that `set`. This pairs naturally with a context manager and a
+`finally` block, which makes the cleanup exception-safe and keeps nested scopes
+correct. For example, to track how deeply nested the current operation is:
+
+```python
+from contextlib import contextmanager
+from contextvars import ContextVar
+
+# Each thread and each asyncio task sees its own value, starting from the default.
+depth = ContextVar("depth", default=0)
+
+
+@contextmanager
+def new_level():
+    token = depth.set(depth.get() + 1)
+    try:
+        yield depth.get()
+    finally:
+        # Runs even if the body raises, and restores the exact previous value so
+        # that nested scopes unwind correctly.
+        depth.reset(token)
+```
+
+Always create the `ContextVar` at module scope, never inside a function or
+closure, otherwise a new variable is created on every call and the value is not
+shared as intended. On Python 3.14 and newer, the [token returned by
+`ContextVar.set`](https://docs.python.org/3/library/contextvars.html#contextvars.ContextVar.set)
+is itself a context manager that resets the variable on exit, so you can drop the
+explicit `try`/`finally` and write `with depth.set(depth.get() + 1):` instead.
+
+Another way of dealing with issues like this is to convert a shared global cache
 into a thread-local cache. In this approach, each thread will see its own private
 copy of the cache, making races between threads impossible. This approach makes
 sense if having extra copies of the cache in each thread is not prohibitively
@@ -247,50 +291,6 @@ def do_calculation(arg):
 This wouldn't help a case where each thread having a copy of the cache would be
 prohibitive, but it does fix possible resource leak issues due to
 races filling a cache.
-
-### Converting global state to context-local state
-
-[`threading.local`](https://docs.python.org/3/library/threading.html#thread-local-data)
-isolates state per thread, but it is not aware of `asyncio` tasks: several
-coroutines running on the same thread share a single thread-local object, so
-state that is mutated across an `await` can still leak between tasks. It also has
-no built-in way to restore the previous value when a scope exits.
-
-When your state is scoped to a particular operation rather than cached for the
-lifetime of the thread, for example, a counter that is incremented while an
-operation is in progress and decremented once it finishes, prefer
-[`contextvars.ContextVar`](https://docs.python.org/3/library/contextvars.html#contextvars.ContextVar).
-A `ContextVar` is isolated both per thread and per `asyncio` task, since each task
-runs with its own copy of the context, so it is both thread-safe and async-safe.
-
-`ContextVar.set` returns a token and `ContextVar.reset` restores the value the
-variable had before that `set`. This pairs naturally with a context manager and
-a `finally` block, which makes the cleanup exception-safe and keeps nested scopes
-correct:
-
-```python
-from contextlib import contextmanager
-from contextvars import ContextVar
-
-# How deeply nested the current operation is. Each thread and each asyncio task
-# sees its own value, starting from the default.
-_depth = ContextVar("depth", default=0)
-
-
-@contextmanager
-def new_level():
-    token = _depth.set(_depth.get() + 1)
-    try:
-        yield _depth.get()
-    finally:
-        # Runs even if the body raises, and restores the exact previous value so
-        # that nested scopes unwind correctly.
-        _depth.reset(token)
-```
-
-Always create the `ContextVar` at module scope, never inside a function or
-closure, otherwise a new variable is created on every call and the value is not
-shared as intended.
 
 <!-- ref:copy-on-write -->
 
