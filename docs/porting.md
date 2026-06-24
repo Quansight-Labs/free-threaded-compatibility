@@ -248,6 +248,50 @@ This wouldn't help a case where each thread having a copy of the cache would be
 prohibitive, but it does fix possible resource leak issues due to
 races filling a cache.
 
+### Converting global state to context-local state
+
+[`threading.local`](https://docs.python.org/3/library/threading.html#thread-local-data)
+isolates state per thread, but it is not aware of `asyncio` tasks: several
+coroutines running on the same thread share a single thread-local object, so
+state that is mutated across an `await` can still leak between tasks. It also has
+no built-in way to restore the previous value when a scope exits.
+
+When your state is scoped to a particular operation rather than cached for the
+lifetime of the thread, for example, a counter that is incremented while an
+operation is in progress and decremented once it finishes, prefer
+[`contextvars.ContextVar`](https://docs.python.org/3/library/contextvars.html#contextvars.ContextVar).
+A `ContextVar` is isolated both per thread and per `asyncio` task, since each task
+runs with its own copy of the context, so it is both thread-safe and async-safe.
+
+`ContextVar.set` returns a token and `ContextVar.reset` restores the value the
+variable had before that `set`. This pairs naturally with a context manager and
+a `finally` block, which makes the cleanup exception-safe and keeps nested scopes
+correct:
+
+```python
+from contextlib import contextmanager
+from contextvars import ContextVar
+
+# How deeply nested the current operation is. Each thread and each asyncio task
+# sees its own value, starting from the default.
+_depth = ContextVar("depth", default=0)
+
+
+@contextmanager
+def new_level():
+    token = _depth.set(_depth.get() + 1)
+    try:
+        yield _depth.get()
+    finally:
+        # Runs even if the body raises, and restores the exact previous value so
+        # that nested scopes unwind correctly.
+        _depth.reset(token)
+```
+
+Always create the `ContextVar` at module scope, never inside a function or
+closure, otherwise a new variable is created on every call and the value is not
+shared as intended.
+
 <!-- ref:copy-on-write -->
 
 ### Copy-on-Write
