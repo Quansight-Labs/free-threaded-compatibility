@@ -17,15 +17,18 @@ wheels is worth the restrictions of the Stable ABI.
 
 ## Supporting older Python versions
 
-`abi3t` wheels support only Python 3.15 and newer. To cover every CPython
-release still supported upstream, we suggest publishing these three wheels on
-each platform:
+`abi3t` wheels support only Python 3.15 and newer. For a project supporting
+Python 3.11 and later, we suggest publishing these three wheels on each
+platform:
 
 | Wheel tag          | Compatible CPython builds                    |
 | ------------------ | -------------------------------------------- |
-| `cp310-abi3`       | GIL-enabled 3.10 and later                   |
+| `cp311-abi3`       | GIL-enabled 3.11 and later                   |
 | `cp314-cp314t`     | Free-threaded 3.14 only                      |
 | `cp315-abi3.abi3t` | GIL-enabled and free-threaded 3.15 and later |
+
+Build the ordinary `abi3` wheel with the oldest Python version your project
+supports. The examples below use Python 3.11.
 
 Free-threaded 3.14 predates `abi3t`, so it still needs a version-specific
 `cp314-cp314t` wheel.
@@ -44,7 +47,10 @@ Build-tool support varies:
 === "CMake with scikit-build-core"
 
     CMake 4.4 supports `abi3t`, and scikit-build-core 1.0+ generates the
-    corresponding wheel tag. Add the following to your existing
+    corresponding wheel tag. To build the three wheels listed above, use
+    `cp311` for GIL-enabled interpreters and an
+    [override](https://scikit-build-core.readthedocs.io/en/stable/configuration/overrides.html)
+    for free-threaded Python 3.15 and newer. Add the following to your existing
     `pyproject.toml`:
 
     ```toml
@@ -148,13 +154,13 @@ contract.
 newer when enabling both Stable ABI families:
 
 ```toml
-pyo3 = { version = "0.29", features = ["abi3-py310", "abi3t-py315"] }
+pyo3 = { version = "0.29", features = ["abi3-py311", "abi3t-py315"] }
 ```
 
 Build each family with the corresponding interpreter:
 
 ```bash
-maturin build --interpreter python3.10
+maturin build --interpreter python3.11
 maturin build --interpreter python3.15t
 ```
 
