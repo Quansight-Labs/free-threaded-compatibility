@@ -157,6 +157,7 @@ that best describes you:
     - [Porting Python Packages to Support Free-Threading](porting.md)
     - [Improving Multithreaded Test Coverage](testing.md)
     - [Updating Native Extensions to Support Free-Threading](porting-extensions.md)
+    - [Building and Distributing `abi3t` Extensions](abi3t.md)
 
 ## Frequently asked questions about errors
 

@@ -7,8 +7,9 @@ try to keep an up-to-date list here:
 
 ## CPython documentation
 
-- [Python experimental support for free threading](https://docs.python.org/3/howto/free-threading-python.html#freethreading-python-howto)
-- [C API Extension Support for Free Threading HOWTO on docs.python.org](https://docs.python.org/3/howto/free-threading-extensions.html)
+- [Python support for free threading](https://docs.python.org/3/howto/free-threading-python.html#freethreading-python-howto)
+- [C API Extension Support for Free Threading](https://docs.python.org/3/howto/free-threading-extensions.html)
+- [Migrating to Stable ABI for free threading (`abi3t`)](https://docs.python.org/3.15/howto/abi3t-migration.html)
 
 ## Free-threading pre-history and background
 

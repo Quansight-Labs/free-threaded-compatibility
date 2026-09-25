@@ -4,36 +4,34 @@
 
 ### CFFI
 
-CFFI added support for the free-threaded build of Python 3.14 in version
-2.0.0. You can ensure it is installed by passing a version constraint to pip:
+CFFI 2.0.0 added support for free-threaded Python 3.14. Supporting free-threaded
+Python 3.15 requires CFFI 2.1.1 or newer: CFFI 2.1.0 added `abi3t` support, and
+CFFI 2.1.1 adapted to a later ABI change in the Python 3.15 beta releases. See
+the [CFFI
+changelog](https://cffi.readthedocs.io/en/stable/whatsnew.html#v2-1-1) for
+details. To support both Python 3.14 and 3.15, install:
 
 ```bash
-python -m pip install cffi>=2.0.0
+python -m pip install "cffi>=2.1.1"
 ```
 
-If you want to force CFFI 2.0.0 to be used as a dependency of a project, you can use the following `pyproject.toml` snippet:
+To retain CFFI 2.0.0 as the minimum on Python 3.14, use the following
+`pyproject.toml` snippet:
 
 ```toml
 [build-system]
 requires = [
-  "cffi>=2.0.0",
-]
-```
-
-You can also use the `python_version` [environment
-marker](https://packaging.python.org/en/latest/specifications/dependency-specifiers/#environment-markers)
-to specify the constraint is only valid for Python 3.14 and newer:
-
-```toml
-[build-system]
-requires = [
-  "cffi>=2.0.0; python_version >= '3.14'",
+  "cffi>=2.1.1; python_version >= '3.15'",
+  "cffi>=2.0.0; python_version >= '3.14' and python_version < '3.15'",
   "cffi; python_version < '3.14'",
 ]
 ```
 
-You can declare a runtime dependency in the `project.dependencies` section using
-the same syntax.
+These conditions use the `python_version` [environment
+marker](https://packaging.python.org/en/latest/specifications/dependency-specifiers/#environment-markers).
+The marker distinguishes Python releases, not GIL configuration, so this also
+requires CFFI 2.1.1 or newer on GIL-enabled Python 3.15. You can declare a
+runtime dependency in the `project.dependencies` section using the same syntax.
 
 CFFI does not support the free-threaded build of Python 3.13.
 
@@ -52,9 +50,11 @@ pure-python build instead.
 
 ### Other bindings generators
 
-Cython, nanobind, pybind11, and PyO3 all fully support the free-threaded
-build. See the documentation of those projects for more details about using them
-with the free-threaded interpreter.
+Cython, nanobind, pybind11, and PyO3 can all build version-specific
+free-threaded extensions, although Cython describes its support as
+experimental. This does not imply that each project supports the free-threaded
+Stable ABI. See [Building and distributing `abi3t` extensions](abi3t.md) for
+current `abi3t` workflows and limitations.
 
 ## Runtime dependencies that don't support free-threading
 

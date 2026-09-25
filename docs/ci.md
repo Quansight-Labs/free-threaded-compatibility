@@ -71,11 +71,17 @@ wheels for Python 3.14 and newer in its default configuration. If your project
 releases nightly wheels, we suggest configuring `cibuildwheel` to build nightly
 free-threaded wheels.
 
-As of April 2026, we suggest not enabling builds for Free-threaded Python 3.13 going
-forward. The 3.13t release was considered experimental, is approximately 30%
-slower in single-threaded performance than 3.14t, and does not include a number
-of safety fixes for builtins and the standard library that were included in
-3.14t. Free-threaded 3.14 also has better ecosystem compatibility than 3.13.
+These wheels are usually version-specific, such as `cp314-cp314t` or
+`cp315-cp315t`. Starting with CPython 3.15, eligible native extensions can
+instead publish a combined `cp315-abi3.abi3t` wheel for GIL-enabled and
+free-threaded interpreters. See [Building and distributing `abi3t`
+extensions](abi3t.md) for build backend support and restrictions.
+
+As of April 2026, we recommend not adding new CI builds for free-threaded Python
+3.13. Python 3.13t was considered experimental, is approximately 30% slower in
+single-threaded performance than 3.14t, and does not include several safety
+fixes for builtins and the standard library that were added in 3.14t.
+Free-threaded Python 3.14 also has better ecosystem compatibility than 3.13.
 
 You will also likely need to manually pass `-Xgil=0` or set `PYTHON_GIL=0` in
 your shell environment while running tests to ensure the GIL is actually
@@ -89,16 +95,16 @@ free-threaded Python in your extension.
 !!! info
 
     If a dependency of your package does not support free-threading or has not
-    yet done a release which includes `cp314t` wheels, this can be tricky to
-    work around because an environment marker for free-threading does not exist
-    (see [this Discourse thread](https://discuss.python.org/t/environment-marker-for-free-threading/60007)).
-    Hence it is not possible to special-case free-threading with static metadata
-    in `pyproject.toml`. It's fine to still upload `cp314t` wheels for your
-    package to PyPI; the user may then be responsible for getting the
-    dependency installed (e.g., from a nightly wheel or building the
-    dependency's `main` branch from source) if the last release of the
-    dependency doesn't cleanly build from source or doesn't work under
-    free-threading.
+    yet released wheels for your target free-threaded Python version, this can
+    be tricky to work around because an environment marker for free-threading
+    does not exist (see [this Discourse
+    thread](https://discuss.python.org/t/environment-marker-for-free-threading/60007)).
+    Hence it is not possible to special-case free-threading with static
+    metadata in `pyproject.toml`. It's fine to still upload your own
+    free-threaded wheels to PyPI; the user may then be responsible for getting
+    the dependency installed (e.g., from a nightly wheel or by building the
+    dependency's `main` branch from source) if the dependency's latest release
+    does not cleanly build from source or work under free-threading.
 
 ## CI Timeouts
 

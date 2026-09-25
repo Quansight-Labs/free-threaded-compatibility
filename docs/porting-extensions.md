@@ -174,43 +174,34 @@ after importing a module that does not support the GIL.
 
 === "PyO3"
 
-    If you use the CPython C API in Rust via [PyO3](https://pyo3.rs), then you
-    can follow the [PyO3 Guide
-    section](https://pyo3.rs/latest/free-threading.html) on supporting
-    free-threaded Python. You must also update your extension to at least
-    version 0.23.
+    If you use the CPython C API from Rust through [PyO3](https://pyo3.rs),
+    follow [PyO3's free-threading
+    guide](https://pyo3.rs/latest/free-threading.html). For a new port, update
+    to PyO3 0.28 or newer. Targeting the Stable ABI for free-threaded builds
+    requires PyO3 0.29 or newer; see the [`abi3t` packaging
+    guide](abi3t.md#pyo3-and-maturin).
 
     You should write multithreaded tests of any code you expose to Python. See
     our guide on [updating test suites](testing.md#fixing-thread-unsafe-tests) for
     more details. You should fix any thread safety issues you discover while
     running multithreaded tests.
 
-    As of PyO3 0.23, PyO3 enforces Rust's borrow checking rules at
-    runtime and may produce runtime panics if you simultaneously mutably borrow
-    data in more than one thread. You may want to consider storing state in using
-    atomic data structures, with mutexes or locks, or behind `Arc`
-    pointers.
+    PyO3 applies runtime borrow checking to data in `#[pyclass]` instances.
+    Concurrent conflicting borrows can raise exceptions or, in some cases,
+    panic. For shared mutable state, use synchronization primitives such as
+    atomics or mutexes. If a `#[pyclass]` provides its own interior mutability,
+    consider declaring it [`frozen`](https://pyo3.rs/latest/class.html#frozen-classes-opting-out-of-interior-mutability)
+    to opt out of PyO3's runtime borrow checking.
 
-    Once you are satisfied the Python modules defined by your rust crate are
-    thread safe, you can pass `gil_used = false` to the [`pymodule`
-    macro](https://docs.rs/pyo3/latest/pyo3/attr.pymodule.html):
+    In PyO3 0.28 and newer, modules defined with the [`pymodule`
+    macro](https://docs.rs/pyo3/latest/pyo3/attr.pymodule.html) declare
+    free-threading support by default. This is a promise about your code, not an
+    automatic safety check. If the module is not ready, opt out with
+    `#[pymodule(gil_used = true)]` until it has been ported and tested.
 
-    ```rust
-
-    #[pymodule(gil_used = false)]
-    fn my_module(py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
-        ...
-    }
-    ```
-
-    If you define any modules procedurally by manually creating a `PyModule`
-    struct without using the `pymodule` macro, you can call
-    [`PyModuleMethods::gil_used`](https://docs.rs/pyo3/latest/pyo3/prelude/trait.PyModuleMethods.html#tymethod.gil_used)
-    after instantiating the module.
-
-    If you use the `pyo3-ffi` crate and/or `unsafe` FFI calls to call directly into the C
-    API, then see the section on porting C extensions in this guide as well as
-    the PyO3 source code.
+    If you use the `pyo3-ffi` crate or make `unsafe` FFI calls directly into the
+    C API, also follow the [C extension guidance](#porting-c-extensions) in this
+    guide.
 
 === "f2py"
 
@@ -312,8 +303,13 @@ As illustrated above, attaching and detaching from the runtime uses exactly the
 same code in the free-threaded build as is used in the GIL-enabled build to
 acquire and release the GIL. It is an unfortunate naming issue that
 `PyGILState_Ensure` and `PyGILState_Release` have "`GIL`" in the name of the
-function, despite the lack of a GIL on the free-threaded build. It's likely that
-the C API in a future Python version will fix this naming issue.
+function, despite the lack of a GIL on the free-threaded build. Python 3.15 adds
+the GIL-neutral [`PyThreadState_Ensure` and `PyThreadState_Release`
+APIs](https://docs.python.org/3.15/c-api/threads.html#attaching-detaching-thread-states)
+and soft-deprecates the older pair. Unlike the older APIs, the new ones take an
+interpreter and return an interpreter guard, so they are not drop-in
+replacements. Code that supports older Python versions can continue using the
+older APIs.
 
 Hopefully you now have a better mental model for how native code interacts with
 the CPython interpreter runtime in the free-threaded build and how it is similar
@@ -790,15 +786,16 @@ build.
 
 ### Limited API support
 
-The free-threaded build does not support the limited CPython C API. If you
-currently use the limited API to build wheels that do not depend on a specific
-Python version, you will not be able to use it while shipping binaries for the
-free-threaded build. In practice, the limited API is a subset of the full C API,
-so your extension will build, you just cannot set `Py_LIMITED_API` at build
-time. This also means that code inside `#ifdef Py_GIL_DISABLED` checks can use C
-API constructs outside the limited API if you would like to do that, although
-these uses will need to be removed once the free-threaded build gains support
-for compiling with the limited API.
+Free-threaded CPython 3.13 and 3.14 do not support the Limited API, so
+extensions for those interpreters need version-specific wheels. An ordinary
+`abi3` extension remains limited to GIL-enabled builds.
+
+CPython 3.15 adds a separate Stable ABI named `abi3t`. Extensions that satisfy
+its restrictions can publish one wheel compatible with both GIL-enabled and
+free-threaded CPython 3.15 and later. See [Building and distributing `abi3t`
+extensions](abi3t.md) for the CPython migration guide, build backend status,
+and examples. If an extension cannot target `abi3t`, build it against the full
+C API instead and publish version-specific free-threaded wheels.
 
 ## Dependencies that don't support free-threading
 

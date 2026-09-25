@@ -36,6 +36,7 @@ nav:
   - Porting Guide:
     - 'porting.md'
     - 'porting-extensions.md'
+    - 'abi3t.md'
     - 'dependencies.md'
     - 'ci.md'
   - Testing, Debugging, and Profiling:
