@@ -37,12 +37,12 @@ Free-threaded 3.14 predates `abi3t`, so it still needs a version-specific
 
 Build-tool support varies:
 
-| Build path                   | Status                                                                                                                                                                                   |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| CMake with scikit-build-core | Released in [CMake 4.4](https://cmake.org/cmake/help/latest/release/4.4.html) and [scikit-build-core 1.0](https://scikit-build.readthedocs.io/en/latest/history.html#scikit-build-1-0-0) |
-| Maturin with PyO3            | Initial support in [Maturin 1.14.0](https://github.com/PyO3/maturin/releases/tag/v1.14.0); use [1.14.1+](https://github.com/PyO3/maturin/releases/tag/v1.14.1) with both ABI families    |
-| meson-python                 | [Implemented upstream](https://github.com/mesonbuild/meson-python/pull/856) but not released                                                                                             |
-| setuptools                   | [Under development](https://github.com/pypa/setuptools/pull/5193)                                                                                                                        |
+| Build path                   | Status                                                                                                                                                                                           |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| CMake with scikit-build-core | Released in [CMake 4.4](https://cmake.org/cmake/help/latest/release/4.4.html) and [scikit-build-core 1.0](https://scikit-build-core.readthedocs.io/en/stable/about/changelog.html#version-1-0-0) |
+| Maturin with PyO3            | Initial support in [Maturin 1.14.0](https://github.com/PyO3/maturin/releases/tag/v1.14.0); use [1.14.1+](https://github.com/PyO3/maturin/releases/tag/v1.14.1) with both ABI families            |
+| meson-python                 | Released in [meson-python 0.21.0](https://mesonbuild.com/meson-python/changelog.html); `abi3t` builds need a free-threaded interpreter                                                           |
+| setuptools                   | [Under development](https://github.com/pypa/setuptools/pull/5193)                                                                                                                                |
 
 === "CMake with scikit-build-core"
 
@@ -59,6 +59,11 @@ Build-tool support varies:
     build-backend = "scikit_build_core.build"
 
     [tool.scikit-build]
+    wheel.py-api = "cp311"
+
+    [[tool.scikit-build.overrides]]
+    if.abi-flags = "t"
+    if.python-version = ">=3.15"
     wheel.py-api = "cp315.cp315t"
     ```
 
@@ -69,15 +74,26 @@ Build-tool support varies:
     project(example LANGUAGES C)
 
     find_package(
-      Python 3.15 REQUIRED COMPONENTS Interpreter Development.SABIModule)
-    Python_add_library(
-      _core MODULE src/_core.c USE_SABI 3.15 WITH_SOABI)
+      Python 3.11 REQUIRED COMPONENTS
+      Interpreter Development.Module ${SKBUILD_SABI_COMPONENT})
+    if(SKBUILD_SABI_VERSION)
+      Python_add_library(
+        _core MODULE src/_core.c USE_SABI ${SKBUILD_SABI_VERSION} WITH_SOABI)
+    else()
+      Python_add_library(_core MODULE src/_core.c WITH_SOABI)
+    endif()
     install(TARGETS _core DESTINATION example)
     ```
 
-    Build with a free-threaded Python 3.15 interpreter to produce the combined
-    `cp315-abi3.abi3t` wheel. A build with a GIL-enabled interpreter falls back
-    to `cp315-abi3`.
+    Build separately with GIL-enabled Python 3.11, free-threaded Python 3.14,
+    and free-threaded Python 3.15 to produce `cp311-abi3`, `cp314-cp314t`, and
+    `cp315-abi3.abi3t`, respectively. Scikit-build-core leaves
+    `SKBUILD_SABI_VERSION` empty on free-threaded Python 3.14, which has no
+    Stable ABI. On the other builds, it selects 3.11 or 3.15 to match the
+    wheel tag. The extension source must support each selected API.
+
+    Setting `wheel.py-api = "cp315.cp315t"` unconditionally targets Python
+    3.15 and later; it does not also produce an `abi3` wheel for Python 3.11.
 
     See the complete [scikit-build-core `abi3t`
     example](https://scikit-build-core.readthedocs.io/en/stable/guide/getting_started.html)
@@ -88,18 +104,61 @@ Build-tool support varies:
 
 === "meson-python"
 
-    **No released version supports `abi3t` yet.** Support has been merged for a
-    future release in [meson-python pull request
-    856](https://github.com/mesonbuild/meson-python/pull/856). The released
-    [`limited-api`
-    setting](https://mesonbuild.com/meson-python/reference/pyproject-settings.html#tool-meson-python-limited-api)
-    currently covers ordinary `abi3` only.
+    [meson-python 0.21.0](https://mesonbuild.com/meson-python/changelog.html)
+    added `abi3t` support. Its [Limited API build
+    guide](https://mesonbuild.com/meson-python/how-to-guides/limited-api.html)
+    recommends making Stable ABI builds opt-in. Add the following to your
+    existing `pyproject.toml`:
 
-    Until support is released, publish version-specific free-threaded wheels.
-    If you experiment with an unreleased development version, treat its
-    interface as unstable. Meson also cannot yet [select an `abi3t` target from
-    a GIL-enabled
-    interpreter](https://github.com/mesonbuild/meson/issues/15637).
+    ```toml
+    [build-system]
+    requires = ["meson-python>=0.21.0", "meson>=1.7.0"]
+    build-backend = "mesonpy"
+
+    [tool.meson-python]
+    limited-api = true
+    ```
+
+    In `meson.build`, select the API version as described in the
+    [`abi3t` instructions](https://mesonbuild.com/meson-python/how-to-guides/limited-api.html#the-abi3t-stable-abi):
+
+    ```meson
+    project(
+      'example', 'c',
+      meson_version: '>=1.7.0',
+      default_options: ['python.allow_limited_api=false'],
+    )
+
+    py = import('python').find_installation(pure: false)
+    api_version = '3.11'
+    if py.language_version().version_compare('>=3.15')
+      if py.get_variable('Py_GIL_DISABLED') == 1
+        api_version = '3.15'
+      endif
+    endif
+
+    py.extension_module(
+      '_core', 'src/_core.c',
+      limited_api: api_version,
+      subdir: 'example',
+      install: true,
+    )
+    ```
+
+    Enable the Limited API for the two Stable ABI builds; leave it disabled
+    for free-threaded Python 3.14:
+
+    ```bash
+    python3.11 -m build --wheel -Csetup-args=-Dpython.allow_limited_api=true
+    python3.14t -m build --wheel
+    python3.15t -m build --wheel -Csetup-args=-Dpython.allow_limited_api=true
+    ```
+
+    These commands produce `cp311-abi3`, `cp314-cp314t`, and
+    `cp315-abi3.abi3t` wheels, respectively. Meson-python takes the wheel's
+    Python version tag from the build interpreter, regardless of
+    `limited_api`, so build the first wheel with Python 3.11. Building for
+    `abi3t` currently requires a free-threaded interpreter.
 
 === "setuptools"
 
@@ -179,9 +238,11 @@ already provides complete Meson and setuptools integration examples, so use
 those instead of duplicating their source-generation setup here.
 
 CFFI does not assign the final wheel tag by itself. Pair it with an
-`abi3t`-capable backend, such as the CMake with scikit-build-core path above.
-Until meson-python or setuptools support is released, CFFI projects using
-those backends should publish version-specific free-threaded wheels.
+`abi3t`-capable backend, such as the CMake with scikit-build-core or
+meson-python paths above. The upstream Meson example does not target the
+Stable ABI; add the `limited_api` argument and the `limited-api` setting from
+the meson-python tab. Until setuptools support is released, CFFI projects using
+setuptools should publish version-specific free-threaded wheels.
 
 ### Cython
 
@@ -202,8 +263,8 @@ describes a preview implementation with an `abi3t` frontend.
 Before publishing an `abi3t` wheel:
 
 1. Configure the build to target `abi3t`. Some backends, including CMake with
-    scikit-build-core, require building with a free-threaded CPython 3.15
-    interpreter; others can target it from a GIL-enabled build.
+    scikit-build-core and meson-python, require building with a free-threaded
+    CPython 3.15 interpreter; others can target it from a GIL-enabled build.
 1. If you target Python 3.15, confirm that the wheel name contains
     `cp315-abi3.abi3t` and, on Unix-like systems, that the extension filename
     uses an `abi3t` suffix such as `.abi3t.so` or
@@ -221,19 +282,20 @@ Before publishing an `abi3t` wheel:
 
 ### Worked GitHub Actions cross-test
 
-This example workflow builds one wheel with free-threaded Python, then installs
-the same wheel into both free-threaded and GIL-enabled Python. It covers
-`x86_64` Linux in a [PyPA manylinux](https://github.com/pypa/manylinux) image,
-`arm64` macOS, and `x64` Windows. The [GitHub-hosted runner
-table](https://docs.github.com/en/actions/reference/runners/github-hosted-runners)
-documents the architectures used by the macOS and Windows labels.
+Use [cibuildwheel](ci.md#building-free-threaded-wheels-with-cibuildwheel) to
+build and test with free-threaded Python, then pass the wheel to a separate
+job that tests with GIL-enabled Python. This example covers Linux, macOS, and
+Windows, with one wheel per platform.
 
-The example assumes that your project is already configured to produce `abi3t`
-wheels and uses `pytest`. Replace the build and test dependencies and commands
-to match your project.
+The project must already be configured to produce `abi3t` wheels. For the
+opt-in meson-python example above, uncomment `CIBW_CONFIG_SETTINGS` below.
+Replace `pytest` and `tests` with your project's test dependencies and test
+suite as needed.
 
-<details>
-<summary>Complete GitHub Actions cross-test workflow:</summary>
+The workflow disables cibuildwheel's default `abi3audit` check because
+[`abi3t` auditing is not yet supported](https://github.com/pypa/abi3audit/issues/215).
+Released `abi3audit` rejects the `PyModExport_*` entry point required by
+`abi3t`. Wheel repair and the tests on both interpreter builds still run.
 
 ```yaml
 name: abi3t cross-test
@@ -243,110 +305,59 @@ on:
   push:
 
 jobs:
-  abi3t-wheel:
-    name: abi3t cross-test on ${{ matrix.name }}
+  build:
     runs-on: ${{ matrix.os }}
-    container: ${{ matrix.container }}
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - name: manylinux_x86_64
-            os: ubuntu-latest
-            container: quay.io/pypa/manylinux_2_28_x86_64
-          - name: macos_arm64
-            os: macos-15
-            architecture: arm64
-          - name: windows_x86_64
-            os: windows-latest
-            architecture: x64
-
+        os: [ubuntu-latest, macos-15, windows-latest]
     steps:
       - uses: actions/checkout@v7
-
-      # The manylinux image already contains both interpreters.
-      - uses: actions/setup-python@v7
-        id: python-ft
-        if: ${{ !matrix.container }}
+      - uses: pypa/cibuildwheel@v4.2.1
+        env:
+          CIBW_BUILD: cp315t-*
+          CIBW_SKIP: '*-musllinux_*'
+          CIBW_ARCHS: auto64
+          CIBW_AUDIT_COMMAND: ''
+          CIBW_TEST_REQUIRES: pytest
+          CIBW_TEST_COMMAND: python -m pytest {project}/tests
+          # For the opt-in meson-python configuration above:
+          # CIBW_CONFIG_SETTINGS: setup-args=-Dpython.allow_limited_api=true
+      - uses: actions/upload-artifact@v7
         with:
-          python-version: 3.15t
-          allow-prereleases: true
-          architecture: ${{ matrix.architecture }}
+          name: abi3t-${{ matrix.os }}
+          path: wheelhouse/*.whl
 
+  test-gil:
+    needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-15, windows-latest]
+    steps:
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
-        id: python-gil
-        if: ${{ !matrix.container }}
         with:
           python-version: '3.15'
           allow-prereleases: true
-          architecture: ${{ matrix.architecture }}
-
-      - name: Pick the interpreters
-        shell: bash
-        env:
-          IN_CONTAINER: ${{ matrix.container && 'yes' || '' }}
-          SETUP_FT: ${{ steps.python-ft.outputs.python-path }}
-          SETUP_GIL: ${{ steps.python-gil.outputs.python-path }}
-        run: |
-          if [ -n "$IN_CONTAINER" ]; then
-            echo "FT_PYTHON=/opt/python/cp315-cp315t/bin/python" >>"$GITHUB_ENV"
-            echo "GIL_PYTHON=/opt/python/cp315-cp315/bin/python" >>"$GITHUB_ENV"
-          else
-            echo "FT_PYTHON=$SETUP_FT" >>"$GITHUB_ENV"
-            echo "GIL_PYTHON=$SETUP_GIL" >>"$GITHUB_ENV"
-          fi
-
-      - name: Build once with free-threaded Python
+      - uses: actions/download-artifact@v8
+        with:
+          name: abi3t-${{ matrix.os }}
+          path: wheelhouse
+      - name: Install and test the same wheel
         shell: bash
         run: |
-          "$FT_PYTHON" -Im pip install build
-          "$FT_PYTHON" -Im build --wheel
-
-      - name: Select the combined wheel
-        shell: bash
-        run: |
-          ls dist/
-          WHEEL=$(find dist -type f | grep -E '/[^/]+-cp315-abi3\.abi3t-[^/]+\.whl$')
-          test "$(printf '%s\n' "$WHEEL" | wc -l)" -eq 1
-          echo "WHEEL=$WHEEL" >>"$GITHUB_ENV"
-
-      - name: Check the Unix extension suffix
-        if: ${{ runner.os != 'Windows' }}
-        shell: bash
-        run: |
-          "$FT_PYTHON" -c '
-          import re
-          import sys
-          import zipfile
-
-          with zipfile.ZipFile(sys.argv[1]) as wheel:
-              names = wheel.namelist()
-
-          assert any(
-              re.search(r"\.abi3t(?:-[^/]*)?\.so$", name)
-              for name in names
-          ), names
-          ' "$WHEEL"
-
-      - name: Test with free-threaded Python
-        shell: bash
-        run: |
-          "$FT_PYTHON" -Im pip install "$WHEEL" pytest
-          "$FT_PYTHON" -Im pytest
-
-      - name: Test the same wheel with GIL-enabled Python
-        shell: bash
-        run: |
-          "$GIL_PYTHON" -Im pip install "$WHEEL" pytest
-          "$GIL_PYTHON" -Im pytest
+          python -m pip install --upgrade 'pip>=26.1'
+          python -m pip install wheelhouse/*.whl pytest
+          python -Im pytest tests
 ```
 
-</details>
-
-This workflow cross-tests a wheel; it is not a release workflow. The manylinux
-job does not repair the wheel or replace [a cibuildwheel release
-workflow](ci.md#building-free-threaded-wheels-with-cibuildwheel). In production,
-pin third-party actions to commit SHAs and container images to digests.
+Cibuildwheel tests the installed wheel in a separate environment using the
+free-threaded interpreter selected by `CIBW_BUILD`. The second job downloads
+that wheel and tests it with GIL-enabled Python 3.15. On Linux, cibuildwheel
+builds manylinux wheels; musllinux wheels are excluded because the second job
+runs on Ubuntu. In production, pin third-party actions to commit SHAs.
 
 Python 3.15 is the first release with `abi3t`. Add GIL-enabled and free-threaded
 tests for every later Python version you support.
