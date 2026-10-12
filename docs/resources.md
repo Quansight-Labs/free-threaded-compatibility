@@ -11,6 +11,14 @@ try to keep an up-to-date list here:
 - [C API Extension Support for Free Threading](https://docs.python.org/3/howto/free-threading-extensions.html)
 - [Migrating to Stable ABI for free threading (`abi3t`)](https://docs.python.org/3.15/howto/abi3t-migration.html)
 
+## Concurrent programming and free-threading guidance
+
+These guides are aimed at CPython contributors, but much of the advice also
+applies to native extension modules.
+
+- [Concurrent Programming Primer, for CPython Developers](https://python.ca/cpython-guidance/concurrent-primer/) — an introduction to concurrency in C
+- [Free-threading guidance for CPython contributors](https://python.ca/cpython-guidance/free-threading/) — practical advice drawn from recurring code review issues
+
 ## Free-threading pre-history and background
 
 - [PEP 703 design document](https://docs.google.com/document/d/18CXhDb1ygxg-YXNBJNzfzZsDFosB5e6BfnXLlejd9l0/edit?usp=sharing)

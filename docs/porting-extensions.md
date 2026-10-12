@@ -12,6 +12,10 @@ testing, and fix any identified thread safety issues. We will also describe how
 to handle some common thread-unsafe patterns we have found in many extension
 modules across the open source ecosystem.
 
+For an introduction to concurrent programming in C and the synchronization
+mechanisms used by free-threaded CPython, see [Concurrent Programming Primer,
+for CPython Developers](https://python.ca/cpython-guidance/concurrent-primer/).
+
 ## Declaring free-threaded support
 
 Extension modules need to explicitly indicate they support running with the GIL
