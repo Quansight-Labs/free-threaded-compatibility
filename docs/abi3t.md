@@ -235,11 +235,6 @@ Build-tool support varies:
     documentation](https://setuptools.pypa.io/en/stable/userguide/ext_modules.html)
     for general C/C++ build configuration.
 
-    On Windows, setuptools 84.2.0 still passes `/EXPORT:PyInit_*` to the linker,
-    so an extension that only defines `PyModExport_*` needs a dummy `PyInit_*`
-    function like the one in the [CPython abi3t
-    HOWTO](https://docs.python.org/3.15/howto/abi3t-migration.html#module-export-hook).
-
 ## Extension APIs, bindings, and code generators
 
 The extension API, language binding, or source generator you use must support
