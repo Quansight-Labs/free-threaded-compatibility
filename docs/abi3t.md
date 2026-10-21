@@ -42,7 +42,7 @@ Build-tool support varies:
 | CMake with scikit-build-core | Released in [CMake 4.4](https://cmake.org/cmake/help/latest/release/4.4.html) and [scikit-build-core 1.0](https://scikit-build-core.readthedocs.io/en/stable/about/changelog.html#version-1-0-0) |
 | Maturin with PyO3            | Initial support in [Maturin 1.14.0](https://github.com/PyO3/maturin/releases/tag/v1.14.0); use [1.14.1+](https://github.com/PyO3/maturin/releases/tag/v1.14.1) with both ABI families            |
 | meson-python                 | Released in [meson-python 0.21.0](https://mesonbuild.com/meson-python/changelog.html); `abi3t` builds need a free-threaded interpreter                                                           |
-| setuptools                   | [Under development](https://github.com/pypa/setuptools/pull/5193)                                                                                                                                |
+| setuptools                   | Released in [setuptools 84.2.0](https://setuptools.pypa.io/en/stable/history.html#v84-2-0); `abi3t` builds need a free-threaded interpreter                                                      |
 
 === "CMake with scikit-build-core"
 
@@ -101,6 +101,12 @@ Build-tool support varies:
     reference](https://cmake.org/cmake/help/v4.4/module/FindPython.html#commands).
     The scikit-build-core example also includes a fallback for CMake versions
     older than 4.4.
+
+=== "Maturin with PyO3"
+
+    Maturin selects `abi3t` through PyO3's Cargo features rather than a
+    build-backend setting. See [PyO3 and Maturin](#pyo3-and-maturin) below for
+    the `Cargo.toml` features and the `maturin build` commands.
 
 === "meson-python"
 
@@ -162,16 +168,72 @@ Build-tool support varies:
 
 === "setuptools"
 
-    **No released version supports `abi3t` yet.** Released versions reject
-    `py_limited_api` on free-threaded builds. Follow [setuptools pull request
-    5193](https://github.com/pypa/setuptools/pull/5193) and the [tracking
-    issue](https://github.com/pypa/setuptools/issues/5205) for the proposed
-    support.
+    [setuptools 84.2.0](https://setuptools.pypa.io/en/stable/history.html#v84-2-0)
+    supports `abi3t` extension filenames and combined wheel tags. Require it
+    in your existing `pyproject.toml`:
 
-    Until that work is released, use version-specific free-threaded wheels. The
-    [setuptools extension module
-    documentation](https://setuptools.pypa.io/en/latest/userguide/ext_modules.html)
-    remains the reference for its general C/C++ build configuration.
+    ```toml
+    [build-system]
+    requires = ["setuptools>=84.2.0"]
+    build-backend = "setuptools.build_meta"
+    ```
+
+    Only the free-threaded Python 3.15 build needs this version. You can also
+    conservatively scope the requirement to Python 3.15 and newer with an
+    environment marker such as `"setuptools>=84.2.0; python_version >= '3.15'"`.
+
+    This example uses the `abi3` Limited API on GIL-enabled Python, the
+    version-specific API on free-threaded Python 3.14, and `abi3t` on
+    free-threaded Python 3.15 and newer:
+
+    ```python
+    import sys
+    import sysconfig
+
+    from setuptools import Extension, setup
+
+    free_threaded = bool(sysconfig.get_config_var("Py_GIL_DISABLED"))
+
+    if not free_threaded:
+        macros = [("Py_LIMITED_API", "0x030b0000")]
+    elif sys.version_info >= (3, 15):
+        macros = [("Py_TARGET_ABI3T", "0x030f0000")]
+    else:
+        macros = []  # free-threaded 3.13/3.14 have no Stable ABI
+
+    setup(
+        ext_modules=[
+            Extension(
+                "example._core",
+                ["src/_core.c"],
+                py_limited_api=bool(macros),
+                define_macros=macros,
+            )
+        ],
+    )
+    ```
+
+    The extension source must implement the [module export hook and other
+    `abi3t` changes](https://docs.python.org/3.15/howto/abi3t-migration.html)
+    when `Py_TARGET_ABI3T` is defined. Set the `bdist_wheel` option separately
+    to choose the wheel tag:
+
+    ```bash
+    # builds an cp311-abi3 wheel
+    python3.11 -m build --wheel -C--build-option=--py-limited-api=cp311
+
+    # builds a cp314-cp314t wheel
+    python3.14t -m build --wheel
+
+    # builds a cp315-abi3t wheel
+    python3.15t -m build --wheel -C--build-option=--py-limited-api=cp315
+    ```
+
+    Building for `abi3t` requires a free-threaded interpreter. With GIL-enabled
+    Python 3.15, the same settings produce an ordinary `abi3`
+    wheel. See the [setuptools extension module
+    documentation](https://setuptools.pypa.io/en/stable/userguide/ext_modules.html)
+    for general C/C++ build configuration.
 
 ## Extension APIs, bindings, and code generators
 
@@ -238,11 +300,12 @@ already provides complete Meson and setuptools integration examples, so use
 those instead of duplicating their source-generation setup here.
 
 CFFI does not assign the final wheel tag by itself. Pair it with an
-`abi3t`-capable backend, such as the CMake with scikit-build-core or
-meson-python paths above. The upstream Meson example does not target the
-Stable ABI; add the `limited_api` argument and the `limited-api` setting from
-the meson-python tab. Until setuptools support is released, CFFI projects using
-setuptools should publish version-specific free-threaded wheels.
+`abi3t`-capable backend, such as the CMake with scikit-build-core, meson-python,
+or setuptools 84.2.0+ paths above. The upstream Meson example does not target
+the Stable ABI; add the `limited_api` argument and the `limited-api` setting
+from the meson-python tab. For setuptools, use the extension and wheel settings
+from its tab with CFFI's generated source. Free-threaded Python 3.13/3.14
+still needs version-specific wheels.
 
 ### Cython
 
@@ -263,8 +326,9 @@ describes a preview implementation with an `abi3t` frontend.
 Before publishing an `abi3t` wheel:
 
 1. Configure the build to target `abi3t`. Some backends, including CMake with
-    scikit-build-core and meson-python, require building with a free-threaded
-    CPython 3.15 interpreter; others can target it from a GIL-enabled build.
+    scikit-build-core, meson-python, and setuptools, require building with a
+    free-threaded CPython 3.15 interpreter; others can target it from a
+    GIL-enabled build.
 1. If you target Python 3.15, confirm that the wheel name contains
     `cp315-abi3.abi3t` and, on Unix-like systems, that the extension filename
     uses an `abi3t` suffix such as `.abi3t.so` or
@@ -288,9 +352,9 @@ job that tests with GIL-enabled Python. This example covers Linux, macOS, and
 Windows, with one wheel per platform.
 
 The project must already be configured to produce `abi3t` wheels. For the
-opt-in meson-python example above, uncomment `CIBW_CONFIG_SETTINGS` below.
-Replace `pytest` and `tests` with your project's test dependencies and test
-suite as needed.
+opt-in meson-python or setuptools examples above, uncomment the corresponding
+`CIBW_CONFIG_SETTINGS` line below. Replace `pytest` and `tests` with your
+project's test dependencies and test suite as needed.
 
 The workflow disables cibuildwheel's default `abi3audit` check because
 [`abi3t` auditing is not yet supported](https://github.com/pypa/abi3audit/issues/215).
@@ -323,6 +387,8 @@ jobs:
           CIBW_TEST_COMMAND: python -m pytest {project}/tests
           # For the opt-in meson-python configuration above:
           # CIBW_CONFIG_SETTINGS: setup-args=-Dpython.allow_limited_api=true
+          # For the setuptools configuration above:
+          # CIBW_CONFIG_SETTINGS: --build-option=--py-limited-api=cp315
       - uses: actions/upload-artifact@v7
         with:
           name: abi3t-${{ matrix.os }}
