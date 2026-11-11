@@ -12,12 +12,6 @@ updated tracker](https://hugovk.github.io/free-threaded-wheels/) that pulls in
 information for a wider range of packages, but only tracks whether or not they
 have wheels on PyPI.
 
-To check a specific project's dependencies against the free-threaded build,
-[wheelgap](https://github.com/wheelgap/wheelgap) reads a lockfile
-(`uv.lock`, `poetry.lock`, `pylock.toml` or `requirements.txt`) and reports
-which pinned packages lack free-threaded wheels for a given platform, e.g.
-`uvx wheelgap -p 3.14t -t all`.
-
 A version listed without a PyPI release checkmark is a projected stable release.
 Prerelease builds may already be available.
 

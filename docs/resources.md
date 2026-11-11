@@ -33,6 +33,14 @@ applies to native extension modules.
 - [`cereggii`](https://github.com/dpdani/cereggii)
 - [`free-threading`](https://github.com/iskandergaba/free-threading)
 
+## Third-party tools
+
+- [`wheelgap`](https://github.com/wheelgap/wheelgap): a new third-party
+    command-line tool that reads a lockfile (`uv.lock`, `poetry.lock`,
+    `pylock.toml` or `requirements.txt`) and reports which pinned dependencies
+    lack free-threaded wheels for a given platform, e.g.
+    `uvx wheelgap -p 3.14t -t all`.
+
 ## Conference talks
 
 ### PyData Seattle 2025
