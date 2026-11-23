@@ -318,13 +318,13 @@ cache = [0, 1]
 
 def fib(nth: int) -> int:
     global cache
-    if nth < 1:
-        raise ValueError("nth must be a positive integer")
+    if nth < 0:
+        raise ValueError("nth must be a non-negative integer")
 
     # Atomically read shared reference to global cache
     local_cache = cache
 
-    if nth > len(local_cache) + 1:
+    if nth > len(local_cache):
         # Make a new un-shared list
         local_cache = local_cache.copy()
 
