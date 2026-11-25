@@ -32,6 +32,9 @@ applies to native extension modules.
 - [`ft_utils` documentation](https://facebookincubator.github.io/ft_utils/)
 - [`cereggii`](https://github.com/dpdani/cereggii)
 - [`free-threading`](https://github.com/iskandergaba/free-threading)
+- [`giltrip`](https://github.com/hamarshehmhmd/giltrip): lists every extension module
+    that re-enables the GIL in an environment or a test run, with the package it
+    came from and the line that imported it
 
 ## Conference talks
 
